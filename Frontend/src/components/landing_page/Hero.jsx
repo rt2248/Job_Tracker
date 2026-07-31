@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import AnimatedOrbs from './AnimatedOrbs'
 import GridLines from './GridLines'
 import TypingHeadline from './TypingHeadline'
@@ -37,10 +39,10 @@ export default function Hero() {
 
             {/* CTAs */}
             <div className="flex gap-3.5 flex-wrap [animation:slide-in-up_0.5s_ease_0.3s_both]">
-              <button className="px-7 py-3.5 rounded-[10px] text-[15px] font-semibold bg-gradient-to-br from-indigo to-[#4338ca] border-none text-white cursor-pointer flex items-center gap-2 font-body shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-shadow duration-200 hover:shadow-[0_0_50px_rgba(99,102,241,0.6)]">
+              <Link to="/signup" className="px-7 py-3.5 rounded-[10px] text-[15px] font-semibold bg-gradient-to-br from-indigo to-[#4338ca] border-none text-white cursor-pointer flex items-center gap-2 font-body shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-shadow duration-200 hover:shadow-[0_0_50px_rgba(99,102,241,0.6)]">
                 Start tracking free
                 <span className="text-base">→</span>
-              </button>
+              </Link>
               <button className="px-7 py-3.5 rounded-[10px] text-[15px] font-medium bg-transparent border border-indigo/18 text-muted-light cursor-pointer flex items-center gap-2 font-body transition-all duration-200 hover:border-indigo/45 hover:text-ink">
                 <span className="text-base">▶</span> Watch demo
               </button>

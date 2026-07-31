@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 export default function NavBar() {
   const [scrolled, setScrolled] = useState(false)
@@ -40,12 +41,12 @@ export default function NavBar() {
 
       {/* CTA */}
       <div className="flex gap-3">
-        <button className="px-[18px] py-2 rounded-lg text-[13px] font-medium bg-transparent border border-indigo/18 text-muted-light cursor-pointer transition-all duration-200 font-body hover:border-indigo/45 hover:text-ink">
+        <Link to="/login" className="px-[18px] py-2 rounded-lg text-[13px] font-medium bg-transparent border border-indigo/18 text-muted-light cursor-pointer transition-all duration-200 font-body hover:border-indigo/45 hover:text-ink">
           Log in
-        </button>
-        <button className="px-[18px] py-2 rounded-lg text-[13px] font-semibold bg-gradient-to-br from-indigo to-[#4f46e5] border-none text-white cursor-pointer transition-shadow duration-200 font-body shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:shadow-[0_0_30px_rgba(99,102,241,0.8)]">
+        </Link>
+        <Link to="/signup" className="px-[18px] py-2 rounded-lg text-[13px] font-semibold bg-gradient-to-br from-indigo to-[#4f46e5] border-none text-white cursor-pointer transition-shadow duration-200 font-body shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:shadow-[0_0_30px_rgba(99,102,241,0.8)]">
           Get started
-        </button>
+        </Link>
       </div>
     </nav>
   )

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function AutomationCTA() {
   return (
     <section className="mx-auto mb-[120px] max-w-[1160px] rounded-3xl border border-indigo/18 p-20 relative overflow-hidden bg-gradient-to-br from-surface via-indigo/[0.08] to-surface">
@@ -17,9 +19,9 @@ export default function AutomationCTA() {
             JobTracker is a plug-in module in a broader workflow automation platform. Trigger resume analysis, send deadline alerts, fire webhooks — all connected.
           </p>
           <div className="flex gap-3">
-            <button className="px-[26px] py-[13px] rounded-[10px] text-sm font-semibold bg-gradient-to-br from-indigo to-[#4338ca] border-none text-white cursor-pointer font-body transition-shadow duration-200 shadow-[0_0_30px_rgba(99,102,241,0.3)] hover:shadow-[0_0_50px_rgba(99,102,241,0.5)]">
+            <Link to="/signup" className="px-[26px] py-[13px] rounded-[10px] text-sm font-semibold bg-gradient-to-br from-indigo to-[#4338ca] border-none text-white cursor-pointer font-body transition-shadow duration-200 shadow-[0_0_30px_rgba(99,102,241,0.3)] hover:shadow-[0_0_50px_rgba(99,102,241,0.5)]">
               Get started free
-            </button>
+            </Link>
             <button className="px-[26px] py-[13px] rounded-[10px] text-sm font-medium bg-transparent border border-indigo/18 text-muted-light cursor-pointer font-body transition-all duration-200 hover:border-indigo/45 hover:text-ink">
               Read the docs →
             </button>
