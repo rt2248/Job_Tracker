@@ -12,7 +12,6 @@ app.get("/api/hello", (req, res)=>{
 
 // Import routes
 const authRoutes = require("./routes/auth.routes");
-
 // Use routes
 app.use("/api/auth", authRoutes);
 
