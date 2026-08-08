@@ -15,6 +15,6 @@ const authRoutes = require("./routes/auth.routes");
 // Use routes
 app.use("/api/auth", authRoutes);
 
-app.listen(5000, () => {
-  console.log("Server running on http://localhost:5000");
+app.listen(process.env.PORT||5000, () => {
+  console.log(`Server running on http://localhost:${process.env.PORT||5000}`);
 });

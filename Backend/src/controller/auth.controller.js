@@ -1,39 +1,40 @@
-const bcrypt = require("bcryptjs");
+const {hashPassword}=require("../utils/hash");
+const {findUserbyEmail,createUser}=require("../models/user.model");
 
-const signup = async (req, res) => {
-    try {
-        const { name, email, password } = req.body;
+const signup=async(req, res)=>{
+    try{
+        const{firstname, midname, lastname, email, password}=req.body;
 
-        //Empty case
-        if (!name || !email || !password) {
-            return res.status(400).json({ message: "All fields are required" });
+        if(!firstname||!lastname||!email||!password){
+            return res.status(400).json({message: "Required fields are missing"});
         }
 
-        //Password hashing
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const existingUser=await findUserbyEmail(email);
 
-        //User details
-        const user = {
-            name,
+        if(existingUser){
+            return res.status(409).json
+            ({message:"Email already in use"});
+        }
+
+        const passwordHash=await hashPassword(password);
+         const newUser=await createUser({
+            firstName:firstname,
+            middleName: midname,
+            lastName:lastname,
             email,
-            password: hashedPassword,
-        };
+            passwordHash,
+         });
 
-        console.log("User created: ", user);
-        res.status(201).json({
-            message: "User registered successfully",
-            user: {
-                name: user.name,
-                email: user.email,
-            },
-        });
+         res.status(201).json({
+            message:"User registered successfully",
+            user:newUser,
+         });
+
     }
-
-    catch (error) {
+    catch(error){
         console.log(error);
-        res.status(500).json({ message: "Server error" })
+        res.status(500).json({message: "Server error"});
     }
 };
 
-module.exports = { signup };
+module.exports={signup};
