@@ -8,7 +8,7 @@ import googleIcon from '../assets/icons/google.svg';
 import codeSarthi from '../assets/icons/codesarthi.svg';
 import arrowBack from '../assets/icons/arrowback.svg';
 
-const SignUp = () => {
+const Login = () => {
     const navigate = useNavigate();
     const {
         register,
@@ -20,7 +20,7 @@ const SignUp = () => {
 
     const onSubmit = async (data) => {
         try {
-            const response = await fetch("http://localhost:5000/api/auth/signup", {
+            const response = await fetch("http://localhost:5000/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
@@ -31,7 +31,7 @@ const SignUp = () => {
                 console.error(result.message);
                 return;
             }
-            console.log("Signup successful: ", result);
+            console.log("Login successful: ", result);
             navigate('/dashboard')
         }
         catch (error) {
@@ -64,37 +64,10 @@ const SignUp = () => {
 
                 <div className='min-h-screen w-[65vw] flex flex-col items-center justify-center bg-surface/30 relative'>
                     <StarField />
-                    <div className="heading mb-6 bg-ink font-display font-bold text-center text-4xl bg-clip-text tracking-tight">Create new account</div>
+                    <div className="heading mb-6 bg-ink font-display font-bold text-center text-4xl bg-clip-text tracking-tight">Welcome back!</div>
 
                     <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col items-center justify-center'>
-                        <div className='flex gap-8'>
-                            <div className="flex flex-col relative">
-                                <span className="name font-mono m-1 text-[14px]">First name</span>
-                                <input {...register('firstname', {
-                                    required: "First name is required",
-                                    pattern: {
-                                        value: /^[A-Za-z]+(?:[ '-][A-Za-z]+)*$/,
-                                        message: "Enter a valid name"
-                                    }
-                                })} type="text" placeholder='Monkey' className='p-2 h-[5vh] w-[10vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
-                                <FieldError message={errors.firstname?.message} />
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="name font-mono m-1 text-[14px]">Middle name</span>
-                                <input {...register('midname')} type="text" placeholder='D.' className='p-2 h-[5vh] w-[10vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
-                            </div>
-                            <div className="flex flex-col relative">
-                                <span className="name font-mono m-1 text-[14px]">Last name</span>
-                                <input {...register('lastname', {
-                                    required: "Last name is required",
-                                    pattern: {
-                                        value: /^[A-Za-z]+(?:[ '-][A-Za-z]+)*$/,
-                                        message: "Enter a valid name"
-                                    }
-                                })} type="text" placeholder='Luffy' className='p-2 h-[5vh] w-[10vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
-                                <FieldError message={errors.lastname?.message} />
-                            </div>
-                        </div>
+                        
 
                         <div className="email flex flex-col">
                             <div className='email my-4 relative flex gap-16'>
@@ -106,20 +79,10 @@ const SignUp = () => {
                                             value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                                             message: "Enter a valid email"
                                         }
-                                    })} type="text" placeholder='example123@xyz.com' className='p-2 h-[5vh] w-[15vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
+                                    })} type="text" placeholder='example123@xyz.com' className='p-2 h-[5vh] w-[25vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
                                     <FieldError message={errors.email?.message} />
                                 </div>
-                                <div className="relative flex flex-col">
-                                    <span className="flex flex-col font-mono m-1 text-[14px]">Username</span>
-                                    <input {...register('username', {
-                                        required: "Username is required",
-                                        pattern: {
-                                            value: /^[a-z][a-z0-9_.\-]*$/,
-                                            message: "Enter a valid username"
-                                        }
-                                    })} type="text" placeholder='username_123' className='p-2 h-[5vh] w-[15vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
-                                    <FieldError message={errors.username?.message} />
-                                </div>
+                               
                             </div>
                             <div className="pass flex gap-16">
                                 <div className='relative flex flex-col'>
@@ -134,22 +97,15 @@ const SignUp = () => {
                                             value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
                                             message: 'Needs 1 uppercase, lowercase, number, symbol'
                                         }
-                                    })} type="password" placeholder='Enter password' className='p-2 h-[5vh] w-[15vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
+                                    })} type="password" placeholder='Enter password' className='p-2 h-[5vh] w-[25vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
                                     <FieldError message={errors.password?.message} />
                                 </div>
-                                <div className='relative flex flex-col '>
-                                    <span className="font-mono m-1 text-[14px]">Confirm password <sup>*</sup></span>
-                                    <input {...register('confirmPassword', {
-                                        required: "Please confirm your password",
-                                        validate: (value) => value === watch("password") || "Passwords do not match"
-                                    })} type="password" placeholder='Confirm password' className='p-2 h-[5vh] w-[15vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
-                                    <FieldError message={errors.confirmPassword?.message} />
-                                </div>
+                                
                             </div>
                         </div>
 
                         <div className="mt-12 buttons flex flex-col items-center justify-center gap-4">
-                            <div className="primary flex items-center justify-center gap-20">
+                            <div className="primary flex items-center justify-center gap-[75px]">
                                 <button type='button' onClick={()=>{reset()}} className="w-[150px] text-center m-1 px-[18px] py-2 rounded-xl text-[13px] font-semibold bg-gradient-to-br from-[#dbe1ff] to-[#9c9c9f] border-none text-black cursor-pointer transition-shadow duration-200 font-body shadow-[0_0_20px_rgba(225,225,249,0.3)] hover:shadow-[0_0_30px_rgba(225,225,249,0.4)]">Clear
                                 </button>
 
@@ -165,7 +121,7 @@ const SignUp = () => {
                                 <img src={codeSarthi} alt="" className='mr-1 h-5 w-5 brightness-0' />Continue with CodeSarthi
                             </Link>
 
-                            <Link to="/login" className=' text-indigo-light hover:font-bold hover:underline'>Already a user?</Link>
+                            <Link to="/signup" className=' text-indigo-light hover:font-bold hover:underline'>Create new account</Link>
                         </div>
                     </form>
                 </div>
@@ -175,4 +131,4 @@ const SignUp = () => {
     )
 }
 
-export default SignUp
+export default Login
