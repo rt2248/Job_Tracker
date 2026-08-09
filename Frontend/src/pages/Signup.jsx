@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import NavBar from '../components/landing_page/NavBar';
 import Footer from '../components/landing_page/Footer';
@@ -9,6 +9,7 @@ import googleIcon from '../assets/icons/google.svg';
 import codeSarthi from '../assets/icons/codesarthi.svg';
 
 const SignUp = () => {
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
@@ -16,7 +17,26 @@ const SignUp = () => {
         formState: { errors },
     } = useForm();
 
-    const onSubmit = (data) => console.log(data)
+    const onSubmit = async (data) => {
+        try{
+            const response =await fetch("http://localhost:5000/api/auth/signup",{
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(data),
+            });
+            const result = await response.json();
+
+            if(!response.ok){
+                console.error(result.message);
+                return;
+            }
+            console.log("Signup successful: ", result);
+            navigate('/dashboard')
+        }
+        catch(error){
+            console.error("Network error: ", error);
+        }
+    };
 
     return (
         <>
