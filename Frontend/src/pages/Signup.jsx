@@ -32,6 +32,7 @@ const SignUp = () => {
                 return;
             }
             console.log("Signup successful: ", result);
+            localStorage.setItem('token', result.token);
             navigate('/dashboard')
         }
         catch (error) {
@@ -76,7 +77,7 @@ const SignUp = () => {
                                         value: /^[A-Za-z]+(?:[ '-][A-Za-z]+)*$/,
                                         message: "Enter a valid name"
                                     }
-                                })} type="text" placeholder='Monkey' className='p-2 h-[5vh] w-[10vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
+                                })} type="text" placeholder='Monkey' className={`p-2 h-[5vh] w-[10vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px] ${errors.firstname ? 'border-red' : 'border-indigo/30'}`} />
                                 <FieldError message={errors.firstname?.message} />
                             </div>
                             <div className="flex flex-col">
@@ -91,7 +92,7 @@ const SignUp = () => {
                                         value: /^[A-Za-z]+(?:[ '-][A-Za-z]+)*$/,
                                         message: "Enter a valid name"
                                     }
-                                })} type="text" placeholder='Luffy' className='p-2 h-[5vh] w-[10vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
+                                })} type="text" placeholder='Luffy' className={`p-2 h-[5vh] w-[10vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px] ${errors.lastname ? 'border-red' : 'border-indigo/30'}`} />
                                 <FieldError message={errors.lastname?.message} />
                             </div>
                         </div>
@@ -106,7 +107,7 @@ const SignUp = () => {
                                             value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                                             message: "Enter a valid email"
                                         }
-                                    })} type="text" placeholder='example123@xyz.com' className='p-2 h-[5vh] w-[15vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
+                                    })} type="text" placeholder='example123@xyz.com' className={`p-2 h-[5vh] w-[15vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px] ${errors.email ? 'border-red' : 'border-indigo/30'}`} />
                                     <FieldError message={errors.email?.message} />
                                 </div>
                                 <div className="relative flex flex-col">
@@ -117,7 +118,7 @@ const SignUp = () => {
                                             value: /^[a-z][a-z0-9_.\-]*$/,
                                             message: "Enter a valid username"
                                         }
-                                    })} type="text" placeholder='username_123' className='p-2 h-[5vh] w-[15vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
+                                    })} type="text" placeholder='username_123' className={`p-2 h-[5vh] w-[15vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px] ${errors.username ? 'border-red' : 'border-indigo/30'}`} />
                                     <FieldError message={errors.username?.message} />
                                 </div>
                             </div>
@@ -126,7 +127,7 @@ const SignUp = () => {
                                     <span className=" font-mono m-1 text-[14px]">Password</span>
                                     <input {...register('password', {
                                         required: "Password is required",
-                                        minlength: {
+                                        minLength: {
                                             value: 8,
                                             message: "Password must have at least 8 characters"
                                         },
@@ -134,15 +135,15 @@ const SignUp = () => {
                                             value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
                                             message: 'Needs 1 uppercase, lowercase, number, symbol'
                                         }
-                                    })} type="password" placeholder='Enter password' className='p-2 h-[5vh] w-[15vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
+                                    })} type="password" placeholder='Enter password' className={`p-2 h-[5vh] w-[15vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px] ${errors.password ? 'border-red' : 'border-indigo/30'}`}/>
                                     <FieldError message={errors.password?.message} />
                                 </div>
                                 <div className='relative flex flex-col '>
-                                    <span className="font-mono m-1 text-[14px]">Confirm password <sup>*</sup></span>
+                                    <span className="font-mono m-1 text-[14px]">Confirm password</span>
                                     <input {...register('confirmPassword', {
                                         required: "Please confirm your password",
                                         validate: (value) => value === watch("password") || "Passwords do not match"
-                                    })} type="password" placeholder='Confirm password' className='p-2 h-[5vh] w-[15vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
+                                    })} type="password" placeholder='Confirm password' className={`p-2 h-[5vh] w-[15vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px] ${errors.confirmPassword ? 'border-red' : 'border-indigo/30'}`} />
                                     <FieldError message={errors.confirmPassword?.message} />
                                 </div>
                             </div>
