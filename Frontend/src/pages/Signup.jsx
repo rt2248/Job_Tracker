@@ -3,9 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import StarField from '../components/signup_page/StarField';
 import WelcomeLine from '../components/signup_page/WelcomeLine';
-import FieldError from '../components/signup_page/FieldError'
-import googleIcon from '../assets/icons/google.svg';
-import codeSarthi from '../assets/icons/codesarthi.svg';
+import FieldError from '../components/signup_page/FieldError';
+import PasswordField from '../components/signup_page/PasswordField';
+import googleIcon from '../assets/logos/google.svg';
+import codeSarthi from '../assets/logos/codesarthi.svg';
 import arrowBack from '../assets/icons/arrowback.svg';
 
 const SignUp = () => {
@@ -123,9 +124,13 @@ const SignUp = () => {
                                 </div>
                             </div>
                             <div className="pass flex gap-16">
-                                <div className='relative flex flex-col'>
-                                    <span className=" font-mono m-1 text-[14px]">Password</span>
-                                    <input {...register('password', {
+                                <PasswordField
+                                    label="Password"
+                                    placeholder="Enter password"
+                                    name="password"
+                                    register={register}
+                                    error={errors.password}
+                                    rules={{
                                         required: "Password is required",
                                         minLength: {
                                             value: 8,
@@ -135,23 +140,25 @@ const SignUp = () => {
                                             value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
                                             message: 'Needs 1 uppercase, lowercase, number, symbol'
                                         }
-                                    })} type="password" placeholder='Enter password' className={`p-2 h-[5vh] w-[15vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px] ${errors.password ? 'border-red' : 'border-indigo/30'}`}/>
-                                    <FieldError message={errors.password?.message} />
-                                </div>
-                                <div className='relative flex flex-col '>
-                                    <span className="font-mono m-1 text-[14px]">Confirm password</span>
-                                    <input {...register('confirmPassword', {
+                                    }}
+                                />
+                                <PasswordField
+                                    label="Confirm password"
+                                    placeholder="Confirm password"
+                                    name="confirmPassword"
+                                    register={register}
+                                    error={errors.confirmPassword}
+                                    rules={{
                                         required: "Please confirm your password",
                                         validate: (value) => value === watch("password") || "Passwords do not match"
-                                    })} type="password" placeholder='Confirm password' className={`p-2 h-[5vh] w-[15vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px] ${errors.confirmPassword ? 'border-red' : 'border-indigo/30'}`} />
-                                    <FieldError message={errors.confirmPassword?.message} />
-                                </div>
+                                    }}
+                                />
                             </div>
                         </div>
 
                         <div className="mt-12 buttons flex flex-col items-center justify-center gap-4">
                             <div className="primary flex items-center justify-center gap-20">
-                                <button type='button' onClick={()=>{reset()}} className="w-[150px] text-center m-1 px-[18px] py-2 rounded-xl text-[13px] font-semibold bg-gradient-to-br from-[#dbe1ff] to-[#9c9c9f] border-none text-black cursor-pointer transition-shadow duration-200 font-body shadow-[0_0_20px_rgba(225,225,249,0.3)] hover:shadow-[0_0_30px_rgba(225,225,249,0.4)]">Clear
+                                <button type='button' onClick={() => { reset() }} className="w-[150px] text-center m-1 px-[18px] py-2 rounded-xl text-[13px] font-semibold bg-gradient-to-br from-[#dbe1ff] to-[#9c9c9f] border-none text-black cursor-pointer transition-shadow duration-200 font-body shadow-[0_0_20px_rgba(225,225,249,0.3)] hover:shadow-[0_0_30px_rgba(225,225,249,0.4)]">Clear
                                 </button>
 
                                 <button className="w-[150px] text-center m-1 px-[18px] py-2 rounded-xl text-[13px] font-semibold bg-gradient-to-br from-indigo to-[#4f46e5] border-none text-white cursor-pointer transition-shadow duration-200 font-body shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:shadow-[0_0_30px_rgba(99,102,241,0.5)]">Submit

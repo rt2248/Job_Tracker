@@ -3,9 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import StarField from '../components/signup_page/StarField';
 import WelcomeLine from '../components/signup_page/WelcomeLine';
-import FieldError from '../components/signup_page/FieldError'
-import googleIcon from '../assets/icons/google.svg';
-import codeSarthi from '../assets/icons/codesarthi.svg';
+import FieldError from '../components/signup_page/FieldError';
+import PasswordField from '../components/signup_page/PasswordField';
+import googleIcon from '../assets/logos/google.svg';
+import codeSarthi from '../assets/logos/codesarthi.svg';
 import arrowBack from '../assets/icons/arrowback.svg';
 
 const Login = () => {
@@ -81,14 +82,17 @@ const Login = () => {
 
                             </div>
                             <div className="pass flex gap-16">
-                                <div className='relative flex flex-col'>
-                                    <span className=" font-mono m-1 text-[14px]">Password</span>
-                                    <input {...register('password', {
+                                <PasswordField
+                                    label="Password"
+                                    placeholder="Enter your password"
+                                    name="password"
+                                    register={register}
+                                    error={errors.password}
+                                    width="w-[25vw]"
+                                    rules={{
                                         required: "Password is required"
-                                    })} type="password" placeholder='Enter your password' className='p-2 h-[5vh] w-[25vw] border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px]' />
-                                    <FieldError message={errors.password?.message} />
-                                </div>
-
+                                    }}
+                                />
                             </div>
                         </div>
 
