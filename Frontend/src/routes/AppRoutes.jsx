@@ -2,9 +2,12 @@ import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 
 import LandingPage from '../pages/LandingPage'
-import SignUp from '../pages/Signup'
-import Login from '../pages/Login'
-import Dashboard from '../pages/Dashboard'
+import SignUp from '../pages/auth/Signup'
+import Login from '../pages/auth/Login'
+import Dashboard from '../pages/dashboard/Dashboard'
+import Profile from '../pages/dashboard/profile'
+import Applications from '../pages/dashboard/applications'
+import Network from '../pages/dashboard/network'
 
 import ProtectedRoutes from './ProtectedRoutes'
 
@@ -18,6 +21,21 @@ const AppRoutes = () => {
         <Route path='/dashboard' element={
           <ProtectedRoutes>
             <Dashboard/>
+          </ProtectedRoutes>
+        }/>
+        <Route path='/profile' element={
+          <ProtectedRoutes>
+            <Profile/>
+          </ProtectedRoutes>
+        }/>
+        <Route path='/applications' element={
+          <ProtectedRoutes>
+            <Applications/>
+          </ProtectedRoutes>
+        }/>
+        <Route path='/network' element={
+          <ProtectedRoutes>
+            <Network/>
           </ProtectedRoutes>
         }/>
     </Routes>

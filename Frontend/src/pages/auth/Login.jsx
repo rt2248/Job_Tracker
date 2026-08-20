@@ -1,13 +1,13 @@
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom';
 
-import StarField from '../components/signup_page/StarField';
-import WelcomeLine from '../components/signup_page/WelcomeLine';
-import FieldError from '../components/signup_page/FieldError';
-import PasswordField from '../components/signup_page/PasswordField';
-import googleIcon from '../assets/logos/google.svg';
-import codeSarthi from '../assets/logos/codesarthi.svg';
-import arrowBack from '../assets/icons/arrowback.svg';
+import StarField from '../../components/signup_page/StarField';
+import WelcomeLine from '../../components/signup_page/WelcomeLine';
+import FieldError from '../../components/signup_page/FieldError';
+import PasswordField from '../../components/signup_page/PasswordField';
+import googleIcon from '../../assets/logos/google.svg';
+import codeSarthi from '../../assets/logos/codesarthi.svg';
+import arrowBack from '../../assets/icons/arrowback.svg';
 
 const Login = () => {
     const navigate = useNavigate();
