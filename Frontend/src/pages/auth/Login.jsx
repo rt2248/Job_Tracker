@@ -33,6 +33,7 @@ const Login = () => {
                 return;
             }
             console.log("Login successful: ", result);
+            localStorage.setItem('token', result.token);
             navigate('/dashboard')
         }
         catch (error) {
