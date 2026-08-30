@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { hashPassword, comparePassword } = require("../utils/hash");
-const { findUserbyEmail, findUserbyUsername, createUser } = require("../models/user.model");
+const { findUserbyEmail, findUserbyUsername, createUser } = require("../models/files/user.model");
 
 const signup = async (req, res) => {
     try {

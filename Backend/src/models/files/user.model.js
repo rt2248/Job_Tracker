@@ -1,12 +1,12 @@
-const pool = require("../configs/db");
+const pool = require("../../configs/db");
 
 const findUserbyEmail = async (email) => {
     const result = await pool.query("SELECT * FROM users WHERE email=$1", [email]);
     return result.rows[0];
 };
 
-const findUserbyUsername=async(userName)=>{
-    const result = await pool.query("SELECT * FROM users WHERE user_name=$1",[userName]);
+const findUserbyUsername = async (userName) => {
+    const result = await pool.query("SELECT * FROM users WHERE user_name=$1", [userName]);
     return result.rows[0];
 }
 
@@ -19,4 +19,4 @@ const createUser = async ({ firstName, middleName, lastName, email, userName, pa
     return result.rows[0];
 };
 
-module.exports = { findUserbyEmail, findUserbyUsername ,createUser };
+module.exports = { findUserbyEmail, findUserbyUsername, createUser };
