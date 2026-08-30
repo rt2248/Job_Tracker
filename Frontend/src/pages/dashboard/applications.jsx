@@ -1,44 +1,14 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import SideBar from "../../components/dashboard_page/SideBar"
 import TopBar from "../../components/dashboard_page/TopBar"
 import JobCard from "../../components/applications_page/JobCard"
+import { useJobs } from "../../hooks/useJobs"
 
 const Applications = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
 
-  const [jobs, setJobs] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const token = localStorage.getItem("token")
-        const response = await fetch("http://localhost:5000/api/jobs", {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        const result = await response.json()
-
-        if (!response.ok) {
-          setError(result.message)
-          return
-        }
-
-        setJobs(result.jobs)
-      }
-      catch (error) {
-        console.error("Network error: ", error)
-        setError("Something went wrong while fetching jobs")
-      }
-      finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchJobs()
-  }, [])
+  const { jobs, isLoading, error } = useJobs()
 
   return (
     <div className="flex h-screen overflow-hidden bg-canvas">
@@ -51,7 +21,7 @@ const Applications = () => {
           </h1>
 
           {isLoading && (
-            <p className="flex justify-center text-muted-light font-mono text-sm">Loading jobs...</p>
+            <p className="text-muted-light font-mono text-sm">Loading jobs...</p>
           )}
 
           {error && (
@@ -59,7 +29,7 @@ const Applications = () => {
           )}
 
           {!isLoading && !error && jobs.length === 0 && (
-            <p className="flex justify-center text-muted-light font-mono text-sm">No applications yet.</p>
+            <p className="text-muted-light font-mono text-sm">No applications yet.</p>
           )}
 
           {!isLoading && !error && jobs.length > 0 && (
