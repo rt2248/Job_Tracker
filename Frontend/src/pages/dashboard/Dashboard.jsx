@@ -2,6 +2,7 @@ import { useState } from "react"
 import SideBar from "../../components/dashboard_page/SideBar"
 import TopBar from "../../components/dashboard_page/TopBar"
 import KanbanColumn from "../../components/dashboard_page/KanbanColumn"
+import JobDetailModal from "../../components/shared/JobDetailModal"
 import { useJobs } from "../../hooks/useJobs"
 import { STATUS_ORDER } from "../../constants/jobStatus"
 
@@ -10,6 +11,7 @@ const Dashboard = () => {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
 
   const { jobs, isLoading, error } = useJobs()
+  const [selectedJob, setSelectedJob] = useState(null)
 
   const jobsByStatus = STATUS_ORDER.reduce((acc, status) => {
     acc[status] = jobs.filter((job) => job.status === status)
@@ -37,12 +39,19 @@ const Dashboard = () => {
           {!isLoading && !error && (
             <div className="flex gap-4 overflow-x-auto flex-1 pb-2">
               {STATUS_ORDER.map((status) => (
-                <KanbanColumn key={status} status={status} jobs={jobsByStatus[status]} />
+                <KanbanColumn
+                  key={status}
+                  status={status}
+                  jobs={jobsByStatus[status]}
+                  onCardClick={setSelectedJob}
+                />
               ))}
             </div>
           )}
         </main>
       </div>
+
+      <JobDetailModal job={selectedJob} onClose={() => setSelectedJob(null)} />
     </div>
   )
 }

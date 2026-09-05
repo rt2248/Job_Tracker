@@ -2,6 +2,7 @@ import { useState } from "react"
 import SideBar from "../../components/dashboard_page/SideBar"
 import TopBar from "../../components/dashboard_page/TopBar"
 import JobCard from "../../components/applications_page/JobCard"
+import JobDetailModal from "../../components/shared/JobDetailModal"
 import { useJobs } from "../../hooks/useJobs"
 
 const Applications = () => {
@@ -9,6 +10,7 @@ const Applications = () => {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
 
   const { jobs, isLoading, error } = useJobs()
+  const [selectedJob, setSelectedJob] = useState(null)
 
   return (
     <div className="flex h-screen overflow-hidden bg-canvas">
@@ -35,12 +37,14 @@ const Applications = () => {
           {!isLoading && !error && jobs.length > 0 && (
             <div className="flex flex-col gap-3">
               {jobs.map((job) => (
-                <JobCard key={job.id} job={job} />
+                <JobCard key={job.id} job={job} onClick={() => setSelectedJob(job)} />
               ))}
             </div>
           )}
         </main>
       </div>
+
+      <JobDetailModal job={selectedJob} onClose={() => setSelectedJob(null)} />
     </div>
   )
 }

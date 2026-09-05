@@ -10,7 +10,7 @@ const HEADER_ACCENT_CLASSES = {
     red: "border-t-red",
 };
 
-function KanbanColumn({ status, jobs }) {
+function KanbanColumn({ status, jobs, onCardClick }) {
     const meta = STATUS_META[status] || { label: status, color: "muted" };
     const accentClass = HEADER_ACCENT_CLASSES[meta.color];
 
@@ -25,7 +25,9 @@ function KanbanColumn({ status, jobs }) {
                 {jobs.length === 0 ? (
                     <p className="text-muted text-xs font-mono text-center py-4">No jobs</p>
                 ) : (
-                    jobs.map((job) => <KanbanCard key={job.id} job={job} />)
+                    jobs.map((job) => (
+                        <KanbanCard key={job.id} job={job} onClick={() => onCardClick(job)} />
+                    ))
                 )}
             </div>
         </div>

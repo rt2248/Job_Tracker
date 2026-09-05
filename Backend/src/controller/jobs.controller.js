@@ -16,6 +16,12 @@ const getJobs = async (req, res) => {
             resumeUsed: job.resume_used,
             notes: job.notes,
             link: job.link,
+            jobType: job.job_type,
+            workMode: job.work_mode,
+            compensationMin: job.compensation_min,
+            compensationMax: job.compensation_max,
+            compensationPeriod: job.compensation_period,
+            compensationCurrency: job.compensation_currency,
             createdAt: job.created_at,
             updatedAt: job.updated_at,
         }));
