@@ -3,4 +3,5 @@ export const JOB_TYPE_META = {
     fulltime: { label: "Full-time", color: "indigo" },
     parttime: { label: "Part-time", color: "violet" },
     contract: { label: "Contract", color: "amber" },
+    freelance: { label: "Freelance", color: "pink" },
 };

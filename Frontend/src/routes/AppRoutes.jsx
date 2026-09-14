@@ -8,6 +8,7 @@ import Dashboard from '../pages/dashboard/Dashboard'
 import Profile from '../pages/dashboard/Profile'
 import Applications from '../pages/dashboard/Applications'
 import Network from '../pages/dashboard/Network'
+import JobSearch from '../pages/dashboard/JobSearch'
 
 import ProtectedRoutes from './ProtectedRoutes'
 
@@ -36,6 +37,11 @@ const AppRoutes = () => {
       <Route path='/network' element={
         <ProtectedRoutes>
           <Network />
+        </ProtectedRoutes>
+      } />
+      <Route path='/jobsearch' element={
+        <ProtectedRoutes>
+          <JobSearch />
         </ProtectedRoutes>
       } />
     </Routes>

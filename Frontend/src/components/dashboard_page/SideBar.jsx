@@ -5,12 +5,14 @@ import logout from "../../assets/icons/logout.svg"
 import profile from "../../assets/icons/profile.svg"
 import apps from "../../assets/icons/apps.svg"
 import networknode from "../../assets/icons/networknode.svg"
+import search from "../../assets/icons/search.svg"
 import LogoutModal from "./LogoutModal"
 
 const navItems = [
     { title: "Dashboard", icon: dashboard, link: "/dashboard" },
-    { title: "Profile", icon: profile, link: "/profile" },
+    { title: "Search Jobs", icon: search, link: "/jobsearch" },
     { title: "Applications", icon: apps, link: "/applications" },
+    { title: "Profile", icon: profile, link: "/profile" },
     { title: "Network", icon: networknode, link: "/network" },
     { title: "Logout", icon: logout, link: "/login" },
 ]
