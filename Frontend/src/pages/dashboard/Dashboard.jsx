@@ -19,12 +19,12 @@ const Dashboard = () => {
   }, {})
 
   return (
-    <div className="flex h-screen overflow-hidden bg-canvas">
-      <SideBar isSidebarOpen={isSidebarOpen} />
+    <div className="flex h-screen overflow-hidden bg-canvas text-ink font-body">
+      <SideBar isSidebarOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <div className="flex flex-col flex-1 min-w-0">
-        <TopBar toggleSidebar={toggleSidebar} />
-        <main className="flex-1 overflow-hidden p-6 flex flex-col">
-          <h1 className="font-display text-2xl text-ink font-semibold mb-6 shrink-0">
+        <TopBar toggleSidebar={toggleSidebar} title="Dashboard" />
+        <main className="flex-1 overflow-hidden p-4 sm:p-6 lg:p-8 flex flex-col">
+          <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold mb-4 sm:mb-6 shrink-0">
             Dashboard
           </h1>
 
@@ -37,14 +37,15 @@ const Dashboard = () => {
           )}
 
           {!isLoading && !error && (
-            <div className="flex gap-4 overflow-x-auto flex-1 pb-2">
+            <div className="flex gap-4 overflow-x-auto flex-1 pb-4 scrollbar-thin snap-x">
               {STATUS_ORDER.map((status) => (
-                <KanbanColumn
-                  key={status}
-                  status={status}
-                  jobs={jobsByStatus[status]}
-                  onCardClick={setSelectedJob}
-                />
+                <div key={status} className="snap-start shrink-0">
+                  <KanbanColumn
+                    status={status}
+                    jobs={jobsByStatus[status]}
+                    onCardClick={setSelectedJob}
+                  />
+                </div>
               ))}
             </div>
           )}

@@ -35,7 +35,7 @@ function MoreFiltersPopover({ filters, updateFilter, onClose }) {
     return (
         <div
             ref={popoverRef}
-            className="absolute z-30 top-full mt-2 right-0 w-80 bg-surface border border-surface-2 rounded-xl p-4 shadow-xl flex flex-col gap-4"
+            className="absolute z-30 top-full mt-2 right-0 w-72 sm:w-80 max-w-[calc(100vw-2rem)] bg-surface border border-surface-2 rounded-xl p-4 shadow-xl flex flex-col gap-4"
         >
             <div>
                 <label className="text-xs font-mono text-muted block mb-1">Experience Level</label>

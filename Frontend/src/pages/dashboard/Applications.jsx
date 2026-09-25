@@ -13,12 +13,12 @@ const Applications = () => {
   const [selectedJob, setSelectedJob] = useState(null)
 
   return (
-    <div className="flex h-screen overflow-hidden bg-canvas">
-      <SideBar isSidebarOpen={isSidebarOpen} />
+    <div className="flex h-screen overflow-hidden bg-canvas text-ink font-body">
+      <SideBar isSidebarOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <div className="flex flex-col flex-1 min-w-0">
-        <TopBar toggleSidebar={toggleSidebar} />
-        <main className="flex-1 overflow-y-auto p-6">
-          <h1 className="font-display text-2xl text-ink font-semibold mb-6">
+        <TopBar toggleSidebar={toggleSidebar} title="Applications" />
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+          <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold mb-4 sm:mb-6">
             Applications
           </h1>
 

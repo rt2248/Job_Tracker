@@ -3,24 +3,24 @@ import visibilityIcon from '../../assets/icons/visibility.svg';
 import visibilityOffIcon from '../../assets/icons/visibilityoff.svg';
 import FieldError from './FieldError';
 
-const PasswordField = ({ label, placeholder, name, register, rules, error, width='w-[15vw]' }) => {
+const PasswordField = ({ label, placeholder, name, register, rules, error, width='w-full' }) => {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <div className='relative flex flex-col'>
+        <div className={`relative flex flex-col ${width}`}>
             <span className='font-mono m-1 text-[14px]'>{label}</span>
-            <div className='relative'>
+            <div className='relative w-full'>
                 <input
                     {...register(name, rules)}
                     type={showPassword ? 'text' : 'password'}
                     placeholder={placeholder}
-                    className={`p-2 h-[5vh] ${width} pr-9 border rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px] ${error ? 'border-red' : 'border-indigo/30'}`}
+                    className={`p-2 h-11 w-full pr-9 border rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px] ${error ? 'border-red' : 'border-indigo/30'}`}
                 />
                 <button
                     type='button'
                     tabIndex={-1}
                     onClick={() => setShowPassword((prev) => !prev)}
-                    className='absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center'
+                    className='absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center p-1'
                 >
                     <img
                         src={showPassword ? visibilityOffIcon : visibilityIcon}

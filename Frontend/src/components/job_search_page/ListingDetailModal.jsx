@@ -27,17 +27,17 @@ function ListingDetailModal({ listing, onClose }) {
             onClick={onClose}
         >
             <div
-                className="bg-surface border border-surface-2 rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-y-auto p-6"
+                className="bg-surface border border-surface-2 rounded-2xl w-full max-w-[95vw] sm:max-w-xl lg:max-w-2xl max-h-[85vh] overflow-y-auto p-4 sm:p-6"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex items-start justify-between gap-4">
                     <div>
-                        <h2 className="font-display text-ink text-xl font-semibold">{listing.title}</h2>
-                        <p className="text-muted-light text-sm mt-1">{listing.company} · {listing.location}</p>
+                        <h2 className="font-display text-ink text-lg sm:text-xl font-semibold">{listing.title}</h2>
+                        <p className="text-muted-light text-xs sm:text-sm mt-1">{listing.company} · {listing.location}</p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="text-muted-light hover:text-ink text-xl leading-none hover:cursor-pointer"
+                        className="text-muted-light hover:text-ink text-2xl leading-none hover:cursor-pointer p-1"
                         aria-label="Close"
                     >
                         ×
@@ -50,7 +50,7 @@ function ListingDetailModal({ listing, onClose }) {
                     <ExperienceLevelBadge experienceLevel={listing.experienceLevel} />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 mt-6 text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6 text-sm">
                     <div>
                         <p className="text-muted text-xs font-mono">Compensation</p>
                         <p className="text-ink mt-1">{compensation || "—"}</p>
@@ -59,7 +59,7 @@ function ListingDetailModal({ listing, onClose }) {
                         <p className="text-muted text-xs font-mono">Posted</p>
                         <p className="text-ink mt-1">{formatDate(listing.postedDate)}</p>
                     </div>
-                    <div className="col-span-2">
+                    <div className="col-span-1 sm:col-span-2">
                         <p className="text-muted text-xs font-mono">Apply</p>
                         {listing.link ? (
                             <a
