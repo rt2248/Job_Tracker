@@ -9,7 +9,7 @@ export function useJobs() {
         const fetchJobs = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const response = await fetch("http://localhost:5000/api/jobs", {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/jobs`, {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}` },
                 });
