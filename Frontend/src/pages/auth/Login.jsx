@@ -1,4 +1,5 @@
-import { useForm } from 'react-hook-form'
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
 import StarField from '../../components/signup_page/StarField';
@@ -8,9 +9,12 @@ import PasswordField from '../../components/signup_page/PasswordField';
 import googleIcon from '../../assets/logos/google.svg';
 import codeSarthi from '../../assets/logos/codesarthi.svg';
 import arrowBack from '../../assets/icons/arrowback.svg';
+import { getApiUrl } from '../../utils/config';
 
 const Login = () => {
     const navigate = useNavigate();
+    const [apiError, setApiError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const {
         register,
         handleSubmit,
@@ -20,8 +24,10 @@ const Login = () => {
     } = useForm();
 
     const onSubmit = async (data) => {
+        setApiError('');
+        setIsSubmitting(true);
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+            const response = await fetch(getApiUrl('/api/auth/login'), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
@@ -29,15 +35,19 @@ const Login = () => {
             const result = await response.json();
 
             if (!response.ok) {
-                console.error(result.message);
+                setApiError(result.message || 'Login failed. Please check your credentials.');
                 return;
             }
             console.log("Login successful: ", result);
             localStorage.setItem('token', result.token);
-            navigate('/dashboard')
+            navigate('/dashboard');
         }
         catch (error) {
             console.error("Network error: ", error);
+            setApiError('Unable to connect to server. Please verify your internet connection or try again later.');
+        }
+        finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -87,6 +97,11 @@ const Login = () => {
                     </h1>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col items-center">
+                        {apiError && (
+                            <div className="w-full mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono text-center">
+                                {apiError}
+                            </div>
+                        )}
                         <div className="w-full flex flex-col gap-4">
                             <div className="flex flex-col relative w-full">
                                 <span className="font-mono m-1 text-[14px]">Email/Username</span>

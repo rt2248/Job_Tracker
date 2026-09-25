@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getApiUrl } from "../utils/config";
 
 export function useJobs() {
     const [jobs, setJobs] = useState([]);
@@ -9,7 +10,7 @@ export function useJobs() {
         const fetchJobs = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/jobs`, {
+                const response = await fetch(getApiUrl("/api/jobs"), {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}` },
                 });

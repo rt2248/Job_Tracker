@@ -1,4 +1,6 @@
-const BASE_URL = `${import.meta.env.VITE_API_URL}/api/listings`;
+import { getApiUrl } from "../utils/config";
+
+const BASE_URL = getApiUrl("/api/listings");
 
 const buildQueryString = (filters) => {
     const params = new URLSearchParams();
