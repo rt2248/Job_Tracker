@@ -1,33 +1,34 @@
-import dashboard from "../../assets/icons/dashboard.svg"
-import sidebar from "../../assets/icons/sidebar.svg"
-import notification from "../../assets/icons/notification.svg"
+import React from "react"
+import dashboardIcon from "../../assets/icons/dashboard.svg"
+import sidebarIcon from "../../assets/icons/sidebar.svg"
+import notificationIcon from "../../assets/icons/notification.svg"
 
 const TopBar = ({ toggleSidebar, title = "Dashboard" }) => {
     return (
-        <header className="h-16 shrink-0 border-b border-b-ink/10 bg-surface/50 backdrop-blur-md flex items-center justify-between px-3 sm:px-6 transition-all duration-300 ease-in-out">
-            <div className="flex flex-row items-center gap-2 sm:gap-3">
+        <header className="h-16 shrink-0 border-b border-border-primary bg-surface/80 backdrop-blur-md flex items-center justify-between px-3 sm:px-6 transition-all duration-200">
+            <div className="flex flex-row items-center gap-2 sm:gap-3.5 min-w-0">
                 <button
-                    className="h-9 w-9 p-1.5 hover:cursor-pointer hover:bg-indigo/15 rounded-lg transition-all flex items-center justify-center text-ink shrink-0"
+                    className="h-9 w-9 p-1.5 hover:cursor-pointer hover:bg-surface-secondary rounded-lg border border-border-subtle transition-all flex items-center justify-center text-ink shrink-0 focus-visible:ring-2 focus-visible:ring-indigo/40 outline-none"
                     onClick={toggleSidebar}
                     aria-label="Toggle Sidebar"
                 >
-                    <img src={sidebar} alt="Toggle Sidebar" className="h-5 w-5" />
+                    <img src={sidebarIcon} alt="" className="h-4 w-4 sm:h-5 sm:w-5 opacity-80" />
                 </button>
-                <div className="h-5 w-[1px] bg-ink/20 shrink-0" />
-                <div className="text-base sm:text-lg font-mono flex flex-row items-center gap-2 font-medium text-ink truncate">
-                    <img src={dashboard} alt="" className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+                <div className="h-5 w-[1px] bg-border-subtle shrink-0" />
+                <div className="text-base sm:text-lg font-display font-semibold flex flex-row items-center gap-2.5 text-ink truncate">
+                    <img src={dashboardIcon} alt="" className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 opacity-70" />
                     <span className="truncate">{title}</span>
                 </div>
             </div>
             <div className="flex flex-row items-center gap-2 sm:gap-3 shrink-0">
                 <button
-                    className="h-9 w-9 p-1.5 bg-indigo/10 border border-ink/15 hover:cursor-pointer hover:bg-indigo/20 hover:border-ink/30 rounded-lg transition-all flex items-center justify-center"
+                    className="h-9 w-9 p-1.5 bg-surface-secondary border border-border-primary hover:bg-surface-overlay hover:border-border-accent/40 rounded-lg transition-all flex items-center justify-center hover:cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo/40 outline-none"
                     aria-label="Notifications"
                 >
-                    <img src={notification} className="h-5 w-5" alt="Notifications" />
+                    <img src={notificationIcon} className="h-4 w-4 sm:h-5 sm:w-5 opacity-80" alt="" />
                 </button>
-                <div className="flex justify-center items-center h-9 w-9 bg-gradient-to-br from-indigo to-cyan text-white text-xs font-semibold rounded-full shadow-md">
-                    PF
+                <div className="flex justify-center items-center h-9 w-9 bg-neutral-900 text-white text-xs font-bold rounded-full shadow-sm border border-neutral-700 shrink-0">
+                    EX
                 </div>
             </div>
         </header>

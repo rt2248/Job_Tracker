@@ -54,7 +54,7 @@ const Login = () => {
     return (
         <div className="bg-canvas min-h-screen text-ink font-body flex flex-col lg:flex-row w-full overflow-x-hidden">
             {/* Left Column - Desktop branding sidebar */}
-            <div className="hidden lg:flex lg:w-[38vw] xl:w-[35vw] shrink-0 bg-[radial-gradient(120%_100%_at_0%_0%,rgba(99,102,241,0.13)_0%,transparent_55%),linear-gradient(135deg,theme(colors.surface)_0%,theme(colors.canvas)_85%)] min-h-screen flex-col justify-between p-8 xl:p-12 border-r border-indigo/15">
+            <div className="hidden lg:flex lg:w-[38vw] xl:w-[35vw] shrink-0 auth-sidebar-bg min-h-screen flex-col justify-between p-8 xl:p-12 border-r border-indigo/15">
                 <Link to="/" className="inline-flex items-center gap-2 max-w-fit px-3 py-1.5 font-display text-base text-muted-light hover:text-ink hover:bg-indigo/10 rounded-xl transition-all">
                     <img src={arrowBack} className="h-4 w-4" alt="Back" /> Home
                 </Link>
@@ -78,7 +78,7 @@ const Login = () => {
             </div>
 
             {/* Right Column - Form Container */}
-            <div className="flex-1 min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-8 bg-surface/30 relative">
+            <div className="flex-1 min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-8 auth-form-bg relative">
                 <StarField />
                 
                 {/* Mobile back link & logo header */}

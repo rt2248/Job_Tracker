@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 export default function NavBar() {
@@ -6,94 +6,138 @@ export default function NavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 40)
+    const handler = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handler)
     return () => window.removeEventListener('scroll', handler)
   }, [])
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-[100] flex items-center justify-between h-16 px-4 sm:px-8 lg:px-10 font-body transition-all duration-300 ease-in-out border-b ${
-        scrolled || mobileMenuOpen ? 'bg-canvas/95 backdrop-blur-md border-indigo/18' : 'bg-transparent border-transparent'
+      className={`fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-200 border-b ${
+        scrolled || mobileMenuOpen
+          ? 'bg-canvas/90 backdrop-blur-md border-border-primary'
+          : 'bg-transparent border-transparent'
       }`}
     >
-      {/* Logo */}
-      <Link to="/" className="flex items-center gap-2.5 z-10">
-        <div className="logo w-8 h-8 flex items-center justify-center shrink-0">
-          <img src="https://www.logoai.com/oss/icons/2021/12/02/Q9pS-i3L1EHuO4S.png" alt="Logo" />
-        </div>
-        <span className="font-display font-bold text-base text-ink tracking-[-0.02em]">
-          JobTracker
-        </span>
-      </Link>
-
-      {/* Desktop Nav links */}
-      <div className="hidden md:flex gap-8 items-center">
-        {['Features', 'Workflow', 'Analytics', 'Docs'].map(link => (
-          <a
-            key={link}
-            href={`#${link.toLowerCase()}`}
-            className="text-muted-light text-[13px] font-medium no-underline transition-colors duration-200 hover:text-ink"
-          >
-            {link}
-          </a>
-        ))}
-      </div>
-
-      {/* Desktop CTA */}
-      <div className="hidden md:flex gap-3 items-center">
-        <Link to="/login" className="px-[18px] py-2 rounded-lg text-[13px] font-medium bg-transparent border border-indigo/18 text-muted-light cursor-pointer transition-all duration-200 font-body hover:border-indigo/45 hover:text-ink">
-          Log in
-        </Link>
-        <Link to="/signup" className="px-[18px] py-2 rounded-lg text-[13px] font-semibold bg-gradient-to-br from-indigo to-[#4f46e5] border-none text-white cursor-pointer transition-shadow duration-200 font-body shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:shadow-[0_0_30px_rgba(99,102,241,0.8)]">
-          Get started
-        </Link>
-      </div>
-
-      {/* Mobile Menu Button */}
-      <button
-        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="md:hidden p-2 rounded-lg text-muted-light hover:text-ink focus:outline-none z-10"
-        aria-label="Toggle menu"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {mobileMenuOpen ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-          )}
-        </svg>
-      </button>
-
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-x-0 top-16 bg-canvas/98 border-b border-indigo/18 px-6 py-6 flex flex-col gap-5 shadow-2xl backdrop-blur-xl animate-modal-content">
-          <div className="flex flex-col gap-4">
-            {['Features', 'Workflow', 'Analytics', 'Docs'].map(link => (
-              <a
-                key={link}
-                href={`#${link.toLowerCase()}`}
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-muted-light text-base font-medium no-underline hover:text-ink transition-colors"
-              >
-                {link}
-              </a>
-            ))}
+      <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        
+        {/* Brand Logo */}
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="w-8 h-8 rounded-lg bg-neutral-900 border border-neutral-700 flex items-center justify-center text-white font-display font-bold text-sm shadow-sm transition-transform group-hover:scale-105">
+            EX
           </div>
-          <div className="flex flex-col gap-3 pt-4 border-t border-indigo/15">
+          <span className="font-display font-bold text-lg text-ink tracking-tight">
+            Evolexa
+          </span>
+        </Link>
+
+        {/* Desktop Links */}
+        <div className="hidden md:flex items-center gap-8">
+          <a
+            href="#features"
+            className="text-xs font-medium text-ink-secondary hover:text-ink transition-colors"
+          >
+            Features
+          </a>
+          <a
+            href="#workflow"
+            className="text-xs font-medium text-ink-secondary hover:text-ink transition-colors"
+          >
+            Workflow
+          </a>
+          <a
+            href="#preview"
+            className="text-xs font-medium text-ink-secondary hover:text-ink transition-colors"
+          >
+            Product UI
+          </a>
+          <a
+            href="#capabilities"
+            className="text-xs font-medium text-ink-secondary hover:text-ink transition-colors"
+          >
+            Capabilities
+          </a>
+        </div>
+
+        {/* Desktop CTAs */}
+        <div className="hidden md:flex items-center gap-3">
+          <Link
+            to="/login"
+            className="px-4 py-2 text-xs font-medium text-ink-secondary hover:text-ink transition-colors"
+          >
+            Log in
+          </Link>
+          <Link
+            to="/signup"
+            className="px-4 py-2 rounded-lg text-xs font-semibold bg-white text-black hover:bg-neutral-200 transition-all shadow-sm"
+          >
+            Get Started
+          </Link>
+        </div>
+
+        {/* Mobile Menu Toggle Button */}
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="md:hidden p-2 text-ink-secondary hover:text-ink focus:outline-none"
+          aria-label="Toggle Navigation Menu"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {mobileMenuOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
+      </div>
+
+      {/* Mobile Menu Drawer */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-surface-primary border-b border-border-primary px-4 py-6 flex flex-col gap-4 shadow-xl">
+          <a
+            href="#features"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-sm font-medium text-ink-secondary hover:text-ink transition-colors"
+          >
+            Features
+          </a>
+          <a
+            href="#workflow"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-sm font-medium text-ink-secondary hover:text-ink transition-colors"
+          >
+            Workflow
+          </a>
+          <a
+            href="#preview"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-sm font-medium text-ink-secondary hover:text-ink transition-colors"
+          >
+            Product UI
+          </a>
+          <a
+            href="#capabilities"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-sm font-medium text-ink-secondary hover:text-ink transition-colors"
+          >
+            Capabilities
+          </a>
+          
+          <div className="pt-4 border-t border-border-subtle flex flex-col gap-2.5">
             <Link
               to="/login"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-2.5 rounded-lg text-sm font-medium border border-indigo/20 text-muted-light hover:text-ink"
+              className="w-full text-center py-2.5 text-xs font-medium border border-border-primary rounded-lg text-ink hover:bg-surface-secondary"
             >
               Log in
             </Link>
             <Link
               to="/signup"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-2.5 rounded-lg text-sm font-semibold bg-gradient-to-br from-indigo to-[#4f46e5] text-white shadow-lg"
+              className="w-full text-center py-2.5 text-xs font-semibold bg-white text-black rounded-lg hover:bg-neutral-200"
             >
-              Get started
+              Get Started
             </Link>
           </div>
         </div>
@@ -101,4 +145,3 @@ export default function NavBar() {
     </nav>
   )
 }
-

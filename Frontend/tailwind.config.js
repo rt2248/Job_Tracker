@@ -4,18 +4,49 @@ export default {
   theme: {
     extend: {
       colors: {
-        canvas: '#050913',
-        surface: '#0d1424',
-        'surface-2': '#111827',
-        indigo: {
-          DEFAULT: '#6366f1',
-          light: '#818cf8',
+        // HSL Semantic Tokens
+        canvas: {
+          DEFAULT: 'hsl(var(--canvas))',
+          subtle: 'hsl(var(--canvas-subtle))',
         },
-        cyan: '#22d3ee',
-        ink: '#f1f5f9',
+        surface: {
+          DEFAULT: 'hsl(var(--surface-primary))',
+          primary: 'hsl(var(--surface-primary))',
+          secondary: 'hsl(var(--surface-secondary))',
+          elevated: 'hsl(var(--surface-elevated))',
+          overlay: 'hsl(var(--surface-overlay))',
+          2: 'hsl(var(--surface-secondary))',
+        },
+        ink: {
+          DEFAULT: 'hsl(var(--text-primary))',
+          primary: 'hsl(var(--text-primary))',
+          secondary: 'hsl(var(--text-secondary))',
+          muted: 'hsl(var(--text-muted))',
+          disabled: 'hsl(var(--text-disabled))',
+        },
+        border: {
+          DEFAULT: 'hsl(var(--border-primary))',
+          primary: 'hsl(var(--border-primary))',
+          subtle: 'hsl(var(--border-subtle))',
+          accent: 'hsl(var(--border-accent))',
+        },
+        indigo: {
+          DEFAULT: 'hsl(var(--brand-indigo))',
+          light: 'hsl(var(--brand-indigo-light))',
+        },
+        cyan: {
+          DEFAULT: 'hsl(var(--brand-cyan))',
+        },
+        status: {
+          wishlist: 'hsl(var(--status-wishlist))',
+          applied: 'hsl(var(--status-applied))',
+          interview: 'hsl(var(--status-interview))',
+          offer: 'hsl(var(--status-offer))',
+          rejected: 'hsl(var(--status-rejected))',
+        },
         muted: {
-          DEFAULT: '#64748b',
-          light: '#94a3b8',
+          DEFAULT: 'hsl(var(--text-muted))',
+          light: 'hsl(var(--text-secondary))',
         },
         green: '#10b981',
         amber: '#f59e0b',
@@ -24,9 +55,20 @@ export default {
         pink: '#f472b6',
       },
       fontFamily: {
+        sans: ['Geist Variable', 'Inter', 'sans-serif'],
+        body: ['Geist Variable', 'Inter', 'sans-serif'],
         display: ['Outfit', 'sans-serif'],
-        body: ['Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
+      },
+      borderRadius: {
+        xl: '12px',
+        '2xl': '16px',
+        '3xl': '24px',
+      },
+      boxShadow: {
+        subtle: '0 1px 2px 0 rgba(0, 0, 0, 0.3)',
+        elevated: '0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3)',
+        glow: '0 0 20px -5px rgba(99, 102, 241, 0.25)',
       },
       keyframes: {
         float: {

@@ -1,22 +1,25 @@
+import React from "react";
 import { STATUS_META } from "../../constants/jobStatus";
+import Badge from "../shared/Badge";
 
-const BADGE_CLASSES = {
-    muted: "bg-muted/10 text-muted-light border border-muted/30",
-    amber: "bg-amber/10 text-amber border border-amber/30",
-    violet: "bg-violet/10 text-violet border border-violet/30",
-    cyan: "bg-cyan/10 text-cyan border border-cyan/30",
-    green: "bg-green/10 text-green border border-green/30",
-    red: "bg-red/10 text-red border border-red/30",
+const STATUS_VARIANT_MAP = {
+    applied: "applied",
+    oa: "amber",
+    interview: "interview",
+    offer: "offer",
+    accepted: "emerald",
+    rejected: "rejected",
+    muted: "default",
 };
 
 function StatusBadge({ status }) {
     const meta = STATUS_META[status] || { label: status, color: "muted" };
-    const classes = BADGE_CLASSES[meta.color];
+    const variant = STATUS_VARIANT_MAP[status] || STATUS_VARIANT_MAP[meta.color] || "default";
 
     return (
-        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium font-mono ${classes}`}>
+        <Badge variant={variant} size="sm" dot>
             {meta.label}
-        </span>
+        </Badge>
     );
 }
 

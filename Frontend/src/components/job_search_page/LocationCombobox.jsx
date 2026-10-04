@@ -1,11 +1,16 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useJobLocations } from "../../hooks/useJobLocations";
+import Input from "../shared/Input";
 
 function LocationCombobox({ value, onChange }) {
     const { locations } = useJobLocations();
     const [inputValue, setInputValue] = useState(value || "");
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef(null);
+
+    useEffect(() => {
+        setInputValue(value || "");
+    }, [value]);
 
     useEffect(() => {
         const handleClickOutside = (e) => {
@@ -34,7 +39,7 @@ function LocationCombobox({ value, onChange }) {
 
     return (
         <div ref={containerRef} className="relative w-full sm:w-48">
-            <input
+            <Input
                 type="text"
                 value={inputValue}
                 onChange={(e) => {
@@ -43,25 +48,30 @@ function LocationCombobox({ value, onChange }) {
                     if (e.target.value === "") onChange("");
                 }}
                 onFocus={() => setIsOpen(true)}
-                placeholder="Location"
-                className="w-full bg-surface border border-surface-2 rounded-lg px-3 py-2 text-sm text-ink placeholder:text-muted font-mono focus:outline-none focus:border-indigo/50"
+                placeholder="Location..."
+                className="h-9 text-xs sm:text-sm bg-surface-secondary/90"
+                rightIcon={
+                    value ? (
+                        <button
+                            type="button"
+                            onClick={handleClear}
+                            className="text-muted hover:text-ink text-sm p-1 leading-none"
+                            aria-label="Clear location"
+                        >
+                            ×
+                        </button>
+                    ) : null
+                }
             />
-            {value && (
-                <button
-                    onClick={handleClear}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-muted hover:text-ink text-sm"
-                    aria-label="Clear location"
-                >
-                    ×
-                </button>
-            )}
+
             {isOpen && filteredLocations.length > 0 && (
-                <div className="absolute z-20 mt-1 w-full bg-surface border border-surface-2 rounded-lg max-h-48 overflow-y-auto shadow-lg">
+                <div className="absolute z-20 mt-1 w-full bg-surface-elevated border border-border-primary rounded-xl max-h-48 overflow-y-auto shadow-elevated custom-scrollbar p-1">
                     {filteredLocations.map((loc) => (
                         <button
                             key={loc}
+                            type="button"
                             onClick={() => handleSelect(loc)}
-                            className="w-full text-left px-3 py-2 text-sm text-ink hover:bg-indigo/15 font-mono"
+                            className="w-full text-left px-3 py-1.5 text-xs sm:text-sm text-ink hover:bg-surface-overlay rounded-lg font-sans transition-colors hover:cursor-pointer"
                         >
                             {loc}
                         </button>
