@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { SettingsProvider } from "../context/SettingsContext";
 import { TrackingProvider } from "../context/TrackingContext";
 import ReturnPromptHost from "../components/shared/ReturnPromptHost";
@@ -33,7 +33,7 @@ const ProtectedRoutes = ({ children }) => {
         <SettingsProvider>
             <TrackingProvider>
                 <ReturnPromptHost />
-                {children}
+                {children || <Outlet />}
             </TrackingProvider>
         </SettingsProvider>
     );

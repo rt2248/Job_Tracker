@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useMemo } from "react"
-import SideBar from "../../components/dashboard_page/SideBar"
-import TopBar from "../../components/dashboard_page/TopBar"
 import KanbanColumn from "../../components/dashboard_page/KanbanColumn"
 import JobDetailModal from "../../components/shared/JobDetailModal"
 import Card from "../../components/shared/Card"
@@ -14,9 +12,6 @@ import { getApiUrl } from "../../utils/config"
 import { STATUS_ORDER } from "../../constants/jobStatus"
 
 const Dashboard = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
-
   const { jobs: initialJobs, isLoading, error } = useJobs()
   const [jobsList, setJobsList] = useState([])
   const [selectedJob, setSelectedJob] = useState(null)
@@ -125,11 +120,8 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-canvas text-ink font-sans">
-      <SideBar isSidebarOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <div className="flex flex-col flex-1 min-w-0">
-        <TopBar toggleSidebar={toggleSidebar} title="Dashboard" />
-        <main className="flex-1 overflow-hidden p-4 sm:p-6 lg:p-8 flex flex-col min-w-0">
+    <>
+      <main className="flex-1 overflow-hidden p-4 sm:p-6 lg:p-8 flex flex-col min-w-0">
           
           {/* Dashboard Header Section */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 shrink-0">
@@ -256,10 +248,9 @@ const Dashboard = () => {
             </div>
           )}
         </main>
-      </div>
 
       <JobDetailModal job={selectedJob} onClose={() => setSelectedJob(null)} />
-    </div>
+    </>
   )
 }
 

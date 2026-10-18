@@ -190,13 +190,13 @@ export default function ReturnPromptHost() {
             aria-labelledby="return-prompt-title"
         >
             {/* Modal Card matching LogoutModal design tokens */}
-            <div className="relative w-full max-w-md p-6 overflow-hidden bg-surface/95 rounded-2xl border border-indigo/20 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8),0_0_25px_rgba(99,102,241,0.12)] bg-[radial-gradient(100%_100%_at_50%_0%,rgba(99,102,241,0.12)_0%,transparent_75%)] animate-modal-content">
+            <div className="relative w-full max-w-md p-6 overflow-hidden bg-[#0A0A0A] rounded-2xl border border-[#262626] shadow-2xl animate-modal-content">
 
                 {/* Close Button */}
                 <button
                     onClick={() => handleDismiss(promptData.listingId)}
                     disabled={isSubmitting}
-                    className="absolute top-4 right-4 p-1.5 rounded-lg text-muted hover:text-ink hover:bg-surface-secondary transition-all duration-200 focus:outline-none"
+                    className="absolute top-4 right-4 p-1.5 rounded-lg text-[#A3A3A3] hover:text-[#F5F5F5] hover:bg-[#171717] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
                     aria-label="Close dialog"
                 >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -206,27 +206,25 @@ export default function ReturnPromptHost() {
 
                 {/* Header Icon */}
                 <div className="flex flex-col items-center text-center">
-                    <div className="relative mb-4 flex items-center justify-center w-12 h-12 rounded-2xl bg-indigo/15 border border-indigo/30 text-indigo shadow-[0_0_20px_rgba(99,102,241,0.2)]">
+                    <div className="mb-4 flex items-center justify-center w-12 h-12 rounded-2xl bg-[#171717] border border-[#262626] text-[#F5F5F5]">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                         </svg>
-                        <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-cyan rounded-full animate-ping opacity-75" />
-                        <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-cyan rounded-full" />
                     </div>
 
                     {/* Title */}
-                    <h3 id="return-prompt-title" className="text-xl font-bold font-display text-ink tracking-tight">
+                    <h3 id="return-prompt-title" className="text-xl font-bold font-display text-[#F5F5F5] tracking-tight">
                         Thinking about this opportunity?
                     </h3>
 
                     {/* Opportunity Details */}
-                    <div className="mt-3 p-3.5 rounded-xl bg-surface-secondary/70 border border-border-primary w-full text-center">
-                        <p className="font-display text-base font-semibold text-ink">
+                    <div className="mt-3 p-3.5 rounded-xl bg-[#111111] border border-[#262626] w-full text-center">
+                        <p className="font-display text-base font-semibold text-[#F5F5F5]">
                             {promptData.title}
                         </p>
                         {(hasCompany || hasLocation) && (
-                            <p className="text-muted text-xs sm:text-sm font-sans mt-0.5">
-                                {hasCompany && <span className="text-ink-secondary font-medium">{promptData.company}</span>}
+                            <p className="text-[#A3A3A3] text-xs sm:text-sm font-sans mt-0.5">
+                                {hasCompany && <span className="text-[#F5F5F5] font-medium">{promptData.company}</span>}
                                 {hasCompany && hasLocation && <span> · </span>}
                                 {hasLocation && <span>{promptData.location}</span>}
                             </p>
@@ -234,19 +232,19 @@ export default function ReturnPromptHost() {
                     </div>
 
                     {/* Prompt message */}
-                    <p className="mt-4 text-xs sm:text-sm font-sans text-muted leading-relaxed max-w-sm">
+                    <p className="mt-4 text-xs sm:text-sm font-sans text-[#A3A3A3] leading-relaxed max-w-sm">
                         You’ve been exploring this opportunity. Would you like to keep it on your radar?
                     </p>
                 </div>
 
                 {/* Actions */}
-                <div className="mt-6 flex items-center justify-between gap-3 pt-4 border-t border-border-subtle">
+                <div className="mt-6 flex items-center justify-between gap-3 pt-4 border-t border-[#262626]">
                     <Button
                         type="button"
                         variant="secondary"
                         onClick={() => handleDismiss(promptData.listingId)}
                         disabled={isSubmitting}
-                        className="text-xs sm:text-sm"
+                        className="bg-[#111111] hover:bg-[#171717] hover:border-[#404040] text-[#F5F5F5] border-[#262626] focus-visible:ring-white/20 text-xs sm:text-sm"
                     >
                         Maybe Later
                     </Button>
@@ -255,11 +253,11 @@ export default function ReturnPromptHost() {
                         variant="primary"
                         onClick={handleAdd}
                         disabled={isSubmitting || isInFlight(promptData.listingId)}
-                        className="text-xs sm:text-sm flex items-center gap-1.5"
+                        className="bg-[#F5F5F5] hover:bg-white text-[#0A0A0A] font-semibold border-transparent focus-visible:ring-white/40 text-xs sm:text-sm flex items-center gap-1.5"
                     >
                         {isSubmitting ? (
                             <>
-                                <span className="w-3.5 h-3.5 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                                <span className="w-3.5 h-3.5 rounded-full border-2 border-[#0A0A0A] border-t-transparent animate-spin" />
                                 Adding...
                             </>
                         ) : (

@@ -1,14 +1,11 @@
-import React, { useState } from "react"
+import React from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import dashboardIcon from "../../assets/icons/dashboard.svg"
-import logoutIcon from "../../assets/icons/logout.svg"
 import profileIcon from "../../assets/icons/profile.svg"
 import appsIcon from "../../assets/icons/apps.svg"
 import networknodeIcon from "../../assets/icons/networknode.svg"
 import searchIcon from "../../assets/icons/search.svg"
-import LogoutModal from "./LogoutModal"
 import { cn } from "../../utils/cn"
-import { clearPromptStorageOnLogout } from "../../utils/promptStorage"
 
 const navItems = [
     { title: "Dashboard", icon: dashboardIcon, link: "/dashboard" },
@@ -16,28 +13,15 @@ const navItems = [
     { title: "Applications", icon: appsIcon, link: "/applications" },
     { title: "Profile", icon: profileIcon, link: "/profile" },
     { title: "Network", icon: networknodeIcon, link: "/network" },
-    { title: "Logout", icon: logoutIcon, link: "/login" },
 ]
 
 const SideBar = ({ isSidebarOpen = true, onClose }) => {
     const navigate = useNavigate()
     const location = useLocation()
-    const [showLogoutModal, setShowLogoutModal] = useState(false)
 
     const handleNavigation = (item) => {
-        if (item.title === "Logout") {
-            setShowLogoutModal(true)
-            return
-        }
         navigate(item.link)
         if (onClose) onClose()
-    }
-
-    const handleConfirmLogout = () => {
-        clearPromptStorageOnLogout()
-        localStorage.removeItem("token")
-        setShowLogoutModal(false)
-        navigate("/login")
     }
 
     return (
@@ -88,8 +72,7 @@ const SideBar = ({ isSidebarOpen = true, onClose }) => {
                 {/* Navigation Links List */}
                 <nav className="links overflow-y-auto custom-scrollbar my-4 flex flex-col justify-start w-full gap-1 px-2.5">
                     {navItems.map((item) => {
-                        const isActive = location.pathname === item.link && item.title !== "Logout"
-                        const isLogout = item.title === "Logout"
+                        const isActive = location.pathname === item.link
 
                         return (
                             <button
@@ -101,9 +84,7 @@ const SideBar = ({ isSidebarOpen = true, onClose }) => {
                                     !isSidebarOpen && "md:justify-center md:px-0",
                                     isActive
                                         ? "bg-neutral-200/90 text-neutral-950 font-bold border-l-2 border-neutral-950 shadow-sm"
-                                        : isLogout
-                                            ? "text-neutral-600 font-medium hover:text-red-600 hover:bg-red-50 mt-6"
-                                            : "text-neutral-700 font-medium hover:text-neutral-950 hover:bg-neutral-100/80"
+                                        : "text-neutral-700 font-medium hover:text-neutral-950 hover:bg-neutral-100/80"
                                 )}
                             >
                                 <img
@@ -137,12 +118,6 @@ const SideBar = ({ isSidebarOpen = true, onClose }) => {
                     </div>
                 )}
             </aside>
-
-            <LogoutModal
-                isOpen={showLogoutModal}
-                onClose={() => setShowLogoutModal(false)}
-                onConfirm={handleConfirmLogout}
-            />
         </>
     )
 }

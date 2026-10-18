@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { hashPassword, comparePassword } = require("../utils/hash");
-const { findUserbyEmail, findUserbyUsername, createUser } = require("../models/files/user.model");
+const { findUserbyEmail, findUserbyUsername, findUserById, createUser } = require("../models/files/user.model");
 
 const signup = async (req, res) => {
     try {
@@ -96,4 +96,29 @@ const login = async (req, res) => {
 
 };
 
-module.exports = { signup, login };
+const getMe = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const user = await findUserById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json({
+            user: {
+                id: user.id,
+                firstName: user.first_name,
+                middleName: user.middle_name,
+                lastName: user.last_name,
+                email: user.email,
+                username: user.user_name,
+                createdAt: user.created_at,
+            },
+        });
+    } catch (error) {
+        console.error("Error fetching current user profile:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+module.exports = { signup, login, getMe };
+

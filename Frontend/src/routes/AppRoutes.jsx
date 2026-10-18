@@ -11,6 +11,7 @@ import Network from '../pages/dashboard/Network'
 import JobSearch from '../pages/dashboard/JobSearch'
 
 import ProtectedRoutes from './ProtectedRoutes'
+import DashboardLayout from '../components/layout/DashboardLayout'
 
 const AppRoutes = () => {
   return (
@@ -19,31 +20,17 @@ const AppRoutes = () => {
       <Route path='/signup' element={<SignUp />} />
       <Route path='/login' element={<Login />} />
 
-      <Route path='/dashboard' element={
+      <Route element={
         <ProtectedRoutes>
-          <Dashboard />
+          <DashboardLayout />
         </ProtectedRoutes>
-      } />
-      <Route path='/profile' element={
-        <ProtectedRoutes>
-          <Profile />
-        </ProtectedRoutes>
-      } />
-      <Route path='/applications' element={
-        <ProtectedRoutes>
-          <Applications />
-        </ProtectedRoutes>
-      } />
-      <Route path='/network' element={
-        <ProtectedRoutes>
-          <Network />
-        </ProtectedRoutes>
-      } />
-      <Route path='/jobsearch' element={
-        <ProtectedRoutes>
-          <JobSearch />
-        </ProtectedRoutes>
-      } />
+      }>
+        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/profile' element={<Profile />} />
+        <Route path='/applications' element={<Applications />} />
+        <Route path='/network' element={<Network />} />
+        <Route path='/jobsearch' element={<JobSearch />} />
+      </Route>
     </Routes>
   )
 }

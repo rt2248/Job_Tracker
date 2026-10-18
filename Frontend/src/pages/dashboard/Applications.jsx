@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react"
 import { useSearchParams } from "react-router-dom"
-import SideBar from "../../components/dashboard_page/SideBar"
-import TopBar from "../../components/dashboard_page/TopBar"
 import JobCard from "../../components/applications_page/JobCard"
 import JobDetailModal from "../../components/shared/JobDetailModal"
 import Input from "../../components/shared/Input"
@@ -11,8 +9,6 @@ import Badge from "../../components/shared/Badge"
 import { useJobs } from "../../hooks/useJobs"
 
 const Applications = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
 
   const [searchParams, setSearchParams] = useSearchParams()
   const jobParam = searchParams.get("job")
@@ -63,11 +59,8 @@ const Applications = () => {
   }, [jobs, searchQuery, statusFilter])
 
   return (
-    <div className="flex h-screen overflow-hidden bg-canvas text-ink font-sans">
-      <SideBar isSidebarOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <div className="flex flex-col flex-1 min-w-0">
-        <TopBar toggleSidebar={toggleSidebar} title="Applications" />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar">
+    <>
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar">
           
           {/* Header Section */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -187,10 +180,9 @@ const Applications = () => {
             </div>
           )}
         </main>
-      </div>
 
       <JobDetailModal job={selectedJob} onClose={() => setSelectedJob(null)} />
-    </div>
+    </>
   )
 }
 
