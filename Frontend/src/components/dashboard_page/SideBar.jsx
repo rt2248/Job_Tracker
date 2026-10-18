@@ -8,6 +8,7 @@ import networknodeIcon from "../../assets/icons/networknode.svg"
 import searchIcon from "../../assets/icons/search.svg"
 import LogoutModal from "./LogoutModal"
 import { cn } from "../../utils/cn"
+import { clearPromptStorageOnLogout } from "../../utils/promptStorage"
 
 const navItems = [
     { title: "Dashboard", icon: dashboardIcon, link: "/dashboard" },
@@ -33,6 +34,7 @@ const SideBar = ({ isSidebarOpen = true, onClose }) => {
     }
 
     const handleConfirmLogout = () => {
+        clearPromptStorageOnLogout()
         localStorage.removeItem("token")
         setShowLogoutModal(false)
         navigate("/login")

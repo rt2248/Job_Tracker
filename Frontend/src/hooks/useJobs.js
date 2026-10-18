@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getApiUrl } from "../utils/config";
 
 export function useJobs() {
@@ -6,34 +6,40 @@ export function useJobs() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchJobs = async () => {
-            try {
-                const token = localStorage.getItem("token");
-                const response = await fetch(getApiUrl("/api/jobs"), {
-                    method: "GET",
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                const result = await response.json();
-
-                if (!response.ok) {
-                    setError(result.message);
-                    return;
-                }
-
-                setJobs(result.jobs);
-            }
-            catch (error) {
-                console.error("Network error: ", error);
-                setError("Something went wrong while fetching jobs");
-            }
-            finally {
+    const fetchJobs = useCallback(async () => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
                 setIsLoading(false);
+                return;
             }
-        };
+            setIsLoading(true);
+            const response = await fetch(getApiUrl("/api/jobs"), {
+                method: "GET",
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const result = await response.json();
 
-        fetchJobs();
+            if (!response.ok) {
+                setError(result.message);
+                return;
+            }
+
+            setJobs(result.jobs || []);
+            setError(null);
+        }
+        catch (error) {
+            console.error("Network error: ", error);
+            setError("Something went wrong while fetching jobs");
+        }
+        finally {
+            setIsLoading(false);
+        }
     }, []);
 
-    return { jobs, isLoading, error };
+    useEffect(() => {
+        fetchJobs();
+    }, [fetchJobs]);
+
+    return { jobs, isLoading, error, refetch: fetchJobs, setJobs };
 }

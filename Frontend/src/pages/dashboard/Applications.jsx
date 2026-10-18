@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from "react"
+import React, { useState, useEffect, useMemo } from "react"
+import { useSearchParams } from "react-router-dom"
 import SideBar from "../../components/dashboard_page/SideBar"
 import TopBar from "../../components/dashboard_page/TopBar"
 import JobCard from "../../components/applications_page/JobCard"
@@ -13,8 +14,35 @@ const Applications = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
 
-  const { jobs, isLoading, error } = useJobs()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const jobParam = searchParams.get("job")
+
+  const { jobs, isLoading, error, refetch } = useJobs()
   const [selectedJob, setSelectedJob] = useState(null)
+  const [hasRefetchedForParam, setHasRefetchedForParam] = useState(false)
+
+  // Handle ?job=<id> deep linking parameter
+  useEffect(() => {
+    if (!jobParam) {
+      setHasRefetchedForParam(false)
+      return
+    }
+
+    if (!isLoading && jobs) {
+      const matched = jobs.find((j) => String(j.id) === String(jobParam))
+      if (matched) {
+        setSelectedJob(matched)
+        const updated = new URLSearchParams(searchParams)
+        updated.delete("job")
+        setSearchParams(updated, { replace: true })
+        setHasRefetchedForParam(false)
+      } else if (!hasRefetchedForParam) {
+        // Newly added job might not yet be in list; refetch once
+        setHasRefetchedForParam(true)
+        refetch()
+      }
+    }
+  }, [jobParam, jobs, isLoading, hasRefetchedForParam, refetch, searchParams, setSearchParams])
 
   // Search & Filtering State
   const [searchQuery, setSearchQuery] = useState("")
@@ -77,6 +105,7 @@ const Applications = () => {
                   className="h-9 text-xs sm:text-sm bg-surface-secondary/90"
                 >
                   <option value="">All Statuses</option>
+                  <option value="saved">Saved</option>
                   <option value="applied">Applied</option>
                   <option value="oa">Online Assessment</option>
                   <option value="interview">Interview</option>

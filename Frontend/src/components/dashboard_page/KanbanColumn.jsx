@@ -5,7 +5,9 @@ import Badge from "../shared/Badge";
 import { cn } from "../../utils/cn";
 
 const HEADER_ACCENT_CLASSES = {
-    muted: "border-t-slate-500",
+    slate: "border-t-slate-500",
+    indigo: "border-t-indigo",
+    muted: "border-t-muted",
     amber: "border-t-amber",
     violet: "border-t-violet",
     cyan: "border-t-cyan",
@@ -14,6 +16,7 @@ const HEADER_ACCENT_CLASSES = {
 };
 
 const STATUS_VARIANT_MAP = {
+    saved: "wishlist",
     applied: "applied",
     oa: "amber",
     interview: "interview",
@@ -73,6 +76,7 @@ function KanbanColumn({ status, jobs = [], onCardClick, onDropCard, draggingCard
                 <div className="flex items-center gap-2">
                     <span className={cn(
                         "w-2 h-2 rounded-full",
+                        status === "saved" && "bg-slate-400",
                         status === "applied" && "bg-indigo",
                         status === "oa" && "bg-amber",
                         status === "interview" && "bg-violet",

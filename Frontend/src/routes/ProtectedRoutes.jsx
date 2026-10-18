@@ -1,26 +1,42 @@
+import React from "react";
 import { Navigate } from "react-router-dom";
+import { SettingsProvider } from "../context/SettingsContext";
+import { TrackingProvider } from "../context/TrackingContext";
+import ReturnPromptHost from "../components/shared/ReturnPromptHost";
 
-const ProtectedRoutes=({children})=>{
+import { clearPromptStorageOnLogout } from "../utils/promptStorage";
+
+const ProtectedRoutes = ({ children }) => {
     const token = localStorage.getItem('token');
 
-    if(!token){
+    if (!token) {
+        clearPromptStorageOnLogout();
         return <Navigate to="/login" replace />;
     }
 
-    try{
-        const payload=JSON.parse(atob(token.split('.')[1]));
-        const isExpired=payload.exp*1000<Date.now();
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const isExpired = payload.exp * 1000 < Date.now();
 
-        if(isExpired){
+        if (isExpired) {
+            clearPromptStorageOnLogout();
             localStorage.removeItem('token');
             return <Navigate to="/login" replace />;
         }
-    }
-    catch{
+    } catch {
+        clearPromptStorageOnLogout();
         localStorage.removeItem('token');
         return <Navigate to="/login" replace />;
     }
-    return children;
+
+    return (
+        <SettingsProvider>
+            <TrackingProvider>
+                <ReturnPromptHost />
+                {children}
+            </TrackingProvider>
+        </SettingsProvider>
+    );
 };
 
 export default ProtectedRoutes;

@@ -41,7 +41,7 @@ function JobDetailModal({ job, onClose }) {
                     </div>
                     <div>
                         <p className="text-muted text-xs font-sans font-medium uppercase tracking-wider">Applied Date</p>
-                        <p className="text-ink font-mono mt-1">{formatDate(job.appliedDate)}</p>
+                        <p className="text-ink mt-1">{job.status === "saved" ? "Not applied yet" : formatDate(job.appliedDate)}</p>
                     </div>
                     <div>
                         <p className="text-muted text-xs font-sans font-medium uppercase tracking-wider">Deadline</p>

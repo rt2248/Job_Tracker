@@ -30,7 +30,7 @@ function JobCard({ job, onClick }) {
                         <div className="text-cyan font-mono font-medium text-xs sm:text-sm">{compensation}</div>
                     )}
                     <div className="text-muted font-mono text-[11px] sm:text-xs mt-0.5">
-                        Applied: {formatDate(job.appliedDate)}
+                        {job.status === "saved" ? "Not applied yet" : `Applied: ${formatDate(job.appliedDate)}`}
                     </div>
                 </div>
                 <StatusBadge status={job.status} />

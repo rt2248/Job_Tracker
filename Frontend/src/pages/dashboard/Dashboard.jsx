@@ -9,6 +9,8 @@ import Select from "../../components/shared/Select"
 import Button from "../../components/shared/Button"
 import Badge from "../../components/shared/Badge"
 import { useJobs } from "../../hooks/useJobs"
+import { useToast } from "../../hooks/useToast"
+import { getApiUrl } from "../../utils/config"
 import { STATUS_ORDER } from "../../constants/jobStatus"
 
 const Dashboard = () => {
@@ -18,6 +20,7 @@ const Dashboard = () => {
   const { jobs: initialJobs, isLoading, error } = useJobs()
   const [jobsList, setJobsList] = useState([])
   const [selectedJob, setSelectedJob] = useState(null)
+  const toast = useToast()
   
   // Dashboard Search & Filtering State
   const [searchQuery, setSearchQuery] = useState("")
@@ -25,7 +28,7 @@ const Dashboard = () => {
 
   // Sync loaded jobs into local state for interactive drag & drop moves
   useEffect(() => {
-    if (initialJobs && initialJobs.length > 0) {
+    if (initialJobs) {
       setJobsList(initialJobs)
     }
   }, [initialJobs])
@@ -62,13 +65,63 @@ const Dashboard = () => {
     return { total, active, interviews, offers }
   }, [jobsList])
 
-  // Interactive Drag & Drop status update handler
-  const handleDropCard = (targetStatus, jobId) => {
-    if (!jobId) return
+  // Interactive Drag & Drop status update handler with backend persistence
+  const handleDropCard = async (targetStatus, jobId) => {
+    if (!jobId || !targetStatus) return
 
+    const currentJob = jobsList.find((j) => String(j.id) === String(jobId))
+    if (!currentJob || currentJob.status === targetStatus) return
+
+    const previousJobs = [...jobsList]
+
+    // Optimistic update
     setJobsList((prevJobs) =>
-      prevJobs.map((j) => (String(j.id) === String(jobId) ? { ...j, status: targetStatus } : j))
+      prevJobs.map((j) =>
+        String(j.id) === String(jobId)
+          ? {
+              ...j,
+              status: targetStatus,
+              appliedDate:
+                j.status === "saved" && targetStatus === "applied" && !j.appliedDate
+                  ? new Date().toISOString().split("T")[0]
+                  : j.appliedDate,
+            }
+          : j
+      )
     )
+
+    const token = localStorage.getItem("token")
+    if (!token) return
+
+    try {
+      const response = await fetch(getApiUrl(`/api/jobs/${jobId}/status`), {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: targetStatus }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        // Rollback on failure
+        setJobsList(previousJobs)
+        toast.error(data.message || "Failed to update application status")
+        return
+      }
+
+      if (data.job) {
+        setJobsList((prevJobs) =>
+          prevJobs.map((j) => (String(j.id) === String(jobId) ? { ...j, ...data.job } : j))
+        )
+      }
+    } catch (err) {
+      console.error("Error updating job status:", err)
+      setJobsList(previousJobs)
+      toast.error("Network error while updating status")
+    }
   }
 
   return (

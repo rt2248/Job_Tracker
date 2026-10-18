@@ -1,17 +1,25 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import JobTypeBadge from "../shared/JobTypeBadge";
 import WorkModeBadge from "./WorkModeBadge";
 import ExperienceLevelBadge from "./ExperienceLevelBadge";
 import Modal, { ModalHeader, ModalTitle, ModalContent, ModalFooter } from "../shared/Modal";
 import Button from "../shared/Button";
 import Badge from "../shared/Badge";
+import { useTrackListing } from "../../hooks/useTrackListing";
+import { recordExternalListingClick } from "../../utils/promptStorage";
 import { formatDate } from "../../utils/formatDate";
 import { formatCompensation } from "../../utils/formatCompensation";
 
 function ListingDetailModal({ listing, onClose }) {
+    const { isTracked, getJobId, addToTracker, isInFlight } = useTrackListing();
+    const navigate = useNavigate();
+
     if (!listing) return null;
 
     const compensation = formatCompensation(listing);
+    const tracked = isTracked(listing.id);
+    const inFlight = isInFlight(listing.id);
 
     return (
         <Modal isOpen={Boolean(listing)} onClose={onClose} size="lg">
@@ -77,11 +85,41 @@ function ListingDetailModal({ listing, onClose }) {
                 <Button variant="secondary" onClick={onClose}>
                     Close
                 </Button>
+                {tracked ? (
+                    <Button
+                        variant="secondary"
+                        onClick={() => {
+                            onClose();
+                            const jobId = getJobId(listing.id);
+                            navigate(jobId ? `/applications?job=${jobId}` : "/applications");
+                        }}
+                        className="text-slate-300 hover:text-ink"
+                    >
+                        View in Tracker
+                    </Button>
+                ) : (
+                    <Button
+                        variant="outline"
+                        disabled={inFlight}
+                        onClick={() => addToTracker(listing)}
+                        className="border-indigo/40 text-indigo hover:bg-indigo/10 flex items-center gap-1.5"
+                    >
+                        {inFlight ? (
+                            <>
+                                <span className="w-3.5 h-3.5 rounded-full border-2 border-indigo border-t-transparent animate-spin" />
+                                Adding...
+                            </>
+                        ) : (
+                            "+ Add to Tracker"
+                        )}
+                    </Button>
+                )}
                 {listing.link && (
                     <a
                         href={listing.link}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() => recordExternalListingClick(listing)}
                     >
                         <Button variant="primary">
                             View Posting & Apply ↗

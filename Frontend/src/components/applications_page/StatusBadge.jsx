@@ -1,8 +1,8 @@
-import React from "react";
 import { STATUS_META } from "../../constants/jobStatus";
 import Badge from "../shared/Badge";
 
 const STATUS_VARIANT_MAP = {
+    saved: "wishlist",
     applied: "applied",
     oa: "amber",
     interview: "interview",
@@ -11,6 +11,7 @@ const STATUS_VARIANT_MAP = {
     rejected: "rejected",
     muted: "default",
 };
+
 
 function StatusBadge({ status }) {
     const meta = STATUS_META[status] || { label: status, color: "muted" };

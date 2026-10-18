@@ -1,4 +1,5 @@
 export const STATUS_META = {
+    saved: { label: "Saved", color: "slate" },
     applied: { label: "Applied", color: "muted" },
     oa: { label: "Online Assessment", color: "amber" },
     interview: { label: "Interview", color: "violet" },
@@ -7,4 +8,4 @@ export const STATUS_META = {
     rejected: { label: "Rejected", color: "red" },
 };
 
-export const STATUS_ORDER = ["applied", "oa", "interview", "offer", "accepted", "rejected"];
+export const STATUS_ORDER = ["saved", "applied", "oa", "interview", "offer", "accepted", "rejected"];
