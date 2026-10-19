@@ -1,0 +1,1297 @@
+{
+ "url": "http://127.0.0.1:5173/",
+ "at": "2026-10-18T12:52:07.539Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 7,
+   "filled": [
+    0.67,
+    0.76,
+    0.48,
+    0.82,
+    0.82,
+    0.48,
+    0.48
+   ],
+   "motion": {
+    "elements": 30,
+    "css": 29,
+    "transitions": 1,
+    "scripted": 0,
+    "videos": 1,
+    "playingVideos": 1
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 5441,
+     "screens": 6,
+     "words": 570,
+     "img": 1,
+     "video": 1,
+     "canvas": 0,
+     "svg": 2,
+     "sections": 6,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 8,
+     "uiAbuse": false,
+     "realPictures": 2,
+     "videoCount": 1,
+     "uiPictures": 4,
+     "pictureSamples": [
+      "photo-1558494949-ef010cbdcc31?w=1200&auto=format"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": []
+    },
+    "hero": {
+     "text": "Track applications through every stage.",
+     "words": 5,
+     "chars": 39,
+     "lines": 2,
+     "size": 60,
+     "vw": 4.2,
+     "font": "Outfit",
+     "weight": 800,
+     "tracking": -0.025,
+     "leading": 1,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.41,
+     "top": 144,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Track applications through every stage.",
+     "words": 5,
+     "lines": 2,
+     "size": 60,
+     "font": "Outfit"
+    },
+    "headings": [
+     {
+      "text": "Track applications through every stage.",
+      "words": 5,
+      "chars": 39,
+      "lines": 2,
+      "size": 60,
+      "vw": 4.2,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.41,
+      "top": 144,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Index and search verified engineering listings.",
+      "words": 6,
+      "chars": 47,
+      "lines": 1,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.53,
+      "top": 736,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "How Evolexa coordinates your job hunt.",
+      "words": 6,
+      "chars": 38,
+      "lines": 1,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.53,
+      "top": 1475,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Engineering discipline for your career.",
+      "words": 5,
+      "chars": 39,
+      "lines": 1,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.53,
+      "top": 2388,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Built for developer career management.",
+      "words": 5,
+      "chars": 38,
+      "lines": 1,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.53,
+      "top": 3217,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Take control of your career pipeline.",
+      "words": 6,
+      "chars": 37,
+      "lines": 2,
+      "size": 48,
+      "vw": 3.3,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.4,
+      "top": 4567,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "EVOLEXA",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 30,
+      "vw": 2.1,
+      "font": "Outfit",
+      "weight": 900,
+      "tracking": -0.05,
+      "leading": 1.2,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.09,
+      "top": 5309,
+      "tag": "div",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 7,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 6,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Geist Variable",
+       "share": 0.83,
+       "mono": false
+      },
+      {
+       "family": "Outfit",
+       "share": 0.17,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      13,
+      14,
+      16,
+      18,
+      20,
+      30,
+      36,
+      48,
+      60
+     ],
+     "sizeCount": 9,
+     "notLoaded": [],
+     "body": {
+      "font": "Geist Variable",
+      "size": 18,
+      "leading": 1.56,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 14.2
+     },
+     "measureChars": 64,
+     "max": {
+      "size": 60,
+      "vw": 4.2,
+      "font": "Outfit",
+      "text": "Track applications through every stage."
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.03,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#000000",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 0
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#000000",
+       "top": 0,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0
+       }
+      },
+      {
+       "color": "#0a0a0a",
+       "top": 624,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.04
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#d4d4d8",
+       "share": 0.51
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.23
+      },
+      {
+       "color": "#a1a1aa",
+       "share": 0.22
+      },
+      {
+       "color": "#000000",
+       "share": 0.03
+      },
+      {
+       "color": "#34d399",
+       "share": 0.02
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#000000"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 12,
+     "inHero": 6,
+     "radius": 4,
+     "height": 32,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Start Free",
+      "Start Tracking Free",
+      "Sign In to Dashboard",
+      "Applied",
+      "Interview"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 26,
+     "boxRadius": 12,
+     "squareMedia": 0,
+     "roundedMedia": 2,
+     "mediaRadius": 12,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 1651
+      },
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 1752
+      },
+      {
+       "count": 4,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 3365
+      }
+     ]
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 7,
+     "fixed": true,
+     "height": 64,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "outfit",
+     "geist variable"
+    ]
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 7,
+   "filled": [
+    0.39,
+    0.79,
+    0.86,
+    0.72,
+    1,
+    0.35,
+    0.5
+   ],
+   "motion": {
+    "elements": 30,
+    "css": 29,
+    "transitions": 1,
+    "scripted": 0,
+    "videos": 1,
+    "playingVideos": 1
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 6556,
+     "screens": 6.4,
+     "words": 570,
+     "img": 1,
+     "video": 1,
+     "canvas": 0,
+     "svg": 2,
+     "sections": 6,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 8,
+     "uiAbuse": false,
+     "realPictures": 2,
+     "videoCount": 1,
+     "uiPictures": 4,
+     "pictureSamples": [
+      "photo-1558494949-ef010cbdcc31?w=1200&auto=format"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": []
+    },
+    "hero": {
+     "text": "Track applications through every stage.",
+     "words": 5,
+     "chars": 39,
+     "lines": 2,
+     "size": 48,
+     "vw": 6.3,
+     "font": "Outfit",
+     "weight": 800,
+     "tracking": -0.025,
+     "leading": 1,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.94,
+     "top": 144,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Track applications through every stage.",
+     "words": 5,
+     "lines": 2,
+     "size": 48,
+     "font": "Outfit"
+    },
+    "headings": [
+     {
+      "text": "Track applications through every stage.",
+      "words": 5,
+      "chars": 39,
+      "lines": 2,
+      "size": 48,
+      "vw": 6.3,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.94,
+      "top": 144,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Index and search verified engineering listings.",
+      "words": 6,
+      "chars": 47,
+      "lines": 2,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.94,
+      "top": 1110,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "How Evolexa coordinates your job hunt.",
+      "words": 6,
+      "chars": 38,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.94,
+      "top": 1889,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Engineering discipline for your career.",
+      "words": 5,
+      "chars": 39,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.94,
+      "top": 3222,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Built for developer career management.",
+      "words": 5,
+      "chars": 38,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.94,
+      "top": 3946,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Take control of your career pipeline.",
+      "words": 6,
+      "chars": 37,
+      "lines": 2,
+      "size": 48,
+      "vw": 6.3,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.94,
+      "top": 5250,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "EVOLEXA",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 30,
+      "vw": 3.9,
+      "font": "Outfit",
+      "weight": 900,
+      "tracking": -0.05,
+      "leading": 1.2,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.17,
+      "top": 6424,
+      "tag": "div",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 7,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 6,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Geist Variable",
+       "share": 0.83,
+       "mono": false
+      },
+      {
+       "family": "Outfit",
+       "share": 0.17,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      13,
+      14,
+      16,
+      18,
+      20,
+      30,
+      36,
+      48
+     ],
+     "sizeCount": 8,
+     "notLoaded": [],
+     "body": {
+      "font": "Geist Variable",
+      "size": 18,
+      "leading": 1.56,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 14.2
+     },
+     "measureChars": 64,
+     "max": {
+      "size": 48,
+      "vw": 6.3,
+      "font": "Outfit",
+      "text": "Track applications through every stage."
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.03,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#000000",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 0
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#000000",
+       "top": 0,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0
+       }
+      },
+      {
+       "color": "#0a0a0a",
+       "top": 998,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.04
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#d4d4d8",
+       "share": 0.51
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.23
+      },
+      {
+       "color": "#a1a1aa",
+       "share": 0.22
+      },
+      {
+       "color": "#000000",
+       "share": 0.03
+      },
+      {
+       "color": "#34d399",
+       "share": 0.02
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#000000"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 12,
+     "inHero": 6,
+     "radius": 4,
+     "height": 32,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Start Free",
+      "Start Tracking Free",
+      "Sign In to Dashboard",
+      "Applied",
+      "Interview"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 26,
+     "boxRadius": 12,
+     "squareMedia": 0,
+     "roundedMedia": 2,
+     "mediaRadius": 12,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 2718
+      }
+     ]
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 7,
+     "fixed": true,
+     "height": 64,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "outfit",
+     "geist variable"
+    ]
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 10,
+   "filled": [
+    0.54,
+    0.92,
+    0.67,
+    0.8,
+    0.61,
+    0.89,
+    1,
+    0.88,
+    0.62,
+    0.8
+   ],
+   "motion": {
+    "elements": 30,
+    "css": 29,
+    "transitions": 1,
+    "scripted": 0,
+    "videos": 1,
+    "playingVideos": 1
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 8310,
+     "screens": 9.8,
+     "words": 562,
+     "img": 1,
+     "video": 1,
+     "canvas": 0,
+     "svg": 2,
+     "sections": 6,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 8,
+     "uiAbuse": false,
+     "realPictures": 2,
+     "videoCount": 1,
+     "uiPictures": 4,
+     "pictureSamples": [
+      "photo-1558494949-ef010cbdcc31?w=1200&auto=format"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": []
+    },
+    "hero": {
+     "text": "Track applications through every stage.",
+     "words": 5,
+     "chars": 39,
+     "lines": 2,
+     "size": 36,
+     "vw": 9.2,
+     "font": "Outfit",
+     "weight": 800,
+     "tracking": -0.025,
+     "leading": 1.08,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.92,
+     "top": 112,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Track applications through every stage.",
+     "words": 5,
+     "lines": 2,
+     "size": 36,
+     "font": "Outfit"
+    },
+    "headings": [
+     {
+      "text": "Track applications through every stage.",
+      "words": 5,
+      "chars": 39,
+      "lines": 2,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.08,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 112,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Index and search verified engineering listings.",
+      "words": 6,
+      "chars": 47,
+      "lines": 2,
+      "size": 30,
+      "vw": 7.7,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 1155,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "How Evolexa coordinates your job hunt.",
+      "words": 6,
+      "chars": 38,
+      "lines": 2,
+      "size": 30,
+      "vw": 7.7,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 2026,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Engineering discipline for your career.",
+      "words": 5,
+      "chars": 39,
+      "lines": 2,
+      "size": 30,
+      "vw": 7.7,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 3721,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Built for developer career management.",
+      "words": 5,
+      "chars": 38,
+      "lines": 2,
+      "size": 30,
+      "vw": 7.7,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 4814,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Take control of your career pipeline.",
+      "words": 6,
+      "chars": 37,
+      "lines": 2,
+      "size": 30,
+      "vw": 7.7,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 6655,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "EVOLEXA",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Outfit",
+      "weight": 900,
+      "tracking": -0.05,
+      "leading": 1.33,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.27,
+      "top": 8126,
+      "tag": "div",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 7,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 6,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Geist Variable",
+       "share": 0.83,
+       "mono": false
+      },
+      {
+       "family": "Outfit",
+       "share": 0.17,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      13,
+      14,
+      16,
+      18,
+      20,
+      24,
+      30,
+      36
+     ],
+     "sizeCount": 8,
+     "notLoaded": [],
+     "body": {
+      "font": "Geist Variable",
+      "size": 16,
+      "leading": 1.63,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 14.2
+     },
+     "measureChars": 45,
+     "max": {
+      "size": 36,
+      "vw": 9.2,
+      "font": "Outfit",
+      "text": "Track applications through every stage."
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.04,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#000000",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 0
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#000000",
+       "top": 0,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0
+       }
+      },
+      {
+       "color": "#0a0a0a",
+       "top": 581,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.04
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#d4d4d8",
+       "share": 0.5
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.23
+      },
+      {
+       "color": "#a1a1aa",
+       "share": 0.22
+      },
+      {
+       "color": "#000000",
+       "share": 0.02
+      },
+      {
+       "color": "#34d399",
+       "share": 0.02
+      }
+     ],
+     "button": {
+      "bg": "#121212",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 0.07
+      },
+      "fg": "#000000"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 11,
+     "inHero": 5,
+     "radius": 4,
+     "height": 32,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Start Tracking Free",
+      "Sign In to Dashboard",
+      "Applied",
+      "Interview",
+      "Offer"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 26,
+     "boxRadius": 12,
+     "squareMedia": 0,
+     "roundedMedia": 2,
+     "mediaRadius": 12,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 3029
+      }
+     ]
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 64,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "outfit",
+     "geist variable"
+    ]
+   },
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "WARN",
+   "id": "card-rows",
+   "width": 1440,
+   "message": "3 rows of identical boxed cards.",
+   "fix": "Vary the composition; not every section is a card grid."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "D:\\Dev\\GitHub\\Job_Tracker\\.taste-skill\\inspect\\desktop-fold.jpg",
+   "pages": [
+    "D:\\Dev\\GitHub\\Job_Tracker\\.taste-skill\\inspect\\desktop-page-01.jpg",
+    "D:\\Dev\\GitHub\\Job_Tracker\\.taste-skill\\inspect\\desktop-page-02.jpg"
+   ]
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "D:\\Dev\\GitHub\\Job_Tracker\\.taste-skill\\inspect\\tablet-fold.jpg",
+   "pages": [
+    "D:\\Dev\\GitHub\\Job_Tracker\\.taste-skill\\inspect\\tablet-page-01.jpg",
+    "D:\\Dev\\GitHub\\Job_Tracker\\.taste-skill\\inspect\\tablet-page-02.jpg"
+   ]
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "D:\\Dev\\GitHub\\Job_Tracker\\.taste-skill\\inspect\\mobile-fold.jpg",
+   "pages": [
+    "D:\\Dev\\GitHub\\Job_Tracker\\.taste-skill\\inspect\\mobile-page-01.jpg",
+    "D:\\Dev\\GitHub\\Job_Tracker\\.taste-skill\\inspect\\mobile-page-02.jpg"
+   ]
+  }
+ ]
+}

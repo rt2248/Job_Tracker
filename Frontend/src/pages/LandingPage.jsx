@@ -1,26 +1,26 @@
 import React from 'react'
 import NavBar from '../components/landing_page/NavBar'
 import Hero from '../components/landing_page/Hero'
-import WorkflowSection from '../components/landing_page/WorkflowSection'
-import ProductShowcase from '../components/landing_page/ProductShowcase'
+import LiveSearchShowcase from '../components/landing_page/LiveSearchShowcase'
+import WorkflowStageSection from '../components/landing_page/WorkflowStageSection'
+import ArchitectureVisualSection from '../components/landing_page/ArchitectureVisualSection'
 import CapabilitiesSection from '../components/landing_page/CapabilitiesSection'
-import AutomationCTA from '../components/landing_page/AutomationCTA'
+import CreateApplicationCTA from '../components/landing_page/CreateApplicationCTA'
 import Footer from '../components/landing_page/Footer'
 
-const LandingPage = () => {
+export default function LandingPage() {
   return (
-    <div className="bg-canvas min-h-screen text-ink font-sans overflow-x-hidden selection:bg-white selection:text-black">
+    <div className="bg-canvas min-h-dvh text-white font-sans selection:bg-white selection:text-black">
       <NavBar />
       <main>
         <Hero />
-        <WorkflowSection />
-        <ProductShowcase />
+        <LiveSearchShowcase />
+        <WorkflowStageSection />
+        <ArchitectureVisualSection />
         <CapabilitiesSection />
-        <AutomationCTA />
+        <CreateApplicationCTA />
       </main>
       <Footer />
     </div>
   )
 }
-
-export default LandingPage
