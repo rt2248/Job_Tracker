@@ -1,71 +1,139 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import gsap from 'gsap'
+
+const QUICK_COMPANIES = [
+  { name: 'Stripe', role: 'Staff Backend Architect', status: 'interview' },
+  { name: 'Linear', role: 'Senior Product Engineer', status: 'applied' },
+  { name: 'Cloudflare', role: 'Distributed Systems Lead', status: 'saved' },
+  { name: 'Anthropic', role: 'Platform Systems Engineer', status: 'offer' },
+]
 
 export default function CreateApplicationCTA() {
   const navigate = useNavigate()
-  const [company, setCompany] = useState('Stripe')
-  const [role, setRole] = useState('Senior Backend Engineer')
+  const [company, setCompany] = useState('')
+  const [role, setRole] = useState('')
   const [status, setStatus] = useState('applied')
+  const sectionRef = useRef(null)
+  const formRef = useRef(null)
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (formRef.current) {
+              gsap.fromTo(
+                formRef.current,
+                { opacity: 0, y: 24 },
+                { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }
+              )
+            }
+            observer.disconnect()
+          }
+        })
+      },
+      { threshold: 0.15 }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Direct client-side transition to signup
+    // Pre-populate intent into sessionStorage and navigate smoothly to signup
+    sessionStorage.setItem('pending_intent', JSON.stringify({ company, role, status }))
     navigate('/signup')
   }
 
+  const handleQuickPick = (item) => {
+    setCompany(item.name)
+    setRole(item.role)
+    setStatus(item.status)
+  }
+
   return (
-    <section className="py-20 md:py-28 bg-canvas">
+    <section ref={sectionRef} className="py-24 md:py-32 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+        {/* Asymmetric 2-Column Pitch */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* Left: Closing Argument */}
+          {/* Left: Direct Value Pitch */}
           <div className="lg:col-span-6 space-y-6">
-            <h2
-              data-reveal
-              style={{ '--delay': 0 }}
-              className="font-display text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight"
-            >
-              Take control of your career pipeline.
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+              <span>Ready to take control of </span>
+              <span className="text-metallic-silver">your pipeline?</span>
             </h2>
-            <p
-              data-reveal
-              style={{ '--delay': 1 }}
-              className="text-base sm:text-lg text-ink-secondary leading-relaxed max-w-xl font-sans"
-            >
-              Enter your active target role and begin organizing your applications, interviews, and offers in one unified workspace.
+
+            <p className="text-base sm:text-lg text-ink-secondary leading-relaxed font-sans max-w-xl">
+              Stop losing momentum in messy notes or outdated spreadsheets. Join software engineers tracking applications with precision.
             </p>
-            <div
-              data-reveal
-              style={{ '--delay': 2 }}
-              className="text-[13px] text-ink-muted"
-            >
-              Free forever for individual engineers · No credit card required
+
+            {/* Quick-fill Pills */}
+            <div className="pt-2">
+              <span className="text-[13px] font-mono text-ink-muted block mb-2">
+                FAST-START PRESETS:
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {QUICK_COMPANIES.map((item) => (
+                  <button
+                    key={item.name}
+                    type="button"
+                    onClick={() => handleQuickPick(item)}
+                    className="px-3 py-1.5 rounded-lg text-[13px] font-mono bg-surface-secondary/70 text-ink-secondary hover:text-white hover:bg-surface-elevated border border-white/[0.04] transition-all"
+                  >
+                    + {item.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-4 text-[13px] font-mono text-ink-muted border-t border-white/[0.06] flex flex-wrap items-center gap-x-4 gap-y-1">
+              <span>FREE FOREVER FOR ENGINEERS</span>
+              <span>·</span>
+              <span>NO CREDIT CARD REQUIRED</span>
+              <span>·</span>
+              <span>DATA EXPORTABLE</span>
             </div>
           </div>
 
           {/* Right: The Product's First Screen Already Open (data-ui) */}
           <div className="lg:col-span-6">
             <form
+              ref={formRef}
               data-ui
-              data-reveal
-              style={{ '--delay': 2 }}
               onSubmit={handleSubmit}
-              className="w-full max-w-md mx-auto bg-surface-primary rounded-xl p-6 sm:p-8 border border-surface-overlay space-y-5"
+              className="w-full max-w-lg mx-auto surface-metallic-panel rounded-2xl p-6 sm:p-8 space-y-5 relative overflow-hidden bg-[#0a0d14]"
             >
-              <div>
-                <h3 className="font-display text-lg font-bold text-white mb-1">
-                  Track your first application
-                </h3>
-                <p className="text-[13px] text-ink-muted">
-                  Create a new job entry to launch your dashboard.
-                </p>
+              {/* Top Sheen */}
+              <div className="absolute top-0 left-0 right-0 h-[1px] metallic-sheen-line" />
+
+              <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+                <div>
+                  <h3 className="font-display text-base font-bold text-white tracking-tight">
+                    Track your first application
+                  </h3>
+                  <p className="text-sm text-ink-secondary font-sans mt-0.5">
+                    Initialize your pipeline OS dashboard in seconds.
+                  </p>
+                </div>
+                <span className="font-mono text-[13px] px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  READY
+                </span>
               </div>
 
               {/* Company Input */}
               <div className="space-y-1.5">
-                <label htmlFor="cta-company" className="block text-[13px] font-medium text-ink-secondary">
-                  Target Company
+                <label htmlFor="cta-company" className="flex items-center justify-between text-[13px] font-mono text-ink-secondary">
+                  <span>TARGET COMPANY</span>
+                  <span className="text-white/40">NAME</span>
                 </label>
                 <input
                   id="cta-company"
@@ -74,14 +142,15 @@ export default function CreateApplicationCTA() {
                   onChange={(e) => setCompany(e.target.value)}
                   required
                   placeholder="e.g. Stripe, Linear, Datadog"
-                  className="w-full px-3.5 py-2.5 rounded bg-surface-secondary text-white border border-surface-overlay focus:border-white focus:outline-none text-sm placeholder-ink-muted"
+                  className="w-full px-4 py-3 rounded-xl bg-[#0a0d14] text-white border border-white/[0.09] focus:border-white/30 focus:outline-none text-sm placeholder-ink-muted font-sans shadow-inner transition-colors"
                 />
               </div>
 
               {/* Role Input */}
               <div className="space-y-1.5">
-                <label htmlFor="cta-role" className="block text-[13px] font-medium text-ink-secondary">
-                  Role Title
+                <label htmlFor="cta-role" className="flex items-center justify-between text-[13px] font-mono text-ink-secondary">
+                  <span>ROLE TITLE</span>
+                  <span className="text-white/40">POSITION</span>
                 </label>
                 <input
                   id="cta-role"
@@ -90,36 +159,46 @@ export default function CreateApplicationCTA() {
                   onChange={(e) => setRole(e.target.value)}
                   required
                   placeholder="e.g. Senior Software Engineer"
-                  className="w-full px-3.5 py-2.5 rounded bg-surface-secondary text-white border border-surface-overlay focus:border-white focus:outline-none text-sm placeholder-ink-muted"
+                  className="w-full px-4 py-3 rounded-xl bg-[#0a0d14] text-white border border-white/[0.09] focus:border-white/30 focus:outline-none text-sm placeholder-ink-muted font-sans shadow-inner transition-colors"
                 />
               </div>
 
               {/* Status Selector */}
               <div className="space-y-1.5">
-                <label htmlFor="cta-status" className="block text-[13px] font-medium text-ink-secondary">
-                  Initial Status
+                <label htmlFor="cta-status" className="flex items-center justify-between text-[13px] font-mono text-ink-secondary">
+                  <span>INITIAL STAGE</span>
+                  <span className="text-white/40">STAGE</span>
                 </label>
                 <select
                   id="cta-status"
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded bg-surface-secondary text-white border border-surface-overlay focus:border-white focus:outline-none text-sm"
+                  className="w-full px-4 py-3 rounded-xl bg-[#0a0d14] text-white border border-white/[0.09] focus:border-white/30 focus:outline-none text-sm font-sans shadow-inner transition-colors"
                 >
-                  <option value="saved">Saved (Wishlist)</option>
-                  <option value="applied">Applied</option>
-                  <option value="oa">Online Assessment</option>
-                  <option value="interview">Interview Scheduled</option>
-                  <option value="offer">Offer Received</option>
+                  <option value="saved">Saved (Wishlist · Stage 01)</option>
+                  <option value="applied">Applied (Submitted · Stage 02)</option>
+                  <option value="oa">Online Assessment (Stage 03)</option>
+                  <option value="interview">Interview Scheduled (Stage 04)</option>
+                  <option value="offer">Offer Received (Stage 06)</option>
                 </select>
               </div>
 
               {/* Submit CTA */}
-              <button
-                type="submit"
-                className="w-full py-3 px-4 rounded text-sm font-semibold bg-white text-black hover:bg-neutral-200 transition-colors text-center"
-              >
-                Create Application & Start Free →
-              </button>
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  className="metallic-btn-primary w-full py-3.5 px-5 rounded-xl text-sm font-semibold inline-flex items-center justify-center gap-2 shadow-lg"
+                >
+                  <span>Create Application &amp; Start Free</span>
+                  <span className="font-mono text-sm opacity-70">→</span>
+                </button>
+              </div>
+
+              <div className="text-center">
+                <span className="text-[13px] font-mono text-white/40">
+                  ZERO DATA TRACKING · STORED IN ENCRYPTED USER CONTEXT
+                </span>
+              </div>
             </form>
           </div>
 

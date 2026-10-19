@@ -1,7 +1,17 @@
 {
- "url": "http://127.0.0.1:5173/",
- "at": "2026-10-18T12:52:07.539Z",
- "allow": [],
+ "url": "http://localhost:5173/",
+ "at": "2026-10-19T10:32:15.271Z",
+ "allow": [
+  "gradient",
+  "gradient-text",
+  "shadow",
+  "button-fx",
+  "hairline",
+  "outlined-box",
+  "mono",
+  "micro-label",
+  "numbering"
+ ],
  "viewports": [
   {
    "width": 1440,
@@ -9,19 +19,19 @@
    "load": "load",
    "screens": 7,
    "filled": [
-    0.67,
-    0.76,
-    0.48,
-    0.82,
-    0.82,
-    0.48,
-    0.48
+    0.34,
+    0.59,
+    0.44,
+    0.52,
+    0.45,
+    0.4,
+    0.75
    ],
    "motion": {
-    "elements": 30,
-    "css": 29,
+    "elements": 22,
+    "css": 3,
     "transitions": 1,
-    "scripted": 0,
+    "scripted": 18,
     "videos": 1,
     "playingVideos": 1
    },
@@ -31,23 +41,23 @@
      "h": 900
     },
     "page": {
-     "height": 5441,
-     "screens": 6,
-     "words": 570,
-     "img": 1,
+     "height": 6312,
+     "screens": 7,
+     "words": 745,
+     "img": 3,
      "video": 1,
      "canvas": 0,
      "svg": 2,
      "sections": 6,
      "horizontalOverflow": 0,
      "overflowCulprits": [],
-     "uiFragments": 8,
+     "uiFragments": 7,
      "uiAbuse": false,
      "realPictures": 2,
      "videoCount": 1,
-     "uiPictures": 4,
+     "uiPictures": 7,
      "pictureSamples": [
-      "photo-1558494949-ef010cbdcc31?w=1200&auto=format"
+      "pipeline_stage_progression.jpg"
      ],
      "blendText": 0,
      "sideScrollers": 0,
@@ -59,8 +69,8 @@
      "words": 5,
      "chars": 39,
      "lines": 2,
-     "size": 60,
-     "vw": 4.2,
+     "size": 62,
+     "vw": 4.3,
      "font": "Outfit",
      "weight": 800,
      "tracking": -0.025,
@@ -70,8 +80,9 @@
      "mono": false,
      "align": "left",
      "position": "left",
-     "widthRatio": 0.41,
-     "top": 144,
+     "widthRatio": 0.4,
+     "top": 180,
+     "gradientText": true,
      "tag": "h1",
      "kind": "heading"
     },
@@ -79,7 +90,7 @@
      "text": "Track applications through every stage.",
      "words": 5,
      "lines": 2,
-     "size": 60,
+     "size": 62,
      "font": "Outfit"
     },
     "headings": [
@@ -88,8 +99,8 @@
       "words": 5,
       "chars": 39,
       "lines": 2,
-      "size": 60,
-      "vw": 4.2,
+      "size": 62,
+      "vw": 4.3,
       "font": "Outfit",
       "weight": 800,
       "tracking": -0.025,
@@ -99,99 +110,16 @@
       "mono": false,
       "align": "left",
       "position": "left",
-      "widthRatio": 0.41,
-      "top": 144,
+      "widthRatio": 0.4,
+      "top": 180,
+      "gradientText": true,
       "tag": "h1",
       "kind": "heading"
      },
      {
-      "text": "Index and search verified engineering listings.",
-      "words": 6,
-      "chars": 47,
-      "lines": 1,
-      "size": 36,
-      "vw": 2.5,
-      "font": "Outfit",
-      "weight": 800,
-      "tracking": -0.025,
-      "leading": 1.11,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "left",
-      "widthRatio": 0.53,
-      "top": 736,
-      "tag": "h2",
-      "kind": "heading"
-     },
-     {
-      "text": "How Evolexa coordinates your job hunt.",
-      "words": 6,
-      "chars": 38,
-      "lines": 1,
-      "size": 36,
-      "vw": 2.5,
-      "font": "Outfit",
-      "weight": 800,
-      "tracking": -0.025,
-      "leading": 1.11,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "left",
-      "widthRatio": 0.53,
-      "top": 1475,
-      "tag": "h2",
-      "kind": "heading"
-     },
-     {
-      "text": "Engineering discipline for your career.",
-      "words": 5,
+      "text": "Explore live engineering opportunities.",
+      "words": 4,
       "chars": 39,
-      "lines": 1,
-      "size": 36,
-      "vw": 2.5,
-      "font": "Outfit",
-      "weight": 800,
-      "tracking": -0.025,
-      "leading": 1.11,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "left",
-      "widthRatio": 0.53,
-      "top": 2388,
-      "tag": "h2",
-      "kind": "heading"
-     },
-     {
-      "text": "Built for developer career management.",
-      "words": 5,
-      "chars": 38,
-      "lines": 1,
-      "size": 36,
-      "vw": 2.5,
-      "font": "Outfit",
-      "weight": 800,
-      "tracking": -0.025,
-      "leading": 1.11,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "left",
-      "widthRatio": 0.53,
-      "top": 3217,
-      "tag": "h2",
-      "kind": "heading"
-     },
-     {
-      "text": "Take control of your career pipeline.",
-      "words": 6,
-      "chars": 37,
       "lines": 2,
       "size": 48,
       "vw": 3.3,
@@ -204,8 +132,97 @@
       "mono": false,
       "align": "left",
       "position": "left",
-      "widthRatio": 0.4,
-      "top": 4567,
+      "widthRatio": 0.53,
+      "top": 831,
+      "gradientText": true,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "How Evolexa coordinates your job hunt.",
+      "words": 6,
+      "chars": 38,
+      "lines": 2,
+      "size": 48,
+      "vw": 3.3,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.53,
+      "top": 1975,
+      "gradientText": true,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Engineering discipline for your career.",
+      "words": 5,
+      "chars": 39,
+      "lines": 2,
+      "size": 48,
+      "vw": 3.3,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.53,
+      "top": 2970,
+      "gradientText": true,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Built for developer career management.",
+      "words": 5,
+      "chars": 38,
+      "lines": 2,
+      "size": 48,
+      "vw": 3.3,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.53,
+      "top": 3972,
+      "gradientText": true,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Ready to take control of your pipeline?",
+      "words": 7,
+      "chars": 39,
+      "lines": 2,
+      "size": 48,
+      "vw": 3.3,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.41,
+      "top": 5287,
+      "gradientText": true,
       "tag": "h2",
       "kind": "heading"
      },
@@ -226,7 +243,7 @@
       "align": "left",
       "position": "left",
       "widthRatio": 0.09,
-      "top": 5309,
+      "top": 6175,
       "tag": "div",
       "kind": "heading"
      }
@@ -237,35 +254,39 @@
      "over2Lines": 0,
      "statements": 0,
      "centered": 0,
-     "medianWords": 6,
+     "medianWords": 5,
      "mixedFontHeadings": 0
     },
     "type": {
      "families": [
       {
        "family": "Geist Variable",
-       "share": 0.83,
+       "share": 0.59,
        "mono": false
       },
       {
+       "family": "JetBrains Mono",
+       "share": 0.27,
+       "mono": true
+      },
+      {
        "family": "Outfit",
-       "share": 0.17,
+       "share": 0.14,
        "mono": false
       }
      ],
-     "familyCount": 2,
+     "familyCount": 3,
      "sizes": [
+      11,
       13,
       14,
       16,
       18,
-      20,
       30,
-      36,
       48,
-      60
+      62
      ],
-     "sizeCount": 9,
+     "sizeCount": 8,
      "notLoaded": [],
      "body": {
       "font": "Geist Variable",
@@ -273,143 +294,174 @@
       "leading": 1.56,
       "weight": 400,
       "tracking": 0,
-      "contrast": 14.2
+      "contrast": 12.7
      },
      "measureChars": 64,
      "max": {
-      "size": 60,
-      "vw": 4.2,
+      "size": 62,
+      "vw": 4.3,
       "font": "Outfit",
-      "text": "Track applications through every stage."
+      "text": "Track applications"
      },
-     "monoShare": 0,
-     "monoProseShare": 0,
-     "monoFamilies": [],
-     "monoSamples": [],
+     "monoShare": 0.27,
+     "monoProseShare": 0.27,
+     "monoFamilies": [
+      "JetBrains Mono"
+     ],
+     "monoSamples": [
+      "SAN FRANCISCO · 37.7749° N",
+      "OPP_ROUTE #8942",
+      "Interview",
+      "04/07",
+      "MILESTONE DETAILS",
+      "Tomorrow, 2:00 PM"
+     ],
      "microLabels": 0,
      "microLabelShare": 0,
      "microSamples": [],
-     "upperShare": 0,
-     "centerShare": 0.03,
+     "upperShare": 0.15,
+     "centerShare": 0.04,
      "smallText": 0
     },
     "eyebrows": [],
     "numbered": [],
     "color": {
-     "bodyBg": "#000000",
+     "bodyBg": "#07090d",
      "bodyBgHsl": {
-      "h": 0,
-      "s": 0,
-      "l": 0
+      "h": 220,
+      "s": 0.3,
+      "l": 0.04
      },
      "dark": true,
      "sectionBgs": [
       {
-       "color": "#000000",
+       "color": "#07090d",
        "top": 0,
        "hsl": {
-        "h": 0,
-        "s": 0,
-        "l": 0
+        "h": 220,
+        "s": 0.3,
+        "l": 0.04
        }
       },
       {
-       "color": "#0a0a0a",
-       "top": 624,
+       "color": "#05070a",
+       "top": 5849,
        "hsl": {
-        "h": 0,
-        "s": 0,
-        "l": 0.04
+        "h": 216,
+        "s": 0.33,
+        "l": 0.03
        }
       }
      ],
      "textColors": [
       {
-       "color": "#d4d4d8",
-       "share": 0.51
+       "color": "#cacfd8",
+       "share": 0.46
       },
       {
        "color": "#ffffff",
-       "share": 0.23
+       "share": 0.41
       },
       {
-       "color": "#a1a1aa",
-       "share": 0.22
-      },
-      {
-       "color": "#000000",
-       "share": 0.03
+       "color": "#929baa",
+       "share": 0.07
       },
       {
        "color": "#34d399",
+       "share": 0.03
+      },
+      {
+       "color": "#07090d",
        "share": 0.02
       }
      ],
      "button": {
-      "bg": "#ffffff",
+      "bg": "#151a22",
       "hsl": {
-       "h": 0,
-       "s": 0,
-       "l": 1
+       "h": 217,
+       "s": 0.24,
+       "l": 0.11
       },
-      "fg": "#000000"
+      "fg": "#cacfd8"
      },
      "lowContrast": []
     },
     "buttons": {
-     "count": 12,
+     "count": 18,
      "inHero": 6,
-     "radius": 4,
-     "height": 32,
-     "withShadow": 0,
-     "withGradient": 0,
-     "mono": 0,
+     "radius": 8,
+     "height": 34,
+     "withShadow": 7,
+     "withGradient": 7,
+     "mono": 4,
      "upper": 0,
      "heroLabels": [
       "Start Free",
-      "Start Tracking Free",
+      "Start Tracking Free →",
       "Sign In to Dashboard",
       "Applied",
       "Interview"
      ]
     },
     "surfaces": {
-     "shadowStatic": 0,
-     "shadowOverlay": 0,
-     "shadowSamples": [],
-     "gradients": 0,
-     "scrims": 0,
-     "gradientSamples": [],
-     "gradientText": 0,
-     "hairlines": 0,
-     "hairlineSamples": [],
-     "outlinedBoxes": 0,
+     "shadowStatic": 8,
+     "shadowOverlay": 18,
+     "shadowSamples": [
+      "a.metallic-btn-primary.px-4 → rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.35) 0px 4px 14px",
+      "a.metallic-btn-primary.px-6 → rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.35) 0px 4px 14px",
+      "div.md:col-span-7.rounded-2xl → rgba(255, 255, 255, 0.08) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.6) 0px 20px 40p",
+      "div.md:col-span-5.rounded-2xl → rgba(255, 255, 255, 0.08) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.6) 0px 20px 40p"
+     ],
+     "gradients": 9,
+     "scrims": 13,
+     "gradientSamples": [
+      "div.pointer-events-none.absolute → linear-gradient(rgba(30, 27, 75, 0.2), rgba(15, 23, 42, 0.1), rgba(0, 0, 0, 0))",
+      "div.absolute.-inset-1.5 → linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(71, 85, 105, 0.1), rgba(99, 102, 241, 0.1))",
+      "div.surface-metallic-card.p-4 → linear-gradient(rgba(26, 31, 44, 0.65) 0%, rgba(14, 17, 24, 0.88) 100%)",
+      "div.surface-metallic-card.p-4 → linear-gradient(rgba(26, 31, 44, 0.65) 0%, rgba(14, 17, 24, 0.88) 100%)"
+     ],
+     "gradientText": 6,
+     "hairlines": 5,
+     "hairlineSamples": [
+      "div.hero-metrics-bar.pt-4 576px",
+      "div.p-6.bg-[#0e121a] 697px",
+      "div.p-6.bg-[#0e121a] 491px",
+      "div.pt-4.text-[13px] 584px",
+      "footer.border-t.border-white/[0.08] 1440px"
+     ],
+     "outlinedBoxes": 6,
      "dashed": 0,
      "blurred": 0,
      "roundedBoxes": 26,
      "boxRadius": 12,
      "squareMedia": 0,
-     "roundedMedia": 2,
-     "mediaRadius": 12,
+     "roundedMedia": 3,
+     "mediaRadius": 16,
      "textShadow": 0,
      "cardRows": [
       {
        "count": 3,
        "iconTopped": false,
        "rounded": true,
-       "top": 1651
+       "top": 1287
       },
       {
        "count": 3,
        "iconTopped": false,
        "rounded": true,
-       "top": 1752
+       "top": 2207
+      },
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 2293
       },
       {
        "count": 4,
        "iconTopped": false,
        "rounded": true,
-       "top": 3365
+       "top": 4204
       }
      ]
     },
@@ -417,11 +469,12 @@
     "nav": {
      "links": 7,
      "fixed": true,
-     "height": 64,
+     "height": 65,
      "floatingPill": false,
      "blur": false
     },
     "fontsLoaded": [
+     "jetbrains mono",
      "outfit",
      "geist variable"
     ]
@@ -432,21 +485,22 @@
    "width": 768,
    "height": 1024,
    "load": "load",
-   "screens": 7,
+   "screens": 8,
    "filled": [
-    0.39,
-    0.79,
-    0.86,
-    0.72,
-    1,
-    0.35,
-    0.5
+    0.52,
+    0.78,
+    0.64,
+    0.56,
+    0.66,
+    0.74,
+    0.51,
+    0.8
    ],
    "motion": {
-    "elements": 30,
-    "css": 29,
+    "elements": 22,
+    "css": 3,
     "transitions": 1,
-    "scripted": 0,
+    "scripted": 18,
     "videos": 1,
     "playingVideos": 1
    },
@@ -456,23 +510,23 @@
      "h": 1024
     },
     "page": {
-     "height": 6556,
-     "screens": 6.4,
-     "words": 570,
-     "img": 1,
+     "height": 7853,
+     "screens": 7.7,
+     "words": 745,
+     "img": 3,
      "video": 1,
      "canvas": 0,
      "svg": 2,
      "sections": 6,
      "horizontalOverflow": 0,
      "overflowCulprits": [],
-     "uiFragments": 8,
+     "uiFragments": 7,
      "uiAbuse": false,
      "realPictures": 2,
      "videoCount": 1,
-     "uiPictures": 4,
+     "uiPictures": 7,
      "pictureSamples": [
-      "photo-1558494949-ef010cbdcc31?w=1200&auto=format"
+      "pipeline_stage_progression.jpg"
      ],
      "blendText": 0,
      "sideScrollers": 0,
@@ -496,7 +550,8 @@
      "align": "left",
      "position": "center",
      "widthRatio": 0.94,
-     "top": 144,
+     "top": 160,
+     "gradientText": true,
      "tag": "h1",
      "kind": "heading"
     },
@@ -525,15 +580,16 @@
       "align": "left",
       "position": "center",
       "widthRatio": 0.94,
-      "top": 144,
+      "top": 160,
+      "gradientText": true,
       "tag": "h1",
       "kind": "heading"
      },
      {
-      "text": "Index and search verified engineering listings.",
-      "words": 6,
-      "chars": 47,
-      "lines": 2,
+      "text": "Explore live engineering opportunities.",
+      "words": 4,
+      "chars": 39,
+      "lines": 1,
       "size": 36,
       "vw": 4.7,
       "font": "Outfit",
@@ -546,7 +602,8 @@
       "align": "left",
       "position": "center",
       "widthRatio": 0.94,
-      "top": 1110,
+      "top": 1226,
+      "gradientText": true,
       "tag": "h2",
       "kind": "heading"
      },
@@ -567,7 +624,8 @@
       "align": "left",
       "position": "center",
       "widthRatio": 0.94,
-      "top": 1889,
+      "top": 2314,
+      "gradientText": true,
       "tag": "h2",
       "kind": "heading"
      },
@@ -588,7 +646,8 @@
       "align": "left",
       "position": "center",
       "widthRatio": 0.94,
-      "top": 3222,
+      "top": 3675,
+      "gradientText": true,
       "tag": "h2",
       "kind": "heading"
      },
@@ -609,28 +668,30 @@
       "align": "left",
       "position": "center",
       "widthRatio": 0.94,
-      "top": 3946,
+      "top": 4668,
+      "gradientText": true,
       "tag": "h2",
       "kind": "heading"
      },
      {
-      "text": "Take control of your career pipeline.",
-      "words": 6,
-      "chars": 37,
-      "lines": 2,
-      "size": 48,
-      "vw": 6.3,
+      "text": "Ready to take control of your pipeline?",
+      "words": 7,
+      "chars": 39,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
       "font": "Outfit",
       "weight": 800,
       "tracking": -0.025,
-      "leading": 1,
+      "leading": 1.11,
       "upper": false,
       "italic": false,
       "mono": false,
       "align": "left",
       "position": "center",
       "widthRatio": 0.94,
-      "top": 5250,
+      "top": 6261,
+      "gradientText": true,
       "tag": "h2",
       "kind": "heading"
      },
@@ -651,7 +712,7 @@
       "align": "left",
       "position": "left",
       "widthRatio": 0.17,
-      "top": 6424,
+      "top": 7696,
       "tag": "div",
       "kind": "heading"
      }
@@ -662,29 +723,34 @@
      "over2Lines": 0,
      "statements": 0,
      "centered": 0,
-     "medianWords": 6,
+     "medianWords": 5,
      "mixedFontHeadings": 0
     },
     "type": {
      "families": [
       {
        "family": "Geist Variable",
-       "share": 0.83,
+       "share": 0.59,
        "mono": false
       },
       {
+       "family": "JetBrains Mono",
+       "share": 0.27,
+       "mono": true
+      },
+      {
        "family": "Outfit",
-       "share": 0.17,
+       "share": 0.14,
        "mono": false
       }
      ],
-     "familyCount": 2,
+     "familyCount": 3,
      "sizes": [
+      11,
       13,
       14,
       16,
       18,
-      20,
       30,
       36,
       48
@@ -697,143 +763,189 @@
       "leading": 1.56,
       "weight": 400,
       "tracking": 0,
-      "contrast": 14.2
+      "contrast": 12.7
      },
      "measureChars": 64,
      "max": {
       "size": 48,
       "vw": 6.3,
       "font": "Outfit",
-      "text": "Track applications through every stage."
+      "text": "Track applications"
      },
-     "monoShare": 0,
-     "monoProseShare": 0,
-     "monoFamilies": [],
-     "monoSamples": [],
+     "monoShare": 0.27,
+     "monoProseShare": 0.27,
+     "monoFamilies": [
+      "JetBrains Mono"
+     ],
+     "monoSamples": [
+      "SAN FRANCISCO · 37.7749° N",
+      "OPP_ROUTE #8942",
+      "Interview",
+      "04/07",
+      "MILESTONE DETAILS",
+      "Tomorrow, 2:00 PM"
+     ],
      "microLabels": 0,
      "microLabelShare": 0,
      "microSamples": [],
-     "upperShare": 0,
-     "centerShare": 0.03,
+     "upperShare": 0.15,
+     "centerShare": 0.04,
      "smallText": 0
     },
     "eyebrows": [],
     "numbered": [],
     "color": {
-     "bodyBg": "#000000",
+     "bodyBg": "#07090d",
      "bodyBgHsl": {
-      "h": 0,
-      "s": 0,
-      "l": 0
+      "h": 220,
+      "s": 0.3,
+      "l": 0.04
      },
      "dark": true,
      "sectionBgs": [
       {
-       "color": "#000000",
+       "color": "#07090d",
        "top": 0,
        "hsl": {
-        "h": 0,
-        "s": 0,
-        "l": 0
+        "h": 220,
+        "s": 0.3,
+        "l": 0.04
        }
       },
       {
-       "color": "#0a0a0a",
-       "top": 998,
+       "color": "#0e121a",
+       "top": 555,
        "hsl": {
-        "h": 0,
-        "s": 0,
-        "l": 0.04
+        "h": 220,
+        "s": 0.3,
+        "l": 0.08
+       }
+      },
+      {
+       "color": "#05070a",
+       "top": 7250,
+       "hsl": {
+        "h": 216,
+        "s": 0.33,
+        "l": 0.03
        }
       }
      ],
      "textColors": [
       {
-       "color": "#d4d4d8",
-       "share": 0.51
+       "color": "#cacfd8",
+       "share": 0.46
       },
       {
        "color": "#ffffff",
-       "share": 0.23
+       "share": 0.41
       },
       {
-       "color": "#a1a1aa",
-       "share": 0.22
-      },
-      {
-       "color": "#000000",
-       "share": 0.03
+       "color": "#929baa",
+       "share": 0.07
       },
       {
        "color": "#34d399",
+       "share": 0.03
+      },
+      {
+       "color": "#07090d",
        "share": 0.02
       }
      ],
      "button": {
-      "bg": "#ffffff",
+      "bg": "#151a22",
       "hsl": {
-       "h": 0,
-       "s": 0,
-       "l": 1
+       "h": 217,
+       "s": 0.24,
+       "l": 0.11
       },
-      "fg": "#000000"
+      "fg": "#cacfd8"
      },
      "lowContrast": []
     },
     "buttons": {
-     "count": 12,
+     "count": 18,
      "inHero": 6,
-     "radius": 4,
-     "height": 32,
-     "withShadow": 0,
-     "withGradient": 0,
-     "mono": 0,
+     "radius": 8,
+     "height": 34,
+     "withShadow": 7,
+     "withGradient": 7,
+     "mono": 4,
      "upper": 0,
      "heroLabels": [
       "Start Free",
-      "Start Tracking Free",
+      "Start Tracking Free →",
       "Sign In to Dashboard",
       "Applied",
       "Interview"
      ]
     },
     "surfaces": {
-     "shadowStatic": 0,
-     "shadowOverlay": 0,
-     "shadowSamples": [],
-     "gradients": 0,
-     "scrims": 0,
-     "gradientSamples": [],
-     "gradientText": 0,
-     "hairlines": 0,
-     "hairlineSamples": [],
-     "outlinedBoxes": 0,
+     "shadowStatic": 8,
+     "shadowOverlay": 18,
+     "shadowSamples": [
+      "a.metallic-btn-primary.px-4 → rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.35) 0px 4px 14px",
+      "a.metallic-btn-primary.px-6 → rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.35) 0px 4px 14px",
+      "div.md:col-span-7.rounded-2xl → rgba(255, 255, 255, 0.08) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.6) 0px 20px 40p",
+      "div.md:col-span-5.rounded-2xl → rgba(255, 255, 255, 0.08) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.6) 0px 20px 40p"
+     ],
+     "gradients": 10,
+     "scrims": 13,
+     "gradientSamples": [
+      "div.pointer-events-none.absolute → linear-gradient(rgba(30, 27, 75, 0.2), rgba(15, 23, 42, 0.1), rgba(0, 0, 0, 0))",
+      "div.absolute.-inset-1.5 → linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(71, 85, 105, 0.1), rgba(99, 102, 241, 0.1))",
+      "div.surface-metallic-card.p-4 → linear-gradient(rgba(26, 31, 44, 0.65) 0%, rgba(14, 17, 24, 0.88) 100%)",
+      "div.surface-metallic-card.p-4 → linear-gradient(rgba(26, 31, 44, 0.65) 0%, rgba(14, 17, 24, 0.88) 100%)"
+     ],
+     "gradientText": 6,
+     "hairlines": 5,
+     "hairlineSamples": [
+      "div.hero-metrics-bar.pt-4 720px",
+      "div.p-6.bg-[#0e121a] 408px",
+      "div.p-6.bg-[#0e121a] 284px",
+      "div.pt-4.text-[13px] 720px",
+      "footer.border-t.border-white/[0.08] 768px"
+     ],
+     "outlinedBoxes": 6,
      "dashed": 0,
      "blurred": 0,
      "roundedBoxes": 26,
      "boxRadius": 12,
      "squareMedia": 0,
-     "roundedMedia": 2,
-     "mediaRadius": 12,
+     "roundedMedia": 3,
+     "mediaRadius": 16,
      "textShadow": 0,
      "cardRows": [
       {
        "count": 3,
        "iconTopped": false,
        "rounded": true,
-       "top": 2718
+       "top": 1626
+      },
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 3122
       }
      ]
     },
-    "heroMedia": [],
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.09
+     }
+    ],
     "nav": {
      "links": 7,
      "fixed": true,
-     "height": 64,
+     "height": 65,
      "floatingPill": false,
      "blur": false
     },
     "fontsLoaded": [
+     "jetbrains mono",
      "outfit",
      "geist variable"
     ]
@@ -844,24 +956,26 @@
    "width": 390,
    "height": 844,
    "load": "load",
-   "screens": 10,
+   "screens": 12,
    "filled": [
-    0.54,
-    0.92,
-    0.67,
+    0.57,
+    0.68,
     0.8,
-    0.61,
-    0.89,
-    1,
-    0.88,
-    0.62,
-    0.8
+    0.76,
+    0.8,
+    0.78,
+    0.67,
+    0.86,
+    0.74,
+    0.69,
+    0.86,
+    1
    ],
    "motion": {
-    "elements": 30,
-    "css": 29,
+    "elements": 22,
+    "css": 3,
     "transitions": 1,
-    "scripted": 0,
+    "scripted": 18,
     "videos": 1,
     "playingVideos": 1
    },
@@ -871,23 +985,23 @@
      "h": 844
     },
     "page": {
-     "height": 8310,
-     "screens": 9.8,
-     "words": 562,
-     "img": 1,
+     "height": 9671,
+     "screens": 11.5,
+     "words": 737,
+     "img": 3,
      "video": 1,
      "canvas": 0,
      "svg": 2,
      "sections": 6,
      "horizontalOverflow": 0,
      "overflowCulprits": [],
-     "uiFragments": 8,
+     "uiFragments": 7,
      "uiAbuse": false,
      "realPictures": 2,
      "videoCount": 1,
-     "uiPictures": 4,
+     "uiPictures": 7,
      "pictureSamples": [
-      "photo-1558494949-ef010cbdcc31?w=1200&auto=format"
+      "pipeline_stage_progression.jpg"
      ],
      "blendText": 0,
      "sideScrollers": 0,
@@ -904,14 +1018,15 @@
      "font": "Outfit",
      "weight": 800,
      "tracking": -0.025,
-     "leading": 1.08,
+     "leading": 1.06,
      "upper": false,
      "italic": false,
      "mono": false,
      "align": "left",
      "position": "center",
      "widthRatio": 0.92,
-     "top": 112,
+     "top": 128,
+     "gradientText": true,
      "tag": "h1",
      "kind": "heading"
     },
@@ -933,105 +1048,22 @@
       "font": "Outfit",
       "weight": 800,
       "tracking": -0.025,
-      "leading": 1.08,
+      "leading": 1.06,
       "upper": false,
       "italic": false,
       "mono": false,
       "align": "left",
       "position": "center",
       "widthRatio": 0.92,
-      "top": 112,
+      "top": 128,
+      "gradientText": true,
       "tag": "h1",
       "kind": "heading"
      },
      {
-      "text": "Index and search verified engineering listings.",
-      "words": 6,
-      "chars": 47,
-      "lines": 2,
-      "size": 30,
-      "vw": 7.7,
-      "font": "Outfit",
-      "weight": 800,
-      "tracking": -0.025,
-      "leading": 1.2,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "center",
-      "widthRatio": 0.92,
-      "top": 1155,
-      "tag": "h2",
-      "kind": "heading"
-     },
-     {
-      "text": "How Evolexa coordinates your job hunt.",
-      "words": 6,
-      "chars": 38,
-      "lines": 2,
-      "size": 30,
-      "vw": 7.7,
-      "font": "Outfit",
-      "weight": 800,
-      "tracking": -0.025,
-      "leading": 1.2,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "center",
-      "widthRatio": 0.92,
-      "top": 2026,
-      "tag": "h2",
-      "kind": "heading"
-     },
-     {
-      "text": "Engineering discipline for your career.",
-      "words": 5,
+      "text": "Explore live engineering opportunities.",
+      "words": 4,
       "chars": 39,
-      "lines": 2,
-      "size": 30,
-      "vw": 7.7,
-      "font": "Outfit",
-      "weight": 800,
-      "tracking": -0.025,
-      "leading": 1.2,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "center",
-      "widthRatio": 0.92,
-      "top": 3721,
-      "tag": "h2",
-      "kind": "heading"
-     },
-     {
-      "text": "Built for developer career management.",
-      "words": 5,
-      "chars": 38,
-      "lines": 2,
-      "size": 30,
-      "vw": 7.7,
-      "font": "Outfit",
-      "weight": 800,
-      "tracking": -0.025,
-      "leading": 1.2,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "center",
-      "widthRatio": 0.92,
-      "top": 4814,
-      "tag": "h2",
-      "kind": "heading"
-     },
-     {
-      "text": "Take control of your career pipeline.",
-      "words": 6,
-      "chars": 37,
       "lines": 2,
       "size": 30,
       "vw": 7.7,
@@ -1045,7 +1077,96 @@
       "align": "left",
       "position": "center",
       "widthRatio": 0.92,
-      "top": 6655,
+      "top": 1273,
+      "gradientText": true,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "How Evolexa coordinates your job hunt.",
+      "words": 6,
+      "chars": 38,
+      "lines": 2,
+      "size": 30,
+      "vw": 7.7,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 2606,
+      "gradientText": true,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Engineering discipline for your career.",
+      "words": 5,
+      "chars": 39,
+      "lines": 2,
+      "size": 30,
+      "vw": 7.7,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 4325,
+      "gradientText": true,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Built for developer career management.",
+      "words": 5,
+      "chars": 38,
+      "lines": 2,
+      "size": 30,
+      "vw": 7.7,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 5741,
+      "gradientText": true,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Ready to take control of your pipeline?",
+      "words": 7,
+      "chars": 39,
+      "lines": 2,
+      "size": 30,
+      "vw": 7.7,
+      "font": "Outfit",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 7604,
+      "gradientText": true,
       "tag": "h2",
       "kind": "heading"
      },
@@ -1066,7 +1187,7 @@
       "align": "left",
       "position": "center",
       "widthRatio": 0.27,
-      "top": 8126,
+      "top": 9422,
       "tag": "div",
       "kind": "heading"
      }
@@ -1077,29 +1198,34 @@
      "over2Lines": 0,
      "statements": 0,
      "centered": 0,
-     "medianWords": 6,
+     "medianWords": 5,
      "mixedFontHeadings": 0
     },
     "type": {
      "families": [
       {
        "family": "Geist Variable",
-       "share": 0.83,
+       "share": 0.59,
        "mono": false
       },
       {
+       "family": "JetBrains Mono",
+       "share": 0.27,
+       "mono": true
+      },
+      {
        "family": "Outfit",
-       "share": 0.17,
+       "share": 0.14,
        "mono": false
       }
      ],
-     "familyCount": 2,
+     "familyCount": 3,
      "sizes": [
+      11,
       13,
       14,
       16,
       18,
-      20,
       24,
       30,
       36
@@ -1112,100 +1238,118 @@
       "leading": 1.63,
       "weight": 400,
       "tracking": 0,
-      "contrast": 14.2
+      "contrast": 12.7
      },
      "measureChars": 45,
      "max": {
       "size": 36,
       "vw": 9.2,
       "font": "Outfit",
-      "text": "Track applications through every stage."
+      "text": "Track applications"
      },
-     "monoShare": 0,
-     "monoProseShare": 0,
-     "monoFamilies": [],
-     "monoSamples": [],
+     "monoShare": 0.27,
+     "monoProseShare": 0.27,
+     "monoFamilies": [
+      "JetBrains Mono"
+     ],
+     "monoSamples": [
+      "SAN FRANCISCO · 37.7749° N",
+      "OPP_ROUTE #8942",
+      "Interview",
+      "04/07",
+      "MILESTONE DETAILS",
+      "Tomorrow, 2:00 PM"
+     ],
      "microLabels": 0,
      "microLabelShare": 0,
      "microSamples": [],
-     "upperShare": 0,
-     "centerShare": 0.04,
+     "upperShare": 0.15,
+     "centerShare": 0.07,
      "smallText": 0
     },
     "eyebrows": [],
     "numbered": [],
     "color": {
-     "bodyBg": "#000000",
+     "bodyBg": "#07090d",
      "bodyBgHsl": {
-      "h": 0,
-      "s": 0,
-      "l": 0
+      "h": 220,
+      "s": 0.3,
+      "l": 0.04
      },
      "dark": true,
      "sectionBgs": [
       {
-       "color": "#000000",
+       "color": "#07090d",
        "top": 0,
        "hsl": {
-        "h": 0,
-        "s": 0,
-        "l": 0
+        "h": 220,
+        "s": 0.3,
+        "l": 0.04
        }
       },
       {
-       "color": "#0a0a0a",
-       "top": 581,
+       "color": "#0e121a",
+       "top": 615,
        "hsl": {
-        "h": 0,
-        "s": 0,
-        "l": 0.04
+        "h": 220,
+        "s": 0.3,
+        "l": 0.08
+       }
+      },
+      {
+       "color": "#05070a",
+       "top": 8711,
+       "hsl": {
+        "h": 216,
+        "s": 0.33,
+        "l": 0.03
        }
       }
      ],
      "textColors": [
       {
-       "color": "#d4d4d8",
-       "share": 0.5
+       "color": "#cacfd8",
+       "share": 0.47
       },
       {
        "color": "#ffffff",
-       "share": 0.23
+       "share": 0.41
       },
       {
-       "color": "#a1a1aa",
-       "share": 0.22
-      },
-      {
-       "color": "#000000",
-       "share": 0.02
+       "color": "#929baa",
+       "share": 0.07
       },
       {
        "color": "#34d399",
-       "share": 0.02
+       "share": 0.04
+      },
+      {
+       "color": "#07090d",
+       "share": 0.01
       }
      ],
      "button": {
-      "bg": "#121212",
+      "bg": "#151a22",
       "hsl": {
-       "h": 0,
-       "s": 0,
-       "l": 0.07
+       "h": 217,
+       "s": 0.24,
+       "l": 0.11
       },
-      "fg": "#000000"
+      "fg": "#cacfd8"
      },
      "lowContrast": []
     },
     "buttons": {
-     "count": 11,
+     "count": 17,
      "inHero": 5,
-     "radius": 4,
-     "height": 32,
-     "withShadow": 0,
-     "withGradient": 0,
-     "mono": 0,
+     "radius": 8,
+     "height": 34,
+     "withShadow": 6,
+     "withGradient": 6,
+     "mono": 4,
      "upper": 0,
      "heroLabels": [
-      "Start Tracking Free",
+      "Start Tracking Free →",
       "Sign In to Dashboard",
       "Applied",
       "Interview",
@@ -1213,42 +1357,70 @@
      ]
     },
     "surfaces": {
-     "shadowStatic": 0,
-     "shadowOverlay": 0,
-     "shadowSamples": [],
-     "gradients": 0,
-     "scrims": 0,
-     "gradientSamples": [],
-     "gradientText": 0,
-     "hairlines": 0,
-     "hairlineSamples": [],
-     "outlinedBoxes": 0,
+     "shadowStatic": 7,
+     "shadowOverlay": 18,
+     "shadowSamples": [
+      "a.metallic-btn-primary.px-6 → rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.35) 0px 4px 14px",
+      "div.md:col-span-7.rounded-2xl → rgba(255, 255, 255, 0.08) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.6) 0px 20px 40p",
+      "div.md:col-span-5.rounded-2xl → rgba(255, 255, 255, 0.08) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.6) 0px 20px 40p",
+      "div.md:col-span-5.p-6 → rgba(255, 255, 255, 0.08) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.6) 0px 20px 40p"
+     ],
+     "gradients": 12,
+     "scrims": 13,
+     "gradientSamples": [
+      "div.pointer-events-none.absolute → linear-gradient(rgba(30, 27, 75, 0.2), rgba(15, 23, 42, 0.1), rgba(0, 0, 0, 0))",
+      "a.metallic-btn-primary.px-6 → linear-gradient(rgb(255, 255, 255) 0%, rgb(226, 232, 240) 100%)",
+      "a.metallic-btn-secondary.px-6 → linear-gradient(rgba(31, 36, 50, 0.9) 0%, rgba(20, 24, 34, 0.95) 100%)",
+      "div.absolute.-inset-1.5 → linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(71, 85, 105, 0.1), rgba(99, 102, 241, 0.1))"
+     ],
+     "gradientText": 6,
+     "hairlines": 5,
+     "hairlineSamples": [
+      "div.hero-metrics-bar.pt-4 358px",
+      "div.p-6.bg-[#0e121a] 356px",
+      "div.p-6.bg-[#0e121a] 356px",
+      "div.pt-4.text-[13px] 358px",
+      "footer.border-t.border-white/[0.08] 390px"
+     ],
+     "outlinedBoxes": 6,
      "dashed": 0,
      "blurred": 0,
-     "roundedBoxes": 26,
+     "roundedBoxes": 27,
      "boxRadius": 12,
      "squareMedia": 0,
-     "roundedMedia": 2,
-     "mediaRadius": 12,
+     "roundedMedia": 3,
+     "mediaRadius": 16,
      "textShadow": 0,
      "cardRows": [
       {
        "count": 3,
        "iconTopped": false,
        "rounded": true,
-       "top": 3029
+       "top": 1821
+      },
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 3524
       }
      ]
     },
-    "heroMedia": [],
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.13
+     }
+    ],
     "nav": {
      "links": 1,
      "fixed": true,
-     "height": 64,
+     "height": 65,
      "floatingPill": false,
      "blur": false
     },
     "fontsLoaded": [
+     "jetbrains mono",
      "outfit",
      "geist variable"
     ]
@@ -1261,8 +1433,23 @@
    "level": "WARN",
    "id": "card-rows",
    "width": 1440,
-   "message": "3 rows of identical boxed cards.",
-   "fix": "Vary the composition; not every section is a card grid."
+   "message": "4 rows of identical boxed cards.",
+   "fix": "Vary the composition; not every section is a card grid.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "font-count",
+   "width": 1440,
+   "message": "3 typefaces in use (Geist Variable, JetBrains Mono, Outfit).",
+   "fix": "Two at most.",
+   "alsoAt": [
+    768,
+    390
+   ]
   }
  ],
  "images": [

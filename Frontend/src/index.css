@@ -1,32 +1,33 @@
 @import "@fontsource-variable/geist";
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
+/* Evolexa Design System Typography & Design Tokens */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Background & Canvas Tokens (Codexa Pitch Black & Dark Charcoal) */
-    --canvas: 0 0% 0%;            /* #000000 - Pure pitch black background (Codexa --bg-primary) */
-    --canvas-subtle: 0 0% 4%;     /* #0a0a0a - Deep black backdrop (Codexa --bg-secondary) */
+    /* Background & Canvas Tokens (Refined Obsidian & Metallic Slate) */
+    --canvas: 222 30% 4%;           /* #07090d - Deep obsidian ground */
+    --canvas-subtle: 222 25% 6%;    /* #0c0f15 - Dark graphite backdrop */
 
-    /* Surface Tokens (Codexa Panels & Elevated Surfaces) */
-    --surface-primary: 0 0% 4%;   /* #0a0a0a - Standard panel & card surface (Codexa --bg-secondary) */
-    --surface-secondary: 0 0% 7%; /* #121212 - Secondary nested containers (Codexa --bg-tertiary) */
-    --surface-elevated: 240 4% 10%;/* #18181b - Elevated cards, modals, popovers (Codexa zinc-900 / --bg-elevated) */
-    --surface-overlay: 240 5% 18%; /* #27272a - Hover & active pressed states (Codexa zinc-800 / --bg-overlay) */
+    /* Surface Tokens (Brushed Titanium, Slate & Metallic Panels) */
+    --surface-primary: 222 22% 8%;  /* #10131b - Brushed metallic card surface */
+    --surface-secondary: 222 20% 11%;/* #161a24 - Secondary structured containers */
+    --surface-elevated: 222 18% 15%; /* #1f2432 - Elevated cards and flyouts */
+    --surface-overlay: 222 16% 20%;  /* #2b3142 - Hover and active pressed states */
 
-    /* Text Tokens (Codexa 100% Crisp White & High-Contrast Hierarchy) */
-    --text-primary: 0 0% 100%;    /* #ffffff - Pure crisp white text (Codexa --text-primary) */
-    --text-secondary: 240 5% 84%; /* #d4d4d8 - Subtitles, metadata (Codexa zinc-300 / --text-secondary) */
-    --text-muted: 240 5% 65%;     /* #a1a1aa - Form labels, placeholders (Codexa zinc-400 / --text-muted) */
-    --text-disabled: 240 5% 45%;  /* #71717a - Disabled fields and controls (Codexa zinc-500 / --text-disabled) */
+    /* Text Tokens (Crisp White & Silver Hierarchy) */
+    --text-primary: 0 0% 100%;      /* #ffffff - Pure crisp white text */
+    --text-secondary: 218 15% 82%;  /* #cbd5e1 - Silver-grey subtitles and metadata */
+    --text-muted: 218 12% 62%;      /* #94a3b8 - Technical labels, placeholders */
+    --text-disabled: 218 10% 42%;   /* #5f6b7c - Inactive status indicators */
 
-    /* Border & Divider Tokens (Codexa Sharp Zinc-800 & Subtle White Borders) */
-    --border-primary: 240 4% 16%; /* #27272a - Sharp zinc-800 card outlines (Codexa --border-subtle) */
-    --border-subtle: 240 4% 12%;  /* #1f1f22 - Soft dark dividers */
-    --border-accent: 239 84% 67%; /* #6366f1 - Active focus rings & selected borders */
+    /* Border & Divider Tokens (Precision Metallic Hairlines) */
+    --border-primary: 222 14% 18%;  /* #272d3b - Subtle slate borders */
+    --border-subtle: 222 12% 14%;   /* #1e222d - Soft dividers */
+    --border-accent: 239 84% 67%;   /* #6366f1 - Active focus rings & selected borders */
 
     /* Brand & Accent Tokens */
     --brand-indigo: 239 84% 67%;      /* #6366f1 - Evolexa signature primary accent */
@@ -34,7 +35,7 @@
     --brand-cyan: 188 86% 53%;        /* #22d3ee - Secondary cyan accent */
 
     /* Domain Job Application Status Colors */
-    --status-wishlist: 240 5% 65%; /* Zinc-400 - Saved / Wishlist items */
+    --status-wishlist: 218 12% 62%; /* Silver-slate - Saved / Wishlist items */
     --status-applied: 239 84% 67%;  /* Indigo - Submitted applications */
     --status-interview: 38 92% 50%; /* Amber - Active interviews scheduled */
     --status-offer: 160 84% 39%;    /* Emerald - Job offer received */
@@ -129,6 +130,73 @@
   /* Subtle 1px surface border utility */
   .border-subtle {
     border-color: hsl(var(--border-subtle));
+  }
+
+  /* Restored Display Typography */
+  .font-display {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  }
+
+  /* Refined Metallic Gradient Language Utilities */
+  .text-metallic {
+    background: linear-gradient(180deg, #ffffff 15%, #cbd5e1 60%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-metallic-silver {
+    background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 40%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .surface-metallic-panel {
+    background: linear-gradient(180deg, rgba(22, 26, 36, 0.85) 0%, rgba(12, 15, 22, 0.96) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+  }
+
+  .surface-metallic-card {
+    background: linear-gradient(180deg, rgba(26, 31, 44, 0.65) 0%, rgba(14, 17, 24, 0.88) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06), 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  }
+
+  .surface-metallic-card:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 16px 36px -10px rgba(0, 0, 0, 0.65);
+  }
+
+  .metallic-sheen-line {
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.25) 50%, transparent 100%);
+  }
+
+  .metallic-btn-primary {
+    background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 100%);
+    color: #07090d;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 4px 14px rgba(0, 0, 0, 0.35);
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .metallic-btn-primary:hover {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 6px 20px rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .metallic-btn-secondary {
+    background: linear-gradient(180deg, rgba(31, 36, 50, 0.9) 0%, rgba(20, 24, 34, 0.95) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #f1f5f9;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .metallic-btn-secondary:hover {
+    background: linear-gradient(180deg, rgba(43, 49, 66, 0.95) 0%, rgba(27, 32, 45, 0.98) 100%);
+    border-color: rgba(255, 255, 255, 0.22);
+    transform: translateY(-1px);
   }
 }
 

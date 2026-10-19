@@ -26,7 +26,7 @@
   "direction": "product-performs"
  },
  "imagery": "interface",
- "allow": [],
+ "allow": ["gradient", "gradient-text", "shadow", "button-fx", "hairline", "outlined-box", "mono", "micro-label", "numbering"],
  "direction": {
   "id": "product-performs",
   "name": "The product performs",

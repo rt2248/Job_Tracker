@@ -14,24 +14,24 @@ export default function NavBar() {
   }, [])
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 transition-colors duration-200">
+    <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-200">
       <nav
-        className={`w-full transition-colors duration-200 ${
+        className={`w-full transition-all duration-200 ${
           scrolled || mobileMenuOpen
-            ? 'bg-canvas/95 backdrop-blur-md'
-            : 'bg-transparent'
+            ? 'bg-[#07090d]/90 backdrop-blur-md border-b border-white/[0.08] shadow-lg shadow-black/20'
+            : 'bg-transparent border-b border-transparent'
         }`}
         aria-label="Main Navigation"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           
-          {/* Brand Wordmark */}
+          {/* Brand Wordmark - Identity Preserved */}
           <Link
             to="/"
-            className="flex items-center gap-2.5 text-ink hover:text-white transition-opacity"
+            className="flex items-center gap-2.5 group"
             aria-label="Evolexa Home"
           >
-            <div className="w-7 h-7 rounded bg-white text-black font-display font-black text-sm flex items-center justify-center tracking-tighter">
+            <div className="w-7 h-7 rounded bg-white text-black font-display font-black text-sm flex items-center justify-center tracking-tighter shadow-sm group-hover:scale-105 transition-transform">
               EX
             </div>
             <span className="font-display font-bold text-lg text-white tracking-tight">
@@ -43,25 +43,25 @@ export default function NavBar() {
           <div className="hidden md:flex items-center gap-8 text-sm font-medium">
             <a
               href="#pipeline"
-              className="text-ink-secondary hover:text-white transition-colors"
+              className="text-white/70 hover:text-white transition-colors relative py-1 hover:after:w-full after:w-0 after:h-[1px] after:bg-white/40 after:absolute after:bottom-0 after:left-0 after:transition-all"
             >
               Pipeline
             </a>
             <a
               href="#discovery"
-              className="text-ink-secondary hover:text-white transition-colors"
+              className="text-white/70 hover:text-white transition-colors relative py-1 hover:after:w-full after:w-0 after:h-[1px] after:bg-white/40 after:absolute after:bottom-0 after:left-0 after:transition-all"
             >
               Discovery
             </a>
             <a
               href="#workflow"
-              className="text-ink-secondary hover:text-white transition-colors"
+              className="text-white/70 hover:text-white transition-colors relative py-1 hover:after:w-full after:w-0 after:h-[1px] after:bg-white/40 after:absolute after:bottom-0 after:left-0 after:transition-all"
             >
               Workflow
             </a>
             <a
               href="#capabilities"
-              className="text-ink-secondary hover:text-white transition-colors"
+              className="text-white/70 hover:text-white transition-colors relative py-1 hover:after:w-full after:w-0 after:h-[1px] after:bg-white/40 after:absolute after:bottom-0 after:left-0 after:transition-all"
             >
               Capabilities
             </a>
@@ -71,13 +71,13 @@ export default function NavBar() {
           <div className="hidden md:flex items-center gap-4">
             <Link
               to="/login"
-              className="text-sm font-medium text-ink-secondary hover:text-white transition-colors px-2 py-1"
+              className="text-sm font-medium text-white/70 hover:text-white transition-colors px-3 py-1.5"
             >
               Sign In
             </Link>
             <Link
               to="/signup"
-              className="px-4 py-2 rounded text-sm font-semibold bg-white text-black hover:bg-neutral-200 transition-colors"
+              className="metallic-btn-primary px-4 py-2 rounded-lg text-sm font-semibold shadow-md"
             >
               Start Free
             </Link>
@@ -87,7 +87,7 @@ export default function NavBar() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-ink-secondary hover:text-white focus:outline-none focus:ring-1 focus:ring-white"
+            className="md:hidden p-2 text-white/70 hover:text-white focus:outline-none focus:ring-1 focus:ring-white/40 rounded-lg"
             aria-expanded={mobileMenuOpen}
             aria-label="Toggle navigation drawer"
           >
