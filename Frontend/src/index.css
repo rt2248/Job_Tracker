@@ -84,13 +84,13 @@
 @layer components {
   /* Scoped Auth Atmospheric Backgrounds */
   .auth-sidebar-bg {
-    background: radial-gradient(120% 100% at 0% 0%, rgba(99, 102, 241, 0.22) 0%, transparent 60%),
-                linear-gradient(135deg, #0d1424 0%, #050913 85%);
+    background: radial-gradient(100% 75% at 0% 0%, rgba(255, 255, 255, 0.08) 0%, rgba(148, 163, 184, 0.03) 40%, transparent 70%),
+                linear-gradient(180deg, #08090c 0%, #000000 100%);
   }
 
   .auth-form-bg {
-    background: radial-gradient(100% 100% at 100% 100%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
-                linear-gradient(180deg, #090d1a 0%, #050913 100%);
+    background-color: #000000;
+    background-image: linear-gradient(180deg, #050608 0%, #000000 100%);
   }
 }
 
@@ -141,12 +141,14 @@
   .text-metallic {
     background: linear-gradient(180deg, #ffffff 15%, #cbd5e1 60%, #94a3b8 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   .text-metallic-silver {
     background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 40%, #94a3b8 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 

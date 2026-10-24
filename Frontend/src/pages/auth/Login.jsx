@@ -15,6 +15,7 @@ const Login = () => {
     const navigate = useNavigate();
     const [apiError, setApiError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const {
         register,
         handleSubmit,
@@ -26,6 +27,7 @@ const Login = () => {
     const onSubmit = async (data) => {
         setApiError('');
         setIsSubmitting(true);
+        setIsLoading(true);
         try {
             const response = await fetch(getApiUrl('/api/auth/login'), {
                 method: "POST",
@@ -36,6 +38,7 @@ const Login = () => {
 
             if (!response.ok) {
                 setApiError(result.message || 'Login failed. Please check your credentials.');
+                setIsLoading(false);
                 return;
             }
             console.log("Login successful: ", result);
@@ -45,6 +48,7 @@ const Login = () => {
         catch (error) {
             console.error("Network error: ", error);
             setApiError('Unable to connect to server. Please verify your internet connection or try again later.');
+            setIsLoading(false);
         }
         finally {
             setIsSubmitting(false);
@@ -52,16 +56,41 @@ const Login = () => {
     };
 
     return (
-        <div className="bg-canvas min-h-screen text-ink font-body flex flex-col lg:flex-row w-full overflow-x-hidden">
+        <div className="bg-black min-h-screen text-ink font-body flex flex-col lg:flex-row w-full overflow-x-hidden relative">
+            {/* Fullscreen Loading Screen Overlay */}
+            {isLoading && (
+                <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4 animate-modal-backdrop">
+                    <div className="flex flex-col items-center max-w-sm w-full text-center animate-modal-content">
+                        {/* Spinning indicator with brand initials */}
+                        <div className="relative flex items-center justify-center mb-6">
+                            <div className="w-16 h-16 rounded-full border-2 border-white/10 border-t-white animate-spin" />
+                            <div className="absolute font-display font-bold text-sm text-white select-none">
+                                EX
+                            </div>
+                        </div>
+
+                        <span className="text-metallic font-display font-bold text-2xl tracking-tight select-none mb-2">
+                            Evolexa
+                        </span>
+                        <p className="text-ink font-sans text-sm font-medium mb-1">
+                            Verifying your credentials...
+                        </p>
+                        <p className="text-muted text-xs font-mono">
+                            Preparing your workspace
+                        </p>
+                    </div>
+                </div>
+            )}
+
             {/* Left Column - Desktop branding sidebar */}
-            <div className="hidden lg:flex lg:w-[38vw] xl:w-[35vw] shrink-0 auth-sidebar-bg min-h-screen flex-col justify-between p-8 xl:p-12 border-r border-indigo/15">
-                <Link to="/" className="inline-flex items-center gap-2 max-w-fit px-3 py-1.5 font-display text-base text-muted-light hover:text-ink hover:bg-indigo/10 rounded-xl transition-all">
+            <div className="hidden lg:flex lg:w-[38vw] xl:w-[35vw] shrink-0 auth-sidebar-bg min-h-screen flex-col justify-between p-8 xl:p-12 border-r border-white/10">
+                <Link to="/" className="inline-flex items-center gap-2 max-w-fit px-3 py-1.5 font-display text-base text-muted-light hover:text-ink hover:bg-white/5 rounded-xl transition-all">
                     <img src={arrowBack} className="h-4 w-4" alt="Back" /> Home
                 </Link>
                 <div className="my-auto py-12">
                     <div className="flex flex-col gap-3">
-                        <span className="w-fit bg-gradient-to-tr from-cyan to-ink font-bold bg-clip-text text-transparent tracking-tight font-display text-4xl xl:text-5xl [filter:drop-shadow(0_0_8px_rgba(34,211,238,0.4))]">
-                            JobTracker
+                        <span className="w-fit text-metallic font-bold tracking-tight font-display text-4xl xl:text-5xl select-none [filter:drop-shadow(0_0_6px_rgba(255,255,255,0.35))_drop-shadow(0_0_18px_rgba(255,255,255,0.15))]">
+                            Evolexa
                         </span>
                         <span className="text-ink font-display font-bold text-2xl xl:text-3xl tracking-tight leading-snug">
                             <WelcomeLine />
@@ -71,28 +100,28 @@ const Login = () => {
                         Turns job-hunt chaos into something that looks actually manageable.
                     </div>
                 </div>
-                <div className="text-muted-light text-sm">
+                <div className="text-muted text-sm">
                     <p className="font-semibold text-ink mb-1">Trusted by job seekers applying to</p>
-                    <p className="font-mono text-xs text-muted">Google · Stripe · Vercel · Meta</p>
+                    <p className="font-mono text-xs text-muted/70">Google · Stripe · Vercel · Meta</p>
                 </div>
             </div>
 
             {/* Right Column - Form Container */}
             <div className="flex-1 min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-8 auth-form-bg relative">
                 <StarField />
-                
+
                 {/* Mobile back link & logo header */}
                 <div className="lg:hidden w-full max-w-md flex items-center justify-between mb-8 z-10">
                     <Link to="/" className="inline-flex items-center gap-1.5 text-sm font-display text-muted-light hover:text-ink">
                         <img src={arrowBack} className="h-4 w-4" alt="Back" /> Home
                     </Link>
-                    <span className="bg-gradient-to-tr from-cyan to-ink font-bold bg-clip-text text-transparent font-display text-2xl">
-                        JobTracker
+                    <span className="text-metallic font-bold font-display text-2xl">
+                        Evolexa
                     </span>
                 </div>
 
                 <div className="w-full max-w-md z-10 flex flex-col items-center">
-                    <h1 className="heading mb-8 bg-ink font-display font-bold text-center text-3xl sm:text-4xl bg-clip-text tracking-tight">
+                    <h1 className="heading mb-8 font-display font-bold text-center text-3xl sm:text-4xl text-white tracking-tight">
                         Welcome back!
                     </h1>
 
@@ -111,7 +140,7 @@ const Login = () => {
                                     })}
                                     type="text"
                                     placeholder="Enter your email or username"
-                                    className="p-3 h-11 w-full border border-indigo/30 rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px] focus:outline-none focus:border-indigo/60 transition-colors"
+                                    className="p-3 h-11 w-full border border-white/10 rounded-xl bg-[#121316] placeholder:text-muted/50 text-ink font-mono text-[14px] focus:outline-none focus:border-ink/70 focus:ring-1 focus:ring-ink/40 transition-colors"
                                 />
                                 <FieldError message={errors.identifier?.message} />
                             </div>
@@ -136,33 +165,34 @@ const Login = () => {
                                 <button
                                     type="button"
                                     onClick={() => { reset() }}
-                                    className="flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-gradient-to-br from-[#dbe1ff] to-[#9c9c9f] text-black cursor-pointer transition-all hover:opacity-90 shadow-md"
+                                    className="flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-[#18181b] hover:bg-[#222227] border border-white/10 hover:border-white/20 text-ink cursor-pointer shadow-sm hover:shadow-md hover:shadow-white/10 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-black motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100"
                                 >
                                     Clear
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-gradient-to-br from-indigo to-[#4f46e5] text-white cursor-pointer transition-all hover:shadow-[0_0_25px_rgba(99,102,241,0.5)] shadow-md"
+                                    disabled={isSubmitting || isLoading}
+                                    className="flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-ink hover:bg-ink-dark text-black cursor-pointer shadow-md shadow-ink/25 hover:shadow-md hover:shadow-ink/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[background-color,box-shadow,transform] duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-black motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100 disabled:opacity-50 disabled:pointer-events-none"
                                 >
-                                    Log in
+                                    {isLoading ? 'Verifying...' : 'Log in'}
                                 </button>
                             </div>
 
                             <div className="w-full flex items-center my-1">
-                                <div className="flex-1 h-px bg-indigo/15" />
+                                <div className="flex-1 h-px bg-white/10" />
                                 <span className="px-3 text-xs text-muted font-mono uppercase">or</span>
-                                <div className="flex-1 h-px bg-indigo/15" />
+                                <div className="flex-1 h-px bg-white/10" />
                             </div>
 
-                            <Link to="/" className="w-full flex items-center justify-center py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold bg-gradient-to-br from-[#dbe1ff] to-[#9c9c9f] text-black transition-all hover:opacity-90 shadow-md">
+                            <Link to="/" className="w-full flex items-center justify-center py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold bg-[#18181b] hover:bg-[#222227] border border-white/10 hover:border-white/20 text-ink shadow-sm hover:shadow-md hover:shadow-white/10 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-black motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100">
                                 <img src={googleIcon} alt="" className="mr-2 h-4 w-4" /> Continue with Google
                             </Link>
 
-                            <Link to="/" className="w-full flex items-center justify-center py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold bg-gradient-to-br from-[#dbe1ff] to-[#9c9c9f] text-black transition-all hover:opacity-90 shadow-md">
-                                <img src={codeSarthi} alt="" className="mr-2 h-4 w-4 brightness-0" /> Continue with CodeSarthi
+                            <Link to="/" className="w-full flex items-center justify-center py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold bg-[#18181b] hover:bg-[#222227] border border-white/10 hover:border-white/20 text-ink shadow-sm hover:shadow-md hover:shadow-white/10 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-black motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100">
+                                <img src={codeSarthi} alt="" className="mr-2 h-4 w-4 brightness-0 invert" /> Continue with CodeSarthi
                             </Link>
 
-                            <Link to="/signup" className="mt-2 text-sm text-indigo-light hover:font-bold hover:underline font-mono">
+                            <Link to="/signup" className="mt-2 text-sm text-muted-light hover:text-white hover:underline font-mono transition-colors">
                                 Create new account
                             </Link>
                         </div>

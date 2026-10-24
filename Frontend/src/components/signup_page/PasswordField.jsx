@@ -3,7 +3,7 @@ import visibilityIcon from '../../assets/icons/visibility.svg';
 import visibilityOffIcon from '../../assets/icons/visibilityoff.svg';
 import FieldError from './FieldError';
 
-const PasswordField = ({ label, placeholder, name, register, rules, error, width='w-full' }) => {
+const PasswordField = ({ label, placeholder, name, register, rules, error, width = 'w-full' }) => {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
@@ -14,7 +14,7 @@ const PasswordField = ({ label, placeholder, name, register, rules, error, width
                     {...register(name, rules)}
                     type={showPassword ? 'text' : 'password'}
                     placeholder={placeholder}
-                    className={`p-2 h-11 w-full pr-9 border rounded-xl bg-indigo/10 placeholder-ink/40 font-mono text-[14px] ${error ? 'border-red' : 'border-indigo/30'}`}
+                    className={`p-3 h-11 w-full pr-10 border rounded-xl bg-[#121316] placeholder:text-muted/50 text-ink font-mono text-[14px] focus:outline-none focus:border-ink/70 focus:ring-1 focus:ring-ink/40 transition-colors ${error ? 'border-red-500' : 'border-white/10'}`}
                 />
                 <button
                     type='button'
