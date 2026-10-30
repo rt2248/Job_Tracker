@@ -8,13 +8,13 @@ const TopBar = ({ toggleSidebar, title = "Dashboard" }) => {
         <header className="h-16 shrink-0 border-b border-border-primary bg-surface/80 backdrop-blur-md flex items-center justify-between px-3 sm:px-6 transition-all duration-200">
             <div className="flex flex-row items-center gap-2 sm:gap-3.5 min-w-0">
                 <button
-                    className="h-9 w-9 p-1.5 hover:cursor-pointer hover:bg-surface-secondary rounded-lg border border-border-subtle transition-all flex items-center justify-center text-ink shrink-0 focus-visible:ring-2 focus-visible:ring-indigo/40 outline-none"
+                    className="md:hidden h-9 w-9 p-1.5 hover:cursor-pointer hover:bg-surface-secondary rounded-lg border border-border-subtle transition-all flex items-center justify-center text-ink shrink-0 focus-visible:ring-2 focus-visible:ring-indigo/40 outline-none"
                     onClick={toggleSidebar}
                     aria-label="Toggle Sidebar"
                 >
                     <img src={sidebarIcon} alt="" className="h-4 w-4 sm:h-5 sm:w-5 opacity-80" />
                 </button>
-                <div className="h-5 w-[1px] bg-border-subtle shrink-0" />
+                <div className="md:hidden h-5 w-[1px] bg-border-subtle shrink-0" />
                 <div className="text-base sm:text-lg font-display font-semibold flex flex-row items-center gap-2.5 text-ink truncate">
                     <img src={dashboardIcon} alt="" className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 opacity-70" />
                     <span className="truncate">{title}</span>
@@ -27,9 +27,7 @@ const TopBar = ({ toggleSidebar, title = "Dashboard" }) => {
                 >
                     <img src={notificationIcon} className="h-4 w-4 sm:h-5 sm:w-5 opacity-80" alt="" />
                 </button>
-                <div className="flex justify-center items-center h-9 w-9 bg-neutral-900 text-white text-xs font-bold rounded-full shadow-sm border border-neutral-700 shrink-0">
-                    EX
-                </div>
+
             </div>
         </header>
     )

@@ -23,11 +23,11 @@ export default function Footer() {
                 </span>
               </div>
               <p className="text-sm text-ink-secondary leading-relaxed font-sans">
-                The smart career pipeline and application management operating system built for modern software engineers.
+                A focused place to organize job applications, role details, and follow-up notes.
               </p>
             </div>
             <div className="text-[13px] font-mono text-white/50">
-              Designed for focus, stage enforcement, and zero spreadsheet clutter.
+              Keep your search organized from saved role to next conversation.
             </div>
           </div>
 
@@ -73,7 +73,7 @@ export default function Footer() {
 
             <div className="pt-4 text-[13px] font-mono text-emerald-400 font-medium flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
-              <span>SYSTEM OPERATIONAL // LATENCY 14MS</span>
+              <span>YOUR NEXT STEP STARTS HERE</span>
             </div>
           </div>
 
@@ -86,10 +86,10 @@ export default function Footer() {
           </div>
           <div className="space-y-1 text-right">
             <div className="text-[13px] font-mono text-ink-muted text-center md:text-right">
-              © {year} Evolexa. Production-grade career tracking operating system.
+              © {year} Evolexa. A clearer view of your job search.
             </div>
             <div className="text-[13px] font-mono text-white/40 text-center md:text-right">
-              Assets: Custom Precision Vector Cartography &amp; Secure Cryptographic Enclave Telemetry.
+              
             </div>
           </div>
         </div>
@@ -98,3 +98,4 @@ export default function Footer() {
     </footer>
   )
 }
+

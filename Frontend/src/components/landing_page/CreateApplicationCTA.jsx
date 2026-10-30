@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import gsap from 'gsap'
 
 const QUICK_COMPANIES = [
-  { name: 'Stripe', role: 'Staff Backend Architect', status: 'interview' },
-  { name: 'Linear', role: 'Senior Product Engineer', status: 'applied' },
-  { name: 'Cloudflare', role: 'Distributed Systems Lead', status: 'saved' },
-  { name: 'Anthropic', role: 'Platform Systems Engineer', status: 'offer' },
+  { name: 'Northstar Labs', role: 'Backend Engineer', status: 'interview' },
+  { name: 'Fieldnote', role: 'Product Engineer', status: 'applied' },
+  { name: 'Meridian Systems', role: 'Platform Engineer', status: 'saved' },
+  { name: 'Juniper Health', role: 'Software Engineer', status: 'offer' },
 ]
 
 export default function CreateApplicationCTA() {
@@ -73,13 +73,13 @@ export default function CreateApplicationCTA() {
             </h2>
 
             <p className="text-base sm:text-lg text-ink-secondary leading-relaxed font-sans max-w-xl">
-              Stop losing momentum in messy notes or outdated spreadsheets. Join software engineers tracking applications with precision.
+              Add a company, role, and current stage. Evolexa carries those details into signup so you can begin with an application already in view.
             </p>
 
             {/* Quick-fill Pills */}
             <div className="pt-2">
               <span className="text-[13px] font-mono text-ink-muted block mb-2">
-                FAST-START PRESETS:
+                EXAMPLE DETAILS:
               </span>
               <div className="flex flex-wrap gap-2">
                 {QUICK_COMPANIES.map((item) => (
@@ -96,11 +96,11 @@ export default function CreateApplicationCTA() {
             </div>
 
             <div className="pt-4 text-[13px] font-mono text-ink-muted border-t border-white/[0.06] flex flex-wrap items-center gap-x-4 gap-y-1">
-              <span>FREE FOREVER FOR ENGINEERS</span>
+              <span>START WITH ONE APPLICATION</span>
               <span>·</span>
-              <span>NO CREDIT CARD REQUIRED</span>
+              <span>KEEP THE NEXT STEP VISIBLE</span>
               <span>·</span>
-              <span>DATA EXPORTABLE</span>
+              <span>ADD DETAILS BEFORE SIGNUP</span>
             </div>
           </div>
 
@@ -121,7 +121,7 @@ export default function CreateApplicationCTA() {
                     Track your first application
                   </h3>
                   <p className="text-sm text-ink-secondary font-sans mt-0.5">
-                    Initialize your pipeline OS dashboard in seconds.
+                    Choose a starting point, then continue to signup.
                   </p>
                 </div>
                 <span className="font-mono text-[13px] px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -141,7 +141,7 @@ export default function CreateApplicationCTA() {
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
                   required
-                  placeholder="e.g. Stripe, Linear, Datadog"
+                  placeholder="e.g. Northstar Labs, Fieldnote"
                   className="w-full px-4 py-3 rounded-xl bg-[#0a0d14] text-white border border-white/[0.09] focus:border-white/30 focus:outline-none text-sm placeholder-ink-muted font-sans shadow-inner transition-colors"
                 />
               </div>
@@ -196,7 +196,7 @@ export default function CreateApplicationCTA() {
 
               <div className="text-center">
                 <span className="text-[13px] font-mono text-white/40">
-                  ZERO DATA TRACKING · STORED IN ENCRYPTED USER CONTEXT
+                  EXAMPLE FORM · CONTINUE TO SIGNUP
                 </span>
               </div>
             </form>
@@ -208,3 +208,6 @@ export default function CreateApplicationCTA() {
     </section>
   )
 }
+
+
+

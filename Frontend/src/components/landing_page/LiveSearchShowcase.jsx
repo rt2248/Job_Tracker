@@ -3,58 +3,53 @@ import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 
 const PRESET_QUERIES = [
-  'Distributed Systems',
+  'Systems',
   'Frontend',
   'Platform',
-  'Anthropic',
-  'Stripe',
+  'Harbor Health',
+  'Northstar Labs',
 ]
 
 const SAMPLE_LISTINGS = [
   {
     id: 's-1',
-    role: 'Staff Infrastructure Engineer',
-    company: 'Stripe',
-    location: 'Remote (US/Canada)',
-    salary: '$210,000 - $265,000',
-    tags: ['Go', 'Kubernetes', 'High-throughput'],
-    level: 'Staff',
+    role: 'Infrastructure Engineer',
+    company: 'Northstar Labs',
+    location: 'Remote',
+    tags: ['Go', 'Kubernetes', 'Infrastructure'],
+    level: 'Experienced',
   },
   {
     id: 's-2',
-    role: 'Senior Frontend Architect',
-    company: 'Linear',
-    location: 'San Francisco, CA / Remote',
-    salary: '$185,000 - $230,000',
-    tags: ['React', 'TypeScript', 'WebAudio'],
-    level: 'Senior',
+    role: 'Frontend Engineer',
+    company: 'Fieldnote',
+    location: 'Remote',
+    tags: ['React', 'TypeScript', 'Accessibility'],
+    level: 'Experienced',
   },
   {
     id: 's-3',
-    role: 'Distributed Systems Core Lead',
-    company: 'Cloudflare',
-    location: 'Austin, TX / Remote',
-    salary: '$195,000 - $245,000',
-    tags: ['Rust', 'eBPF', 'Networking'],
-    level: 'Lead',
+    role: 'Systems Engineer',
+    company: 'Meridian Systems',
+    location: 'Remote',
+    tags: ['Rust', 'Observability', 'Networking'],
+    level: 'Experienced',
   },
   {
     id: 's-4',
-    role: 'Member of Technical Staff (Platform)',
-    company: 'Anthropic',
-    location: 'San Francisco, CA',
-    salary: '$220,000 - $290,000',
-    tags: ['Python', 'Distributed Training', 'GPU'],
-    level: 'Staff',
+    role: 'Product Engineer',
+    company: 'Harbor Health',
+    location: 'Remote',
+    tags: ['Python', 'Data systems', 'GPU'],
+    level: 'Experienced',
   },
   {
     id: 's-5',
-    role: 'Full Stack Performance Specialist',
-    company: 'Datadog',
-    location: 'New York, NY / Remote',
-    salary: '$175,000 - $220,000',
+    role: 'Software Engineer',
+    company: 'Juniper Health',
+    location: 'Remote',
     tags: ['TypeScript', 'Go', 'Observability'],
-    level: 'Senior',
+    level: 'Experienced',
   },
 ]
 
@@ -109,11 +104,11 @@ export default function LiveSearchShowcase() {
         {/* Section Heading */}
         <div className="max-w-3xl mb-12">
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
-            <span>Explore live engineering </span>
+            <span>Find a role worth pursuing. </span>
             <span className="text-metallic-silver">opportunities.</span>
           </h2>
           <p className="text-base sm:text-lg text-ink-secondary leading-relaxed font-sans max-w-xl">
-            Search active developer roles with verified compensation ranges, work mode requirements, and direct one-click pipeline tracking.
+            Filter illustrative roles by skill or company, then follow a promising opportunity into your application pipeline.
           </p>
         </div>
 
@@ -129,8 +124,8 @@ export default function LiveSearchShowcase() {
           {/* Interactive Search Input */}
           <div className="relative mb-6">
             <label htmlFor="landing-job-search" className="flex items-center justify-between text-[13px] font-mono text-ink-muted mb-2">
-              <span>FILTER ROLES BY TITLE, TECHNOLOGY, OR COMPANY:</span>
-              <span className="text-white/40">LIVE_GREP</span>
+              <span>SEARCH SAMPLE ROLES BY TITLE, SKILL, OR COMPANY:</span>
+              <span className="text-white/40">ROLE SEARCH</span>
             </label>
             <div className="flex items-center gap-3 px-4 py-3 bg-[#0a0d14] rounded-xl border border-white/[0.09] focus-within:border-white/30 transition-all shadow-inner">
               <svg
@@ -191,9 +186,9 @@ export default function LiveSearchShowcase() {
             <div className="flex items-center justify-between text-[13px] text-ink-muted pb-2 border-b border-white/[0.06]">
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span>Matching listings ({filtered.length})</span>
+                <span>Example matches ({filtered.length})</span>
               </div>
-              <span className="text-white/50">Direct Discovery View</span>
+              <span className="text-white/50">Illustrative sample roles</span>
             </div>
 
             {filtered.length > 0 ? (
@@ -226,14 +221,6 @@ export default function LiveSearchShowcase() {
                   </div>
 
                   <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/[0.04]">
-                    <div className="text-left sm:text-right">
-                      <div className="text-sm font-semibold text-emerald-400">
-                        {item.salary}
-                      </div>
-                      <div className="text-[13px] text-white/50">
-                        Verified Band
-                      </div>
-                    </div>
                     <Link
                       to="/signup"
                       className="metallic-btn-primary px-4 py-2 rounded-lg text-[13px] font-semibold transition-all inline-flex items-center gap-1.5"
@@ -246,8 +233,8 @@ export default function LiveSearchShowcase() {
               ))
             ) : (
               <div className="p-8 rounded-xl bg-surface-secondary/50 border border-white/[0.06] text-center space-y-2">
-                <p className="text-sm font-semibold text-white">No active listings match "{query}"</p>
-                <p className="text-sm text-ink-secondary">Try searching for "Distributed Systems", "Frontend", or "Anthropic".</p>
+                <p className="text-sm font-semibold text-white">No sample roles match "{query}"</p>
+                <p className="text-sm text-ink-secondary">Try searching for "Systems", "Frontend", or "Harbor Health".</p>
               </div>
             )}
           </div>
@@ -258,3 +245,8 @@ export default function LiveSearchShowcase() {
     </section>
   )
 }
+
+
+
+
+

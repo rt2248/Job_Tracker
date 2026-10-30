@@ -6,22 +6,22 @@ const STEPS = [
     id: 'index',
     stepNumber: '01',
     badge: 'Discovery Engine',
-    lead: 'First, index your target opportunities.',
-    desc: 'Search tech roles with location comboboxes, verified compensation bands, and remote work filters.',
+    lead: 'First, find opportunities worth tracking.',
+    desc: 'Narrow your search by role, company, skills, and location. Save the opportunities you want to revisit.',
   },
   {
     id: 'pipeline',
     stepNumber: '02',
     badge: 'Kanban OS',
-    lead: 'Next, transition stages with Kanban clarity.',
-    desc: 'Move applications through Saved, Applied, Online Assessment, Interview, and Offer with stage enforcement.',
+    lead: 'Next, keep each application stage in view.',
+    desc: 'Keep each application moving through stages such as Saved, Applied, Interview, and Offer.',
   },
   {
     id: 'vault',
     stepNumber: '03',
     badge: 'Document Vault',
-    lead: 'Finally, vault resumes and recruiter contacts.',
-    desc: 'Keep customized resume PDFs and interview contact records directly linked to each application.',
+    lead: 'Finally, keep notes and follow-ups close.',
+    desc: 'Keep role notes, useful links, and follow-up context close to the application they belong to.',
   },
 ]
 
@@ -90,7 +90,7 @@ export default function WorkflowStageSection() {
             <span className="text-metallic-silver">your job hunt.</span>
           </h2>
           <p className="text-base sm:text-lg text-ink-secondary leading-relaxed font-sans max-w-xl">
-            A cohesive three-step system designed to eliminate lost application links, missed follow-ups, and spreadsheet chaos.
+            Find roles, keep application details together, and make follow-ups easier to remember.
           </p>
         </div>
 
@@ -156,9 +156,9 @@ export default function WorkflowStageSection() {
                     <div className="flex items-center justify-between text-[13px] font-mono text-ink-muted pb-3 border-b border-white/[0.06]">
                       <div className="flex items-center gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                        <span>ROLE DISCOVERY &amp; COMBOBOX INDEX</span>
+                        <span>SAMPLE ROLE SEARCH</span>
                       </div>
-                      <span className="text-emerald-400 font-semibold">FILTERS APPLIED</span>
+                      <span className="text-emerald-400 font-semibold">SEARCH FILTERS</span>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
@@ -171,21 +171,21 @@ export default function WorkflowStageSection() {
                         <span className="text-sm font-semibold text-white">US (Remote)</span>
                       </div>
                       <div className="p-3 bg-surface-secondary/80 rounded-xl border border-white/[0.06]">
-                        <span className="text-[13px] font-mono text-ink-muted block">BAND TARGET</span>
-                        <span className="text-sm font-semibold text-emerald-400">$190k - $240k</span>
+                        <span className="text-[13px] font-mono text-ink-muted block">LOCATION</span>
+                        <span className="text-sm font-semibold text-emerald-400">Remote</span>
                       </div>
                     </div>
 
                     <div className="p-4 rounded-xl surface-metallic-card space-y-2">
                       <div className="flex items-center justify-between text-[13px] font-mono text-ink-muted">
-                        <span className="text-white/80 font-semibold">Cloudflare · Infrastructure</span>
-                        <span className="text-emerald-400">$190k - $240k</span>
+                        <span className="text-white/80 font-semibold">Meridian Systems · Platform</span>
+                        <span className="text-emerald-400">Remote</span>
                       </div>
                       <p className="text-sm font-bold text-white">
-                        Staff Distributed Infrastructure &amp; Edge Network Lead
+                        Platform Engineer
                       </p>
                       <p className="text-sm text-ink-secondary font-sans">
-                        Go, Rust, Kubernetes, eBPF telemetry. Matched 94% with your profile stack.
+                        Go, Rust, Kubernetes · illustrative sample role
                       </p>
                     </div>
                   </div>
@@ -197,9 +197,9 @@ export default function WorkflowStageSection() {
                     <div className="flex items-center justify-between text-[13px] font-mono text-ink-muted pb-3 border-b border-white/[0.06]">
                       <div className="flex items-center gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
-                        <span>STAGE-ENFORCED KANBAN PIPELINE</span>
+                        <span>APPLICATION STAGES</span>
                       </div>
-                      <span className="text-white/50">TRANSITION VERIFIED</span>
+                      <span className="text-white/50">EXAMPLE VIEW</span>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
@@ -210,12 +210,12 @@ export default function WorkflowStageSection() {
                           <span className="px-1.5 py-0.5 rounded bg-white/[0.06] text-[13px] text-white/70">2</span>
                         </div>
                         <div className="p-2.5 rounded-lg bg-[#0a0d14] border border-white/[0.06] text-[13px] space-y-1">
-                          <p className="font-bold text-white">Stripe</p>
-                          <p className="text-white/50 text-[13px]">Backend Architect</p>
+                          <p className="font-bold text-white">Northstar Labs</p>
+                          <p className="text-white/50 text-[13px]">Backend Engineer</p>
                         </div>
                         <div className="p-2.5 rounded-lg bg-[#0a0d14] border border-white/[0.06] text-[13px] space-y-1">
-                          <p className="font-bold text-white">Figma</p>
-                          <p className="text-white/50 text-[13px]">Systems Lead</p>
+                          <p className="font-bold text-white">Juniper Health</p>
+                          <p className="text-white/50 text-[13px]">Product Engineer</p>
                         </div>
                       </div>
 
@@ -226,7 +226,7 @@ export default function WorkflowStageSection() {
                           <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[13px]">1</span>
                         </div>
                         <div className="p-2.5 rounded-lg bg-[#0a0d14] border border-amber-500/30 text-[13px] space-y-1 shadow-sm">
-                          <p className="font-bold text-white">Linear</p>
+                          <p className="font-bold text-white">Fieldnote</p>
                           <p className="text-amber-300 text-[13px]">Round 2: Architecture</p>
                         </div>
                       </div>
@@ -238,8 +238,8 @@ export default function WorkflowStageSection() {
                           <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[13px]">1</span>
                         </div>
                         <div className="p-2.5 rounded-lg bg-[#0a0d14] border border-emerald-500/30 text-[13px] space-y-1 shadow-sm">
-                          <p className="font-bold text-white">Anthropic</p>
-                          <p className="text-emerald-400 text-[13px]">$220k + Equity</p>
+                          <p className="font-bold text-white">Meridian Systems</p>
+                          <p className="text-emerald-400 text-[13px]">Example offer</p>
                         </div>
                       </div>
                     </div>
@@ -259,8 +259,8 @@ export default function WorkflowStageSection() {
 
                     <div className="p-4 rounded-xl surface-metallic-card space-y-3">
                       <div className="flex items-center justify-between text-[13px] font-mono">
-                        <span className="font-bold text-white">DEFAULT RESUME VERSION</span>
-                        <span className="text-emerald-400">PDF VERIFIED</span>
+                        <span className="font-bold text-white">RESUME FOR THIS APPLICATION</span>
+                        <span className="text-emerald-400">RESUME FILE</span>
                       </div>
                       <div className="flex items-center gap-3 p-3 bg-[#0a0d14] rounded-lg border border-white/[0.06]">
                         <div className="w-8 h-8 rounded bg-white/[0.08] text-white font-mono font-bold text-[13px] flex items-center justify-center shrink-0 border border-white/10">
@@ -268,18 +268,18 @@ export default function WorkflowStageSection() {
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="text-sm font-semibold text-white truncate">Staff_Systems_Engineer_2026.pdf</p>
-                          <p className="text-[13px] font-mono text-white/50">SHA-256: 8f4a...9b12 · 142 KB</p>
+                          <p className="text-[13px] font-mono text-white/50">Attached to this example application</p>
                         </div>
                       </div>
                     </div>
 
                     <div className="p-4 rounded-xl surface-metallic-card space-y-2">
                       <div className="flex items-center justify-between text-[13px] font-mono text-ink-muted">
-                        <span className="text-white font-semibold">Sarah Jenkins · Technical Recruiting Lead</span>
-                        <span className="text-white/40">Linear Corp</span>
+                        <span className="text-white font-semibold">Sarah Jenkins · Recruiting contact</span>
+                        <span className="text-white/40">Fieldnote Corp</span>
                       </div>
                       <p className="text-sm text-ink-secondary font-sans">
-                        Confirmed interview debrief scheduled for Monday 9:00 AM PST. Recruiter thread synced with application status.
+                        A sample contact note kept with the application for interview preparation.
                       </p>
                     </div>
                   </div>
@@ -288,8 +288,8 @@ export default function WorkflowStageSection() {
 
               {/* Status Note */}
               <div className="mt-6 pt-4 border-t border-white/[0.06] flex items-center justify-between text-[13px] font-mono text-white/50">
-                <span>VERIFIED EVOLEXA SYSTEM CAPABILITY</span>
-                <span>STATE SYNCHRONIZATION: REAL-TIME</span>
+                <span>EXAMPLE WORKFLOW PREVIEW</span>
+                <span>APPLICATION DETAILS IN ONE PLACE</span>
               </div>
 
             </div>
@@ -301,3 +301,7 @@ export default function WorkflowStageSection() {
     </section>
   )
 }
+
+
+
+

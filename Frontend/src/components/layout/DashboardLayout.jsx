@@ -12,7 +12,7 @@ const PAGE_TITLES = {
 };
 
 export default function DashboardLayout() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
@@ -20,8 +20,13 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-canvas text-ink font-sans">
-      <SideBar isSidebarOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <div className="flex flex-col flex-1 min-w-0">
+      <SideBar
+        isSidebarOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        onExpand={() => setIsSidebarOpen(true)}
+        onCollapse={() => setIsSidebarOpen(false)}
+      />
+      <div className="flex flex-col flex-1 min-w-0 h-screen md:h-[calc(100vh-1.5rem)] md:my-3 md:mr-3 md:ml-[88px] md:rounded-3xl md:border md:border-border-primary bg-surface md:shadow-elevated overflow-hidden">
         <TopBar toggleSidebar={toggleSidebar} title={title} />
         <div key={location.pathname} className="flex-1 flex flex-col min-w-0 overflow-hidden animate-page-enter">
           <Outlet />

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" fill="none">
+  <defs><linearGradient id="panel" x1="24" y1="24" x2="690" y2="500" gradientUnits="userSpaceOnUse"><stop stop-color="#14283a"/><stop offset="1" stop-color="#08111b"/></linearGradient><pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0v28" stroke="#c3e4fb" stroke-opacity=".06"/></pattern></defs>
+  <rect width="720" height="520" rx="26" fill="url(#panel)"/><rect width="720" height="520" rx="26" fill="url(#grid)"/>
+  <text x="48" y="63" fill="#ccecff" font-family="Arial,sans-serif" font-size="13" letter-spacing="2">APPLICATION NOTES</text>
+  <path d="M78 123v296" stroke="#6cbcf0" stroke-opacity=".5" stroke-width="2"/>
+  <g font-family="Arial,sans-serif"><circle cx="78" cy="145" r="8" fill="#79c8fb"/><text x="108" y="140" fill="#e8f5ff" font-size="16">Today</text><text x="108" y="164" fill="#9cb2c5" font-size="13">Prepare questions for the first conversation</text><rect x="476" y="128" width="178" height="42" rx="9" fill="#10253a" stroke="#84cdf8" stroke-opacity=".25"/><text x="494" y="154" fill="#b8e2fb" font-size="13">Interview · Northstar</text>
+  <circle cx="78" cy="267" r="7" fill="#9ccfee"/><text x="108" y="262" fill="#d8eaf7" font-size="15">Application saved</text><text x="108" y="284" fill="#91a6b8" font-size="13">Role details and source kept together</text>
+  <circle cx="78" cy="384" r="7" fill="#9ccfee"/><text x="108" y="379" fill="#d8eaf7" font-size="15">Follow-up reminder</text><text x="108" y="401" fill="#91a6b8" font-size="13">A date to check back after applying</text></g>
+  <rect x="48" y="450" width="624" height="1" fill="#c3e4fb" fill-opacity=".16"/><text x="48" y="482" fill="#7793a8" font-family="Arial,sans-serif" font-size="12" letter-spacing="1">KEEP THE CONTEXT. SEE WHAT COMES NEXT.</text>
+</svg>
