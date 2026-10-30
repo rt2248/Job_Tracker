@@ -69,6 +69,8 @@ const Profile = () => {
   const initialTab = ["overview", "edit", "account"].includes(tabFromUrl) ? tabFromUrl : "overview"
   const [activeTab, setActiveTab] = useState(initialTab)
   const [slideDirection, setSlideDirection] = useState("forward")
+  const [hasNavigated, setHasNavigated] = useState(false)
+  const [editFormResetKey, setEditFormResetKey] = useState(0)
   const [isDirty, setIsDirty] = useState(false)
   const [pendingTab, setPendingTab] = useState(null)
   const [showUnsavedModal, setShowUnsavedModal] = useState(false)
@@ -171,12 +173,13 @@ const Profile = () => {
       const nextOrder = TAB_ORDER[tabFromUrl] ?? 0
       const currentOrder = TAB_ORDER[activeTab] ?? 0
       setSlideDirection(nextOrder >= currentOrder ? "forward" : "backward")
+      setHasNavigated(true)
       setActiveTab(tabFromUrl)
     }
   }, [tabFromUrl, activeTab, isDirty])
 
   // Tab change with dirty state guard
-  const handleTabChange = (targetTab) => {
+  const handleTabChange = useCallback((targetTab) => {
     if (activeTab === targetTab) return
 
     if (activeTab === "edit" && isDirty) {
@@ -188,9 +191,12 @@ const Profile = () => {
     const nextOrder = TAB_ORDER[targetTab] ?? 0
     const currentOrder = TAB_ORDER[activeTab] ?? 0
     setSlideDirection(nextOrder >= currentOrder ? "forward" : "backward")
+    setHasNavigated(true)
     setActiveTab(targetTab)
-    setSearchParams({ tab: targetTab }, { replace: true })
-  }
+    if (searchParams.get("tab") !== targetTab) {
+      setSearchParams({ tab: targetTab }, { replace: true })
+    }
+  }, [activeTab, isDirty, searchParams, setSearchParams])
 
   const handleConfirmDiscard = () => {
     setIsDirty(false)
@@ -199,15 +205,21 @@ const Profile = () => {
     const nextOrder = TAB_ORDER[target] ?? 0
     const currentOrder = TAB_ORDER[activeTab] ?? 0
     setSlideDirection(nextOrder >= currentOrder ? "forward" : "backward")
+    setHasNavigated(true)
+    setEditFormResetKey((k) => k + 1)
     setActiveTab(target)
-    setSearchParams({ tab: target }, { replace: true })
+    if (searchParams.get("tab") !== target) {
+      setSearchParams({ tab: target }, { replace: true })
+    }
     setPendingTab(null)
   }
 
   const handleCancelDiscard = () => {
     setPendingTab(null)
     setShowUnsavedModal(false)
-    setSearchParams({ tab: activeTab }, { replace: true })
+    if (searchParams.get("tab") !== activeTab) {
+      setSearchParams({ tab: activeTab }, { replace: true })
+    }
   }
 
   // Save profile changes (PUT /api/profile/me)
@@ -241,7 +253,11 @@ const Profile = () => {
         const nextOrder = TAB_ORDER["overview"] ?? 0
         const currentOrder = TAB_ORDER[activeTab] ?? 0
         setSlideDirection(nextOrder >= currentOrder ? "forward" : "backward")
+        setHasNavigated(true)
         setActiveTab("overview")
+        if (searchParams.get("tab") !== "overview") {
+          setSearchParams({ tab: "overview" }, { replace: true })
+        }
       } else {
         toast.error(data.message || "Failed to update profile.")
       }
@@ -470,76 +486,107 @@ const Profile = () => {
             })}
           </div>
 
-          {/* Tab Content with Directional Sliding Transition */}
-          <div className="w-full overflow-hidden">
+          {/* Tab Content with Directional Sliding Transition (Persistent panels to prevent unmounting/stutter) */}
+          <div className="w-full profile-tab-viewport">
+            {/* 1. Overview Tab */}
             <div
-              key={activeTab}
-              className={
-                slideDirection === "forward"
-                  ? "animate-profile-slide-forward"
-                  : "animate-profile-slide-backward"
-              }
+              id="profile-panel-overview"
+              role="tabpanel"
+              aria-labelledby="profile-tab-overview"
+              aria-hidden={activeTab !== "overview"}
+              className={cn(
+                "w-full profile-tab-panel",
+                activeTab === "overview"
+                  ? (hasNavigated
+                      ? (slideDirection === "forward"
+                          ? "animate-profile-slide-forward"
+                          : "animate-profile-slide-backward")
+                      : "block")
+                  : "hidden"
+              )}
             >
-              {/* 1. Overview Tab */}
-              {activeTab === "overview" && (
-                <div id="profile-panel-overview" role="tabpanel" aria-labelledby="profile-tab-overview">
-                  <ProfileOverviewTab
-                    userData={userData}
-                    isLoadingUser={isLoadingUser}
-                    resume={resume}
-                    isLoadingResume={isLoadingResume}
-                    isUploadingResume={isUploadingResume}
-                    isViewingResume={isViewingResume}
-                    isDeletingResume={isDeletingResume}
-                    selectedResumeFile={selectedResumeFile}
-                    onSelectResumeFile={handleResumeFileSelect}
-                    onCancelSelectedResume={handleCancelSelectedResume}
-                    onUploadResume={handleUploadResume}
-                    onViewResume={handleViewResume}
-                    onRequestDeleteResume={() => setShowDeleteResumeModal(true)}
-                    resumeFileInputRef={resumeFileInputRef}
-                    returnPromptsEnabled={returnPromptsEnabled}
-                    onToggleReturnPrompts={() => setReturnPromptsEnabled(!returnPromptsEnabled)}
-                    onRequestSignOut={() => setShowLogoutModal(true)}
-                    onNavigateToEdit={() => handleTabChange("edit")}
-                  />
-                </div>
-              )}
+              <ProfileOverviewTab
+                userData={userData}
+                isLoadingUser={isLoadingUser}
+                resume={resume}
+                isLoadingResume={isLoadingResume}
+                isUploadingResume={isUploadingResume}
+                isViewingResume={isViewingResume}
+                isDeletingResume={isDeletingResume}
+                selectedResumeFile={selectedResumeFile}
+                onSelectResumeFile={handleResumeFileSelect}
+                onCancelSelectedResume={handleCancelSelectedResume}
+                onUploadResume={handleUploadResume}
+                onViewResume={handleViewResume}
+                onRequestDeleteResume={() => setShowDeleteResumeModal(true)}
+                resumeFileInputRef={resumeFileInputRef}
+                returnPromptsEnabled={returnPromptsEnabled}
+                onToggleReturnPrompts={() => setReturnPromptsEnabled(!returnPromptsEnabled)}
+                onRequestSignOut={() => setShowLogoutModal(true)}
+                onNavigateToEdit={() => handleTabChange("edit")}
+              />
+            </div>
 
-              {/* 2. Edit Profile Tab */}
-              {activeTab === "edit" && (
-                <div id="profile-panel-edit" role="tabpanel" aria-labelledby="profile-tab-edit">
-                  <EditProfileTab
-                    initialData={userData}
-                    onSaveProfile={handleSaveProfile}
-                    onCancelEdits={handleCancelEdits}
-                    isSaving={isSavingProfile}
-                    isDirty={isDirty}
-                    setIsDirty={setIsDirty}
-                    onAvatarUploaded={(newUrl) => {
-                      setUserData((prev) => ({ ...prev, avatarUrl: newUrl }))
-                    }}
-                  />
-                </div>
+            {/* 2. Edit Profile Tab */}
+            <div
+              id="profile-panel-edit"
+              role="tabpanel"
+              aria-labelledby="profile-tab-edit"
+              aria-hidden={activeTab !== "edit"}
+              className={cn(
+                "w-full profile-tab-panel",
+                activeTab === "edit"
+                  ? (hasNavigated
+                      ? (slideDirection === "forward"
+                          ? "animate-profile-slide-forward"
+                          : "animate-profile-slide-backward")
+                      : "block")
+                  : "hidden"
               )}
+            >
+              <EditProfileTab
+                key={editFormResetKey}
+                initialData={userData}
+                onSaveProfile={handleSaveProfile}
+                onCancelEdits={handleCancelEdits}
+                isSaving={isSavingProfile}
+                isDirty={isDirty}
+                setIsDirty={setIsDirty}
+                onAvatarUploaded={(newUrl) => {
+                  setUserData((prev) => ({ ...prev, avatarUrl: newUrl }))
+                }}
+              />
+            </div>
 
-              {/* 3. Account & Security Tab */}
-              {activeTab === "account" && (
-                <div id="profile-panel-account" role="tabpanel" aria-labelledby="profile-tab-account">
-                  <AccountSecurityTab
-                    userData={userData}
-                    returnPromptsEnabled={returnPromptsEnabled}
-                    onToggleReturnPrompts={() => setReturnPromptsEnabled(!returnPromptsEnabled)}
-                    onRequestSignOut={() => setShowLogoutModal(true)}
-                    onPasswordChanged={(newTimestamp) => {
-                      setUserData((prev) => ({
-                        ...prev,
-                        passwordChangedAt: newTimestamp,
-                      }))
-                    }}
-                  />
-                </div>
+            {/* 3. Account & Security Tab */}
+            <div
+              id="profile-panel-account"
+              role="tabpanel"
+              aria-labelledby="profile-tab-account"
+              aria-hidden={activeTab !== "account"}
+              className={cn(
+                "w-full profile-tab-panel",
+                activeTab === "account"
+                  ? (hasNavigated
+                      ? (slideDirection === "forward"
+                          ? "animate-profile-slide-forward"
+                          : "animate-profile-slide-backward")
+                      : "block")
+                  : "hidden"
               )}
+            >
+              <AccountSecurityTab
+                userData={userData}
+                returnPromptsEnabled={returnPromptsEnabled}
+                onToggleReturnPrompts={() => setReturnPromptsEnabled(!returnPromptsEnabled)}
+                onRequestSignOut={() => setShowLogoutModal(true)}
+                onPasswordChanged={(newTimestamp) => {
+                  setUserData((prev) => ({
+                    ...prev,
+                    passwordChangedAt: newTimestamp,
+                  }))
+                }}
+              />
             </div>
           </div>
         </div>
