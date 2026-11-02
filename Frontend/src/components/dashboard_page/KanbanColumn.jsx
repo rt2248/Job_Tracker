@@ -1,35 +1,23 @@
 import React, { useState } from "react";
 import { STATUS_META } from "../../constants/jobStatus";
 import KanbanCard from "./KanbanCard";
-import Badge from "../shared/Badge";
 import { cn } from "../../utils/cn";
 
 const HEADER_ACCENT_CLASSES = {
     slate: "border-t-slate-500",
-    indigo: "border-t-indigo",
-    muted: "border-t-muted",
+    indigo: "border-t-cyan",
+    muted: "border-t-cyan",
     amber: "border-t-amber",
-    violet: "border-t-violet",
+    violet: "border-t-red",
     cyan: "border-t-cyan",
     green: "border-t-green",
     red: "border-t-red",
 };
 
-const STATUS_VARIANT_MAP = {
-    saved: "wishlist",
-    applied: "applied",
-    oa: "amber",
-    interview: "interview",
-    offer: "offer",
-    accepted: "emerald",
-    rejected: "rejected",
-};
-
 function KanbanColumn({ status, jobs = [], onCardClick, onDropCard, draggingCardId }) {
     const [isDragOver, setIsDragOver] = useState(false);
     const meta = STATUS_META[status] || { label: status, color: "muted" };
-    const accentClass = HEADER_ACCENT_CLASSES[meta.color] || "border-t-indigo";
-    const badgeVariant = STATUS_VARIANT_MAP[status] || "default";
+    const accentClass = HEADER_ACCENT_CLASSES[meta.color] || "border-t-cyan";
 
     const handleDragOver = (e) => {
         e.preventDefault();
@@ -66,9 +54,9 @@ function KanbanColumn({ status, jobs = [], onCardClick, onDropCard, draggingCard
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             className={cn(
-                "bg-surface/90 border border-border-primary border-t-2 rounded-2xl w-[280px] sm:w-80 shrink-0 flex flex-col max-h-full transition-all duration-200 shadow-sm",
+                "bg-surface/90 border border-border-primary border-t-2 rounded-2xl w-[280px] sm:w-80 shrink-0 flex flex-col max-h-full transition-all duration-200 card-3d",
                 accentClass,
-                isDragOver && "bg-surface-elevated border-indigo/60 ring-2 ring-indigo/30 scale-[1.01] shadow-elevated"
+                isDragOver && "bg-surface-elevated border-cyan/60 ring-2 ring-cyan/30 scale-[1.01]"
             )}
         >
             {/* Column Header */}
@@ -77,18 +65,20 @@ function KanbanColumn({ status, jobs = [], onCardClick, onDropCard, draggingCard
                     <span className={cn(
                         "w-2 h-2 rounded-full",
                         status === "saved" && "bg-slate-400",
-                        status === "applied" && "bg-indigo",
+                        status === "applied" && "bg-cyan",
                         status === "oa" && "bg-amber",
-                        status === "interview" && "bg-violet",
-                        status === "offer" && "bg-cyan",
+                        status === "interview" && "bg-red",
+                        status === "offer" && "bg-yellow",
                         status === "accepted" && "bg-green",
                         status === "rejected" && "bg-red"
                     )} />
-                    <h3 className="font-display text-ink text-sm font-semibold tracking-tight">{meta.label}</h3>
+                    <h3 className="font-display text-ink text-sm font-semibold tracking-tight flex items-center gap-1.5">
+                        {meta.label}
+                        <span className="font-mono text-xs font-normal text-muted">
+                            ({jobs.length})
+                        </span>
+                    </h3>
                 </div>
-                <Badge variant={badgeVariant} size="sm">
-                    {jobs.length}
-                </Badge>
             </div>
 
             {/* Column Cards Container */}
@@ -96,7 +86,7 @@ function KanbanColumn({ status, jobs = [], onCardClick, onDropCard, draggingCard
                 {jobs.length === 0 ? (
                     <div className={cn(
                         "flex flex-col items-center justify-center py-8 px-4 rounded-xl border border-dashed text-center transition-all my-auto",
-                        isDragOver ? "border-indigo/60 bg-indigo/10 text-indigo" : "border-border-subtle/80 text-muted/60"
+                        isDragOver ? "border-cyan/60 bg-cyan/10 text-cyan" : "border-border-subtle/80 text-muted/60"
                     )}>
                         <p className="text-xs font-sans font-medium">
                             {isDragOver ? "Drop application here" : "No applications"}

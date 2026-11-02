@@ -26,14 +26,14 @@ export default function Footer() {
                 A focused place to organize job applications, role details, and follow-up notes.
               </p>
             </div>
-            <div className="text-[13px] font-mono text-white/50">
+            <div className="text-[13px] font-ui text-white/50">
               Keep your search organized from saved role to next conversation.
             </div>
           </div>
 
           {/* Tile 2: Application Destinations */}
           <div className="md:col-span-4 p-6 rounded-xl surface-metallic-panel">
-            <h4 className="font-mono text-sm text-white/90 font-semibold mb-4">
+            <h4 className="font-ui text-sm text-white/90 font-semibold mb-4">
               Application modules
             </h4>
             <div className="grid grid-cols-2 gap-2.5 text-sm">
@@ -58,7 +58,7 @@ export default function Footer() {
           {/* Tile 3: Account & Access */}
           <div className="md:col-span-3 p-6 rounded-xl surface-metallic-panel flex flex-col justify-between">
             <div>
-              <h4 className="font-mono text-sm text-white/90 font-semibold mb-4">
+              <h4 className="font-ui text-sm text-white/90 font-semibold mb-4">
                 Account &amp; access
               </h4>
               <div className="flex flex-col gap-2.5 text-sm">
@@ -71,7 +71,7 @@ export default function Footer() {
               </div>
             </div>
 
-            <div className="pt-4 text-[13px] font-mono text-emerald-400 font-medium flex items-center gap-2">
+            <div className="pt-4 text-[13px] font-ui text-emerald-400 font-medium flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
               <span>YOUR NEXT STEP STARTS HERE</span>
             </div>
@@ -85,10 +85,10 @@ export default function Footer() {
             EVOLEXA
           </div>
           <div className="space-y-1 text-right">
-            <div className="text-[13px] font-mono text-ink-muted text-center md:text-right">
+            <div className="text-[13px] font-ui text-ink-muted text-center md:text-right">
               © {year} Evolexa. A clearer view of your job search.
             </div>
-            <div className="text-[13px] font-mono text-white/40 text-center md:text-right">
+            <div className="text-[13px] font-ui text-white/40 text-center md:text-right">
               
             </div>
           </div>

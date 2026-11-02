@@ -65,7 +65,7 @@ function LocationCombobox({ value, onChange }) {
             />
 
             {isOpen && filteredLocations.length > 0 && (
-                <div className="absolute z-20 mt-1 w-full bg-surface-elevated border border-border-primary rounded-xl max-h-48 overflow-y-auto shadow-elevated custom-scrollbar p-1">
+                <div className="absolute z-20 mt-1 w-full bg-surface-elevated border border-border-primary rounded-xl max-h-48 overflow-y-auto card-3d custom-scrollbar p-1">
                     {filteredLocations.map((loc) => (
                         <button
                             key={loc}

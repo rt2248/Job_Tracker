@@ -5,7 +5,6 @@ import WorkModeBadge from "./WorkModeBadge";
 import ExperienceLevelBadge from "./ExperienceLevelBadge";
 import Modal, { ModalHeader, ModalTitle, ModalContent, ModalFooter } from "../shared/Modal";
 import Button from "../shared/Button";
-import Badge from "../shared/Badge";
 import { useTrackListing } from "../../hooks/useTrackListing";
 import { recordExternalListingClick } from "../../utils/promptStorage";
 import { formatDate } from "../../utils/formatDate";
@@ -25,19 +24,19 @@ function ListingDetailModal({ listing, onClose }) {
         <Modal isOpen={Boolean(listing)} onClose={onClose} size="lg">
             <ModalHeader onClose={onClose}>
                 <ModalTitle>{listing.title}</ModalTitle>
-                <p className="text-muted text-sm font-sans mt-0.5">
+                <p className="text-muted text-sm font-sans mt-1 flex items-center gap-2 flex-wrap">
                     <span className="text-ink-secondary font-medium">{listing.company}</span>
-                    {listing.location && <span> · {listing.location}</span>}
+                    {listing.location && <span>· {listing.location}</span>}
+                    <span className="text-border-primary/80">·</span>
+                    <JobTypeBadge jobType={listing.jobType} />
+                    <span className="text-border-primary/80">·</span>
+                    <WorkModeBadge workMode={listing.workMode} />
+                    <span className="text-border-primary/80">·</span>
+                    <ExperienceLevelBadge experienceLevel={listing.experienceLevel} />
                 </p>
             </ModalHeader>
 
             <ModalContent>
-                <div className="flex items-center gap-2 mb-6 flex-wrap">
-                    <JobTypeBadge jobType={listing.jobType} />
-                    <WorkModeBadge workMode={listing.workMode} />
-                    <ExperienceLevelBadge experienceLevel={listing.experienceLevel} />
-                </div>
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-surface-secondary/50 border border-border-subtle text-sm">
                     <div>
                         <p className="text-muted text-xs font-sans font-medium uppercase tracking-wider">Compensation</p>
@@ -70,11 +69,11 @@ function ListingDetailModal({ listing, onClose }) {
                 {listing.tags && listing.tags.length > 0 && (
                     <div className="mt-5">
                         <p className="text-muted text-xs font-sans font-medium uppercase tracking-wider mb-2">Skills & Tags</p>
-                        <div className="flex flex-wrap gap-1.5">
+                        <div className="flex flex-wrap gap-2 text-xs font-sans font-medium">
                             {listing.tags.map((tag) => (
-                                <Badge key={tag} variant="subtle" size="sm">
+                                <span key={tag} className="text-cyan/80">
                                     #{tag}
-                                </Badge>
+                                </span>
                             ))}
                         </div>
                     </div>
@@ -93,7 +92,7 @@ function ListingDetailModal({ listing, onClose }) {
                             const jobId = getJobId(listing.id);
                             navigate(jobId ? `/applications?job=${jobId}` : "/applications");
                         }}
-                        className="text-slate-300 hover:text-ink"
+                        className="text-ink-secondary hover:text-ink"
                     >
                         View in Tracker
                     </Button>
@@ -102,11 +101,11 @@ function ListingDetailModal({ listing, onClose }) {
                         variant="outline"
                         disabled={inFlight}
                         onClick={() => addToTracker(listing)}
-                        className="border-indigo/40 text-indigo hover:bg-indigo/10 flex items-center gap-1.5"
+                        className="border-cyan/40 text-cyan hover:bg-cyan/10 flex items-center gap-1.5"
                     >
                         {inFlight ? (
                             <>
-                                <span className="w-3.5 h-3.5 rounded-full border-2 border-indigo border-t-transparent animate-spin" />
+                                <span className="w-3.5 h-3.5 rounded-full border-2 border-cyan border-t-transparent animate-spin" />
                                 Adding...
                             </>
                         ) : (

@@ -2,8 +2,8 @@ import React, { useState } from "react"
 import JobSearchFilterBar from "../../components/job_search_page/JobSearchFilter"
 import ListingCard from "../../components/job_search_page/ListingCard"
 import ListingDetailModal from "../../components/job_search_page/ListingDetailModal"
-import Badge from "../../components/shared/Badge"
 import Button from "../../components/shared/Button"
+import ThemeToggleButton from "../../components/shared/ThemeToggleButton"
 import { useJobListings } from "../../hooks/useJobListings"
 
 const JobSearch = () => {
@@ -15,20 +15,21 @@ const JobSearch = () => {
             <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar">
                     
                     {/* Header Section */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div className="flex items-start justify-between gap-4 mb-6">
                         <div>
-                            <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight">
+                            <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight flex items-baseline gap-2.5">
                                 Job Discovery
+                                {listings && listings.length > 0 && (
+                                    <span className="font-mono text-xs sm:text-sm font-medium text-cyan">
+                                        ({listings.length} {listings.length === 1 ? "listing" : "listings"})
+                                    </span>
+                                )}
                             </h1>
                             <p className="text-muted text-xs sm:text-sm mt-0.5 font-sans">
                                 Explore and filter available career opportunities.
                             </p>
                         </div>
-                        {listings && listings.length > 0 && (
-                            <Badge variant="cyan" size="md">
-                                {listings.length} {listings.length === 1 ? "Listing" : "Listings"}
-                            </Badge>
-                        )}
+                        <ThemeToggleButton />
                     </div>
 
                     {/* Filter Bar */}

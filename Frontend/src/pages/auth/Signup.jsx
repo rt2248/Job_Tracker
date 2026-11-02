@@ -6,6 +6,8 @@ import StarField from '../../components/signup_page/StarField';
 import WelcomeLine from '../../components/signup_page/WelcomeLine';
 import FieldError from '../../components/signup_page/FieldError';
 import PasswordField from '../../components/signup_page/PasswordField';
+import useAppTheme from '../../hooks/useAppTheme';
+import './auth-page.css';
 import googleIcon from '../../assets/logos/google.svg';
 import codeSarthi from '../../assets/logos/codesarthi.svg';
 import arrowBack from '../../assets/icons/arrowback.svg';
@@ -13,6 +15,7 @@ import { getApiUrl } from '../../utils/config';
 
 const SignUp = () => {
     const navigate = useNavigate();
+    const { theme } = useAppTheme();
     const [apiError, setApiError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -56,10 +59,10 @@ const SignUp = () => {
     };
 
     return (
-        <div className="bg-black min-h-screen text-ink font-body flex flex-col lg:flex-row w-full overflow-x-hidden relative">
+        <div className="auth-page bg-black min-h-screen text-ink font-body flex flex-col lg:flex-row w-full overflow-x-hidden relative" data-theme={theme}>
             {/* Fullscreen Loading Screen Overlay */}
             {isLoading && (
-                <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4 animate-modal-backdrop">
+                <div className="auth-loading-overlay fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4 animate-modal-backdrop">
                     <div className="flex flex-col items-center max-w-sm w-full text-center animate-modal-content">
                         {/* Spinning indicator with brand initials */}
                         <div className="relative flex items-center justify-center mb-6">
@@ -84,12 +87,12 @@ const SignUp = () => {
 
             {/* Left Column - Desktop branding sidebar */}
             <div className="hidden lg:flex lg:w-[38vw] xl:w-[35vw] shrink-0 auth-sidebar-bg min-h-screen flex-col justify-between p-8 xl:p-12 border-r border-white/10">
-                <Link to="/" className="inline-flex items-center gap-2 max-w-fit px-3 py-1.5 font-display text-base text-muted-light hover:text-ink hover:bg-white/5 rounded-xl transition-all">
-                    <img src={arrowBack} className="h-4 w-4" alt="Back" /> Home
+                <Link to="/" className="auth-home-link inline-flex items-center gap-2 max-w-fit px-3 py-1.5 font-display text-base text-muted-light hover:text-ink rounded-xl transition-all">
+                    <img src={arrowBack} className="auth-back-icon h-4 w-4" alt="Back" /> Home
                 </Link>
                 <div className="my-auto py-12">
                     <div className="flex flex-col gap-3">
-                        <span className="w-fit text-metallic font-bold tracking-tight font-display text-4xl xl:text-5xl select-none [filter:drop-shadow(0_0_6px_rgba(255,255,255,0.35))_drop-shadow(0_0_18px_rgba(255,255,255,0.15))]">
+                        <span className="auth-brand-glow w-fit text-metallic font-bold tracking-tight font-display text-4xl xl:text-5xl select-none [filter:drop-shadow(0_0_6px_rgba(255,255,255,0.35))_drop-shadow(0_0_18px_rgba(255,255,255,0.15))]">
                             Evolexa
                         </span>
                         <span className="text-ink font-display font-bold text-2xl xl:text-3xl tracking-tight leading-snug">
@@ -112,12 +115,10 @@ const SignUp = () => {
 
                 {/* Mobile header */}
                 <div className="lg:hidden w-full max-w-md flex items-center justify-between mb-6 z-10">
-                    <Link to="/" className="inline-flex items-center gap-1.5 text-sm font-display text-muted-light hover:text-ink">
-                        <img src={arrowBack} className="h-4 w-4" alt="Back" /> Home
+                    <Link to="/" className="auth-home-link inline-flex items-center gap-1.5 px-2.5 py-1 text-sm font-display text-muted-light hover:text-ink rounded-xl transition-colors">
+                        <img src={arrowBack} className="auth-back-icon h-4 w-4" alt="Back" /> Home
                     </Link>
-                    <span className="text-metallic font-bold font-display text-2xl">
-                        Evolexa
-                    </span>
+                    <span className="text-metallic font-bold font-display text-2xl">Evolexa</span>
                 </div>
 
                 <div className="w-full max-w-md sm:max-w-lg z-10 flex flex-col items-center">

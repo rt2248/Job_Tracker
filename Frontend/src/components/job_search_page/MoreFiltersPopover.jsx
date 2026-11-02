@@ -6,7 +6,7 @@ import Popover from "../shared/Popover";
 import Select from "../shared/Select";
 import Input from "../shared/Input";
 import Button from "../shared/Button";
-import Badge from "../shared/Badge";
+import { cn } from "../../utils/cn";
 
 function MoreFiltersPopover({ filters, updateFilter, onClose }) {
     const { tags: allTags } = useJobTags();
@@ -101,14 +101,14 @@ function MoreFiltersPopover({ filters, updateFilter, onClose }) {
                                     key={tag}
                                     type="button"
                                     onClick={() => toggleTag(tag)}
-                                    className="hover:cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-indigo/40 rounded-full"
+                                    className={cn(
+                                        "px-2.5 py-1 rounded-lg text-xs font-medium font-sans transition-all cursor-pointer border",
+                                        isSelected
+                                            ? "bg-cyan/15 text-cyan border-cyan/40 shadow-xs"
+                                            : "bg-surface-secondary/70 text-muted hover:text-ink border-border-subtle hover:border-border-primary"
+                                    )}
                                 >
-                                    <Badge
-                                        variant={isSelected ? "indigo" : "subtle"}
-                                        size="sm"
-                                    >
-                                        #{tag}
-                                    </Badge>
+                                    #{tag}
                                 </button>
                             );
                         })}

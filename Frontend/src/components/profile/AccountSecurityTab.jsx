@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import Card, { CardHeader, CardTitle, CardContent } from "../shared/Card"
-import Badge from "../shared/Badge"
 import Button from "../shared/Button"
 import OpportunityPreferencesCard from "./OpportunityPreferencesCard"
+import ThemePreferenceCard from "./ThemePreferenceCard"
 import ChangePasswordModal from "./ChangePasswordModal"
 import { formatDate } from "../../utils/formatDate"
 
@@ -78,15 +78,13 @@ const AccountSecurityTab = ({
         onToggleReturnPrompts={onToggleReturnPrompts}
       />
 
-      {/* 3. Credentials & Security Management */}
+      {/* 3. Appearance & Theme Preferences */}
+      <ThemePreferenceCard />
+
+      {/* 4. Credentials & Security Management */}
       <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
         <CardHeader className="mb-4">
-          <div className="flex items-center justify-between gap-3">
-            <CardTitle className="text-lg font-display">Security & Credentials</CardTitle>
-            <Badge variant="subtle" size="sm">
-              Stage 5.1 Active
-            </Badge>
-          </div>
+          <CardTitle className="text-lg font-display">Security & Credentials</CardTitle>
           <p className="text-xs text-muted font-sans mt-0.5">
             Manage your master account credentials and session security.
           </p>
@@ -102,12 +100,7 @@ const AccountSecurityTab = ({
                   </svg>
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-xs sm:text-sm text-ink">Account Password</span>
-                    <Badge variant="outline" size="sm" className="text-[10px]">
-                      Protected
-                    </Badge>
-                  </div>
+                  <span className="font-semibold text-xs sm:text-sm text-ink block">Account Password</span>
                   <p className="text-[11px] text-muted font-sans mt-0.5">
                     Last updated: <span className="font-mono text-ink-secondary">{passwordChangedText}</span>
                   </p>
@@ -133,26 +126,21 @@ const AccountSecurityTab = ({
                   </svg>
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-xs text-ink">Two-Factor Authentication (2FA)</span>
-                    <Badge variant="subtle" size="sm" className="text-[10px]">
-                      Stage 5.2 Roadmap
-                    </Badge>
-                  </div>
+                  <span className="font-semibold text-xs text-ink block">Two-Factor Authentication (2FA)</span>
                   <p className="text-[11px] text-muted font-sans mt-0.5">
-                    TOTP multi-factor authentication and recovery codes are planned for the Stage 5.2 security release.
+                    TOTP multi-factor authentication and recovery codes are planned for a future security update.
                   </p>
                 </div>
               </div>
-              <Badge variant="outline" size="sm" className="self-start sm:self-center text-muted">
+              <span className="self-start sm:self-center text-xs font-sans font-medium text-muted">
                 Planned
-              </Badge>
+              </span>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* 4. Active Session & Logout */}
+      {/* 5. Active Session & Logout */}
       <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>

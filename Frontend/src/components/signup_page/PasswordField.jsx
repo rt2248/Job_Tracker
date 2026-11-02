@@ -20,7 +20,7 @@ const PasswordField = ({ label, placeholder, name, register, rules, error, width
                     type='button'
                     tabIndex={-1}
                     onClick={() => setShowPassword((prev) => !prev)}
-                    className='absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center p-1'
+                    className='auth-password-toggle absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center p-1'
                 >
                     <img
                         src={showPassword ? visibilityOffIcon : visibilityIcon}

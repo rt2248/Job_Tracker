@@ -1,18 +1,21 @@
+import React from "react";
 import { JOB_TYPE_META } from "../../constants/jobType";
+import { cn } from "../../utils/cn";
 
-const BADGE_CLASSES = {
-    cyan: "bg-cyan/10 text-cyan border border-cyan/30",
-    indigo: "bg-indigo/10 text-indigo border border-indigo/30",
-    violet: "bg-violet/10 text-violet border border-violet/30",
-    amber: "bg-amber/10 text-amber border border-amber/30",
+const TEXT_COLORS = {
+    cyan: "text-cyan",
+    indigo: "text-cyan",
+    violet: "text-red",
+    amber: "text-amber",
+    pink: "text-red",
 };
 
-function JobTypeBadge({ jobType }) {
+function JobTypeBadge({ jobType, className }) {
     const meta = JOB_TYPE_META[jobType] || { label: jobType, color: "cyan" };
-    const classes = BADGE_CLASSES[meta.color];
+    const colorClass = TEXT_COLORS[meta.color] || "text-cyan";
 
     return (
-        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium font-mono shrink-0 ${classes}`}>
+        <span className={cn("text-xs font-medium font-sans shrink-0", colorClass, className)}>
             {meta.label}
         </span>
     );

@@ -1,4 +1,36 @@
 @font-face {
+  font-family: 'Evolexa Andika';
+  src: url('../assets/fonts/Andika/Andika-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Evolexa Andika';
+  src: url('../assets/fonts/Andika/Andika-Bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Evolexa Andika';
+  src: url('../assets/fonts/Andika/Andika-Italic.ttf') format('truetype');
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Evolexa Andika';
+  src: url('../assets/fonts/Andika/Andika-BoldItalic.ttf') format('truetype');
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'Evolexa Bricolage';
   src: url('../assets/fonts/Bricolage_Grotesque/BricolageGrotesque-VariableFont_opsz,wdth,wght.ttf') format('truetype');
   font-style: normal;
@@ -23,6 +55,11 @@
 }
 
 .landing-page {
+  --lp-font-display: 'Evolexa Bricolage', 'Geist Variable', sans-serif;
+  --lp-font-body: 'Evolexa Andika', 'Geist Variable', sans-serif;
+  --lp-font-ui: 'Geist Variable', 'Inter', sans-serif;
+  --lp-font-accent: 'Evolexa Playfair', 'Evolexa Bricolage', serif;
+  --lp-font-technical: 'Evolexa Mono', ui-monospace, monospace;
   --lp-bg: #05070b;
   --lp-panel: #0d1119;
   --lp-panel-raised: #121a25;
@@ -35,11 +72,12 @@
   --lp-blue: #a8d9ff;
   --lp-blue-strong: #5bb7f5;
   --lp-blue-wash: rgba(91, 183, 245, 0.11);
+  --lp-search-ambient: rgba(18, 23, 30, 0.48);
   min-height: 100vh;
   overflow-x: clip;
   background: var(--lp-bg);
   color: var(--lp-text);
-  font-family: 'Geist', 'Geist Variable', sans-serif;
+  font-family: var(--lp-font-body);
   color-scheme: dark;
 }
 
@@ -56,12 +94,29 @@
   --lp-blue: #17649b;
   --lp-blue-strong: #1478b8;
   --lp-blue-wash: rgba(62, 163, 230, 0.1);
+  --lp-search-ambient: rgba(48, 59, 70, 0.34);
   color-scheme: light;
 }
 
-.landing-page .font-display { font-family: 'Evolexa Bricolage', 'Geist', sans-serif !important; }
-.landing-page .font-mono { font-family: 'Evolexa Mono', ui-monospace, monospace !important; }
-.landing-page .hero-copy h1 span { font-family: 'Evolexa Playfair', 'Evolexa Bricolage', serif; font-style: italic; font-weight: 600; letter-spacing: -0.055em; }
+.landing-page .font-display { font-family: var(--lp-font-display) !important; }
+.landing-page .font-sans { font-family: var(--lp-font-body) !important; }
+.landing-page .font-ui,
+.landing-page a,
+.landing-page button,
+.landing-page input,
+.landing-page select { font-family: var(--lp-font-ui); }
+.landing-page button.font-sans,
+.landing-page input.font-sans,
+.landing-page select.font-sans { font-family: var(--lp-font-ui) !important; }
+.landing-page .font-technical { font-family: var(--lp-font-technical) !important; }
+.landing-page .job-search-panel {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 24px 48px -12px rgba(0, 0, 0, 0.75),
+    0 44px 88px 8px rgba(0, 0, 0, 0.45),
+    0 60px 120px 12px rgba(91, 183, 245, 0.04);
+}
+.landing-page .hero-copy h1 span { font-family: var(--lp-font-accent); font-style: italic; font-weight: 600; letter-spacing: -0.055em; }
 .landing-page [data-ui] { backdrop-filter: blur(14px); }
 .landing-page section[id], .landing-page section { scroll-margin-top: 5.5rem; }
 .landing-page ::selection { background: #a8d9ff; color: #071321; }
@@ -88,6 +143,12 @@
   background: var(--lp-panel) !important;
   border-color: var(--lp-line) !important;
   box-shadow: 0 18px 55px -38px rgba(18, 67, 105, 0.3) !important;
+}
+.landing-page[data-theme='light'] .job-search-panel {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.9),
+    0 20px 40px -10px rgba(18, 67, 105, 0.14),
+    0 40px 80px 4px rgba(18, 67, 105, 0.09) !important;
 }
 .landing-page[data-theme='light'] input,
 .landing-page[data-theme='light'] select { background-color: #fff !important; color: var(--lp-text) !important; border-color: var(--lp-line) !important; }
@@ -152,3 +213,28 @@
 .landing-page[data-theme='light'] .text-cyan-100,
 .landing-page[data-theme='light'] .text-cyan-400 { color: #126b91 !important; }
 .landing-page[data-theme='light'] .text-indigo-200 { color: #4b48a5 !important; }
+
+/* Keep scoped light-theme controls and image-overlay text legible. */
+.landing-page[data-theme='light'] [class*='bg-surface-'] { background-color: #ffffff !important; }
+.landing-page[data-theme='light'] #capabilities .capability-journey-image {
+  opacity: 1;
+  mix-blend-mode: normal;
+}
+.landing-page[data-theme='light'] #capabilities .capability-journey-overlay {
+  background-image: linear-gradient(to top, rgba(245, 250, 255, 0.98), rgba(245, 250, 255, 0.62) 38%, rgba(245, 250, 255, 0) 100%) !important;
+}
+
+.landing-page[data-theme='light'] #capabilities .capability-telemetry-tag {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+  border-color: var(--lp-line) !important;
+  color: var(--lp-text) !important;
+  box-shadow: 0 4px 12px rgba(18, 67, 105, 0.1) !important;
+}
+
+.landing-page[data-theme='light'] #capabilities .capability-telemetry-tag span {
+  color: var(--lp-muted) !important;
+}
+
+.landing-page[data-theme='light'] #capabilities .capability-telemetry-tag .font-technical {
+  color: var(--lp-text) !important;
+}

@@ -11,6 +11,7 @@ import { useToast } from "../../hooks/useToast"
 import { clearPromptStorageOnLogout } from "../../utils/promptStorage"
 import { getApiUrl } from "../../utils/config"
 import { cn } from "../../utils/cn"
+import ThemeToggleButton from "../../components/shared/ThemeToggleButton"
 
 const PROFILE_NAV_ITEMS = [
   {
@@ -49,13 +50,16 @@ const TAB_ORDER = {
 }
 
 const ProfileHeader = () => (
-  <div className="pb-4 border-b border-border-subtle">
-    <h1 className="font-display text-2xl sm:text-3xl text-ink font-bold tracking-tight">
-      Profile & Account
-    </h1>
-    <p className="text-muted text-xs sm:text-sm mt-1 font-sans">
-      Manage your developer identity, professional portfolio, resume, and security preferences.
-    </p>
+  <div className="flex items-start justify-between gap-4 pb-4 border-b border-border-subtle">
+    <div>
+      <h1 className="font-display text-2xl sm:text-3xl text-ink font-bold tracking-tight">
+        Profile & Account
+      </h1>
+      <p className="text-muted text-xs sm:text-sm mt-1 font-sans">
+        Manage your developer identity, professional portfolio, resume, and security preferences.
+      </p>
+    </div>
+    <ThemeToggleButton />
   </div>
 )
 
@@ -437,9 +441,9 @@ const Profile = () => {
         <div className="max-w-5xl mx-auto flex flex-col gap-4 sm:gap-6">
           <ProfileHeader />
 
-          {/* Compact Profile Navigation Cards */}
+          {/* Profile Navigation Menu */}
           <div
-            className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5 w-full"
+            className="flex items-center gap-1 sm:gap-1.5 w-full border-b border-border-subtle/80 pb-3 overflow-x-auto custom-scrollbar flex-nowrap"
             role="tablist"
             aria-label="Profile navigation sections"
           >
@@ -456,30 +460,30 @@ const Profile = () => {
                   type="button"
                   onClick={() => handleTabChange(item.id)}
                   className={cn(
-                    "group flex items-center gap-2.5 px-3 py-2 sm:py-2.5 rounded-xl text-left transition-all duration-150 outline-none cursor-pointer border select-none min-h-[40px]",
-                    "focus-visible:ring-2 focus-visible:ring-indigo/40",
+                    "group flex items-center gap-2 px-3 py-1.5 sm:py-2 rounded-lg text-left transition-all duration-150 outline-none cursor-pointer select-none",
+                    "focus-visible:ring-2 focus-visible:ring-cyan/40",
                     isActive
-                      ? "bg-surface-elevated text-ink font-semibold border-border-accent/60 shadow-xs ring-1 ring-border-accent/30"
-                      : "bg-surface-secondary/40 text-muted hover:text-ink hover:bg-surface-secondary/70 border-border-subtle"
+                      ? "bg-surface-secondary text-ink font-semibold"
+                      : "text-muted hover:text-ink hover:bg-surface-secondary/60 font-medium"
                   )}
                 >
                   <span
                     className={cn(
-                      "p-1.5 rounded-lg shrink-0 transition-colors",
+                      "shrink-0 transition-colors",
                       isActive
-                        ? "bg-indigo/15 text-indigo-light"
-                        : "bg-surface-secondary/80 text-muted group-hover:text-ink"
+                        ? "text-cyan"
+                        : "text-muted group-hover:text-ink"
                     )}
                   >
                     {item.icon}
                   </span>
 
-                  <span className="text-xs sm:text-sm font-medium tracking-tight truncate flex-1 leading-tight font-sans">
+                  <span className="text-xs sm:text-sm tracking-tight truncate font-sans">
                     {item.label}
                   </span>
 
                   {isActive && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo shrink-0" aria-hidden="true" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan shrink-0" aria-hidden="true" />
                   )}
                 </button>
               )

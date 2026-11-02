@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import Card from "../shared/Card"
-import Badge from "../shared/Badge"
 import { formatDate } from "../../utils/formatDate"
 import { useToast } from "../../hooks/useToast"
 import { getApiUrl } from "../../utils/config"
@@ -70,12 +69,12 @@ const ProfileIdentityCard = ({ userData, isLoadingUser }) => {
 
   return (
     <Card className="bg-surface border-border-primary rounded-2xl p-6 flex flex-col items-center text-center shadow-sm">
-      <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-surface-secondary border border-border-primary flex items-center justify-center text-ink text-2xl sm:text-3xl font-display font-semibold select-none shadow-sm overflow-hidden relative">
+      <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-surface-secondary border border-border-primary flex items-center justify-center text-ink text-2xl sm:text-3xl font-display font-semibold select-none shadow-sm overflow-hidden relative">
         {avatarSrc ? (
           <img
             src={avatarSrc}
             alt={fullName}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-full"
             onError={(e) => {
               e.currentTarget.style.display = "none"
               const fb = e.currentTarget.parentElement?.querySelector(".avatar-fallback")
@@ -161,13 +160,11 @@ const ProfileIdentityCard = ({ userData, isLoadingUser }) => {
         />
 
         <div className="py-2.5 flex items-center justify-between gap-2">
-          <span className="text-muted flex items-center gap-2">
+          <span className="text-muted">Account Status</span>
+          <span className="text-xs font-sans font-medium text-green flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-green" />
-            Account Status
-          </span>
-          <Badge variant="emerald" size="sm" className="font-medium">
             Active
-          </Badge>
+          </span>
         </div>
 
         <div className="py-2.5 flex items-center justify-between gap-2">

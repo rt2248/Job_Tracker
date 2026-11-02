@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import Card, { CardHeader, CardTitle, CardContent } from "../shared/Card"
-import Badge from "../shared/Badge"
 import Button from "../shared/Button"
+import { cn } from "../../utils/cn"
 import { useToast } from "../../hooks/useToast"
 import { getApiUrl } from "../../utils/config"
 
@@ -42,7 +42,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-center shrink-0 text-ink">
             {profileData?.isPublicProfile ? (
-              <svg className="w-5 h-5 text-indigo" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
               </svg>
             ) : (
@@ -56,9 +56,14 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
               <span className="text-sm font-semibold text-ink font-display">
                 Profile Visibility
               </span>
-              <Badge variant={profileData?.isPublicProfile ? "indigo" : "default"}>
-                {profileData?.isPublicProfile ? "Public Mode Active" : "Private"}
-              </Badge>
+              <span className="text-border-primary/80">·</span>
+              <span className={cn(
+                "text-xs font-sans font-medium flex items-center gap-1.5",
+                profileData?.isPublicProfile ? "text-cyan" : "text-muted"
+              )}>
+                <span className={cn("w-1.5 h-1.5 rounded-full", profileData?.isPublicProfile ? "bg-cyan" : "bg-muted")} />
+                {profileData?.isPublicProfile ? "Public" : "Private"}
+              </span>
             </div>
             <p className="text-xs text-muted mt-0.5 font-sans">
               {profileData?.isPublicProfile
@@ -93,7 +98,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
       <Card className="bg-surface border-border-primary p-6 rounded-2xl">
         <CardHeader className="flex flex-row items-center justify-between gap-2 mb-3">
           <CardTitle className="text-base sm:text-lg">About & Bio</CardTitle>
-          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs text-indigo hover:text-indigo-light">
+          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs text-cyan hover:text-cyan/80">
             Edit
           </Button>
         </CardHeader>
@@ -114,17 +119,20 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
       <Card className="bg-surface border-border-primary p-6 rounded-2xl">
         <CardHeader className="flex flex-row items-center justify-between gap-2 mb-3">
           <CardTitle className="text-base sm:text-lg">Technical Stack & Skills</CardTitle>
-          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs text-indigo hover:text-indigo-light">
+          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs text-cyan hover:text-cyan/80">
             Edit
           </Button>
         </CardHeader>
         <CardContent>
           {hasSkills ? (
-            <div className="flex flex-wrap gap-2">
-              {profileData.skills.map((skill) => (
-                <Badge key={skill} variant="subtle" size="md" className="font-sans px-3 py-1">
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
+              {profileData.skills.map((skill, index) => (
+                <span key={skill} className="text-xs font-sans font-medium text-ink-secondary flex items-center gap-2">
                   {skill}
-                </Badge>
+                  {index < profileData.skills.length - 1 && (
+                    <span className="text-border-primary/80">·</span>
+                  )}
+                </span>
               ))}
             </div>
           ) : (
@@ -139,7 +147,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
       <Card className="bg-surface border-border-primary p-6 rounded-2xl">
         <CardHeader className="flex flex-row items-center justify-between gap-2 mb-3">
           <CardTitle className="text-base sm:text-lg">Experience</CardTitle>
-          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs text-indigo hover:text-indigo-light">
+          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs text-cyan hover:text-cyan/80">
             Edit
           </Button>
         </CardHeader>
@@ -188,7 +196,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
       <Card className="bg-surface border-border-primary p-6 rounded-2xl">
         <CardHeader className="flex flex-row items-center justify-between gap-2 mb-3">
           <CardTitle className="text-base sm:text-lg">Portfolio & Web Presence</CardTitle>
-          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs text-indigo hover:text-indigo-light">
+          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs text-cyan hover:text-cyan/80">
             Edit
           </Button>
         </CardHeader>
@@ -200,13 +208,13 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
                   href={socialLinks.portfolio}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs text-ink hover:border-indigo/50 transition-colors group"
+                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs text-ink hover:border-cyan/50 transition-colors group"
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-indigo font-bold font-mono">PORTFOLIO</span>
+                    <span className="text-cyan font-bold font-mono">PORTFOLIO</span>
                     <span className="truncate text-muted group-hover:text-ink">{socialLinks.portfolio}</span>
                   </div>
-                  <span className="text-muted group-hover:text-indigo shrink-0">&rarr;</span>
+                  <span className="text-muted group-hover:text-cyan shrink-0">&rarr;</span>
                 </a>
               )}
               {socialLinks.github && (
@@ -214,13 +222,13 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
                   href={socialLinks.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs text-ink hover:border-indigo/50 transition-colors group"
+                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs text-ink hover:border-cyan/50 transition-colors group"
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-indigo font-bold font-mono">GITHUB</span>
+                    <span className="text-cyan font-bold font-mono">GITHUB</span>
                     <span className="truncate text-muted group-hover:text-ink">{socialLinks.github}</span>
                   </div>
-                  <span className="text-muted group-hover:text-indigo shrink-0">&rarr;</span>
+                  <span className="text-muted group-hover:text-cyan shrink-0">&rarr;</span>
                 </a>
               )}
               {socialLinks.linkedin && (
@@ -228,13 +236,13 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
                   href={socialLinks.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs text-ink hover:border-indigo/50 transition-colors group"
+                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs text-ink hover:border-cyan/50 transition-colors group"
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-indigo font-bold font-mono">LINKEDIN</span>
+                    <span className="text-cyan font-bold font-mono">LINKEDIN</span>
                     <span className="truncate text-muted group-hover:text-ink">{socialLinks.linkedin}</span>
                   </div>
-                  <span className="text-muted group-hover:text-indigo shrink-0">&rarr;</span>
+                  <span className="text-muted group-hover:text-cyan shrink-0">&rarr;</span>
                 </a>
               )}
               {socialLinks.twitter && (
@@ -242,13 +250,13 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
                   href={socialLinks.twitter}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs text-ink hover:border-indigo/50 transition-colors group"
+                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs text-ink hover:border-cyan/50 transition-colors group"
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-indigo font-bold font-mono">TWITTER</span>
+                    <span className="text-cyan font-bold font-mono">TWITTER</span>
                     <span className="truncate text-muted group-hover:text-ink">{socialLinks.twitter}</span>
                   </div>
-                  <span className="text-muted group-hover:text-indigo shrink-0">&rarr;</span>
+                  <span className="text-muted group-hover:text-cyan shrink-0">&rarr;</span>
                 </a>
               )}
             </div>

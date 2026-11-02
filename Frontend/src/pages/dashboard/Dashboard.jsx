@@ -5,7 +5,8 @@ import Card from "../../components/shared/Card"
 import Input from "../../components/shared/Input"
 import Select from "../../components/shared/Select"
 import Button from "../../components/shared/Button"
-import Badge from "../../components/shared/Badge"
+import ThemeToggleButton from "../../components/shared/ThemeToggleButton"
+import DashboardInsightsSection from "../../components/dashboard_page/DashboardInsightsSection"
 import { useJobs } from "../../hooks/useJobs"
 import { useToast } from "../../hooks/useToast"
 import { getApiUrl } from "../../utils/config"
@@ -13,7 +14,7 @@ import { STATUS_ORDER } from "../../constants/jobStatus"
 
 const Dashboard = () => {
   const { jobs: initialJobs, isLoading, error } = useJobs()
-  const [jobsList, setJobsList] = useState([])
+  const [jobsList, setJobsList] = useState(initialJobs || [])
   const [selectedJob, setSelectedJob] = useState(null)
   const toast = useToast()
   
@@ -121,23 +122,22 @@ const Dashboard = () => {
 
   return (
     <>
-      <main className="flex-1 overflow-hidden p-4 sm:p-6 lg:p-8 flex flex-col min-w-0">
+      <main className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-8 flex flex-col min-w-0">
           
           {/* Dashboard Header Section */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 shrink-0">
+          <div className="flex items-start justify-between gap-4 mb-6 shrink-0">
             <div>
-              <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight">
+              <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight flex items-baseline gap-2.5">
                 Application Pipeline
+                <span className="font-mono text-xs sm:text-sm font-medium text-cyan">
+                  ({metrics.active} active)
+                </span>
               </h1>
               <p className="text-muted text-xs sm:text-sm mt-0.5 font-sans">
                 Track, manage, and move your career opportunities through each stage.
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="indigo" size="md">
-                {metrics.active} Active Applications
-              </Badge>
-            </div>
+            <ThemeToggleButton />
           </div>
 
           {/* Metric Summary Cards */}
@@ -145,7 +145,7 @@ const Dashboard = () => {
             <Card className="p-3.5 sm:p-4 bg-surface/80 border-border-primary">
               <div className="flex items-center justify-between">
                 <span className="text-muted text-xs font-sans font-medium uppercase tracking-wider">Total Applications</span>
-                <span className="w-2 h-2 rounded-full bg-indigo" />
+                <span className="w-2 h-2 rounded-full bg-cyan" />
               </div>
               <p className="font-mono text-2xl sm:text-3xl font-bold text-ink mt-2">{metrics.total}</p>
             </Card>
@@ -161,7 +161,7 @@ const Dashboard = () => {
             <Card className="p-3.5 sm:p-4 bg-surface/80 border-border-primary">
               <div className="flex items-center justify-between">
                 <span className="text-muted text-xs font-sans font-medium uppercase tracking-wider">Interviews</span>
-                <span className="w-2 h-2 rounded-full bg-violet" />
+                <span className="w-2 h-2 rounded-full bg-red" />
               </div>
               <p className="font-mono text-2xl sm:text-3xl font-bold text-ink mt-2">{metrics.interviews}</p>
             </Card>
@@ -171,12 +171,15 @@ const Dashboard = () => {
                 <span className="text-muted text-xs font-sans font-medium uppercase tracking-wider">Offers & Accepted</span>
                 <span className="w-2 h-2 rounded-full bg-green" />
               </div>
-              <p className="font-mono text-2xl sm:text-3xl font-bold text-cyan mt-2">{metrics.offers}</p>
+              <p className="font-mono text-2xl sm:text-3xl font-bold text-green mt-2">{metrics.offers}</p>
             </Card>
           </div>
 
+          {/* Compact Insights Section */}
+          <DashboardInsightsSection />
+
           {/* Controls Bar: Search & Filter */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6 shrink-0 bg-surface/60 p-2.5 sm:p-3 rounded-xl border border-border-primary">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6 shrink-0 bg-surface/60 p-2.5 sm:p-3 rounded-xl border border-border-primary card-3d">
             <div className="flex-1 min-w-[200px]">
               <Input
                 placeholder="Search pipeline by role or company..."
@@ -217,7 +220,7 @@ const Dashboard = () => {
           {/* Loading State */}
           {isLoading && (
             <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-              <div className="w-8 h-8 rounded-full border-2 border-indigo border-t-transparent animate-spin mb-3" />
+              <div className="w-8 h-8 rounded-full border-2 border-cyan border-t-transparent animate-spin mb-3" />
               <p className="text-muted text-sm font-sans">Loading application pipeline...</p>
             </div>
           )}
@@ -234,7 +237,7 @@ const Dashboard = () => {
 
           {/* Kanban Board Area */}
           {!isLoading && !error && (
-            <div className="flex gap-4 sm:gap-5 overflow-x-auto flex-1 pb-4 custom-scrollbar snap-x min-w-0">
+            <div className="flex gap-4 sm:gap-5 overflow-x-auto flex-1 pb-4 custom-scrollbar snap-x min-w-0 min-h-[500px]">
               {STATUS_ORDER.map((status) => (
                 <div key={status} className="snap-start shrink-0">
                   <KanbanColumn

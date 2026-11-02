@@ -66,7 +66,7 @@ const SidebarProfilePopover = ({
       aria-label="Profile navigation popover menu"
       className={cn(
         "absolute bottom-[calc(100%+0.625rem)] left-2.5 right-2.5 z-50",
-        "bg-white text-neutral-900 rounded-2xl border border-neutral-200/90 shadow-2xl p-2.5",
+        "bg-white text-neutral-900 rounded-2xl border border-neutral-300 shadow-2xl p-2.5",
         "flex flex-col gap-1.5 select-none transition-all duration-150 animate-in fade-in zoom-in-95",
         className
       )}
@@ -112,7 +112,7 @@ const SidebarProfilePopover = ({
       </div>
 
       {/* Subtle Divider */}
-      <div className="border-t border-neutral-200/80 my-0.5" />
+      <div className="border-t border-neutral-300 my-0.5" />
 
       {/* B. Navigation Options (compact menu list) */}
       <div className="flex flex-col gap-0.5 w-full" role="none">

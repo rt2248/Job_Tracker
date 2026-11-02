@@ -35,23 +35,24 @@ function KanbanCard({ job, onClick, onDragStart, isDragging }) {
             onDragEnd={handleDragEnd}
             onClick={handleClick}
             className={cn(
-                "group relative bg-surface-secondary/80 hover:bg-surface-elevated border border-border-primary hover:border-indigo/40",
-                "rounded-xl p-3.5 transition-all duration-150 shadow-sm hover:shadow-elevated cursor-grab active:cursor-grabbing select-none",
-                isDragging && "opacity-40 scale-95 border-dashed border-indigo ring-2 ring-indigo/20"
+                "group relative bg-surface-secondary/80 hover:bg-surface-elevated border border-border-primary hover:border-cyan/40",
+                "rounded-xl p-3.5 transition-all duration-150 card-3d card-3d-hover hover:-translate-y-0.5 cursor-grab active:cursor-grabbing select-none",
+                isDragging && "opacity-40 scale-95 border-dashed border-cyan ring-2 ring-cyan/20"
             )}
         >
-            <div className="flex items-start justify-between gap-2">
-                <h4 className="font-display text-ink text-sm font-semibold truncate group-hover:text-indigo transition-colors">
-                    {job.role}
-                </h4>
-                <JobTypeBadge jobType={job.jobType} />
-            </div>
+            <h4 className="font-display text-ink text-sm font-semibold truncate group-hover:text-cyan transition-colors">
+                {job.role}
+            </h4>
 
-            <p className="text-muted text-xs font-sans mt-0.5 truncate">{job.company}</p>
+            <p className="text-muted text-xs font-sans mt-1 truncate flex items-center gap-1.5">
+                <span className="truncate">{job.company}</span>
+                <span className="text-border-primary/80">·</span>
+                <JobTypeBadge jobType={job.jobType} />
+            </p>
 
             <div className="mt-3 pt-2.5 border-t border-border-subtle/60 flex flex-wrap items-center justify-between gap-1.5 text-[11px]">
                 {compensation ? (
-                    <span className="text-cyan font-mono font-medium bg-cyan/10 px-2 py-0.5 rounded-md border border-cyan/20 truncate">
+                    <span className="text-cyan font-mono font-medium truncate">
                         {compensation}
                     </span>
                 ) : (

@@ -48,17 +48,29 @@ async function seedJobs(identifier) {
         const deleteResult = await pool.query("DELETE FROM jobs WHERE user_id = $1", [userId]);
         console.log(`Removed ${deleteResult.rowCount} existing job(s) for this user.`);
 
-        console.log(`Seeding ${dummyJobs.length} jobs...`);
+        console.log(`Seeding ${dummyJobs.length} jobs with initial status history...`);
 
         for (const job of dummyJobs) {
-            await pool.query(
+            const insertRes = await pool.query(
                 `INSERT INTO jobs (user_id, company, role, status, applied_date, deadline, resume_used, notes, link, job_type, work_mode, compensation_min, compensation_max, compensation_period)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+                 RETURNING id`,
                 [userId, job.company, job.role, job.status, job.appliedDate, job.deadline, job.resumeUsed, job.notes, job.link, job.jobType, job.workMode, job.compensationMin, job.compensationMax, job.compensationPeriod]
+            );
+
+            const jobId = insertRes.rows[0].id;
+            const historyTimestamp = (job.status !== "saved" && job.appliedDate)
+                ? `${job.appliedDate}T09:00:00Z`
+                : new Date().toISOString();
+
+            await pool.query(
+                `INSERT INTO job_status_history (job_id, user_id, from_status, to_status, changed_at)
+                 VALUES ($1, $2, NULL, $3::job_status, $4)`,
+                [jobId, userId, job.status, historyTimestamp]
             );
         }
 
-        console.log("Seeding complete!");
+        console.log("Seeding complete with status history records!");
     } catch (err) {
         console.error("Seeding failed:", err);
     } finally {

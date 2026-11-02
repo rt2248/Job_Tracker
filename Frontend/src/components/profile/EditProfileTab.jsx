@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react"
 import Card, { CardHeader, CardTitle, CardContent } from "../shared/Card"
 import Input from "../shared/Input"
 import Button from "../shared/Button"
-import Badge from "../shared/Badge"
+import { cn } from "../../utils/cn"
 import { useToast } from "../../hooks/useToast"
 import { getApiUrl } from "../../utils/config"
 
@@ -443,12 +443,12 @@ const EditProfileTab = ({
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row items-center gap-6">
-            <div className="w-24 h-24 rounded-2xl bg-surface-secondary border border-border-primary flex items-center justify-center text-ink text-3xl font-display font-semibold select-none shadow-sm overflow-hidden shrink-0 relative">
+            <div className="w-24 h-24 rounded-full bg-surface-secondary border border-border-primary flex items-center justify-center text-ink text-3xl font-display font-semibold select-none shadow-sm overflow-hidden shrink-0 relative">
               {currentDisplayAvatar ? (
                 <img
                   src={currentDisplayAvatar}
                   alt="Avatar"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded-full"
                 />
               ) : (
                 <span>{getInitials(formData.firstName, formData.lastName, initialData?.username)}</span>
@@ -608,7 +608,7 @@ const EditProfileTab = ({
               rows={4}
               maxLength={2000}
               placeholder="Write a brief overview of your background, technical interests, and projects..."
-              className="w-full px-3 py-2 text-sm bg-surface-secondary text-ink placeholder:text-muted rounded-lg border border-border-primary focus:border-indigo focus:ring-2 focus:ring-indigo/30 transition-all outline-none resize-y"
+              className="w-full px-3 py-2 text-sm bg-surface-secondary text-ink placeholder:text-muted rounded-lg border border-border-primary focus:border-cyan focus:ring-2 focus:ring-cyan/30 transition-all outline-none resize-y"
             />
           </div>
         </CardContent>
@@ -760,7 +760,7 @@ const EditProfileTab = ({
                     id={`current-role-${idx}`}
                     checked={Boolean(exp.current)}
                     onChange={(e) => handleUpdateExperience(idx, "current", e.target.checked)}
-                    className="rounded border-border-primary text-indigo focus:ring-indigo/30 cursor-pointer"
+                    className="rounded border-border-primary text-cyan focus:ring-cyan/30 cursor-pointer"
                   />
                   <label htmlFor={`current-role-${idx}`} className="text-xs text-ink-secondary cursor-pointer">
                     I currently work in this role
@@ -778,7 +778,7 @@ const EditProfileTab = ({
                     rows={2}
                     maxLength={2000}
                     placeholder="Summary of responsibilities, technologies utilized, and impact..."
-                    className="w-full px-3 py-2 text-xs bg-surface-secondary text-ink placeholder:text-muted rounded-lg border border-border-primary focus:border-indigo focus:ring-2 focus:ring-indigo/30 transition-all outline-none"
+                    className="w-full px-3 py-2 text-xs bg-surface-secondary text-ink placeholder:text-muted rounded-lg border border-border-primary focus:border-cyan focus:ring-2 focus:ring-cyan/30 transition-all outline-none"
                   />
                 </div>
               </div>
@@ -839,9 +839,14 @@ const EditProfileTab = ({
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-sm text-ink font-display">Public Profile Mode</span>
-                <Badge variant={formData.isPublicProfile ? "indigo" : "default"}>
-                  {formData.isPublicProfile ? "Public Enabled" : "Private (Disabled)"}
-                </Badge>
+                <span className="text-border-primary/80">·</span>
+                <span className={cn(
+                  "text-xs font-sans font-medium flex items-center gap-1.5",
+                  formData.isPublicProfile ? "text-cyan" : "text-muted"
+                )}>
+                  <span className={cn("w-1.5 h-1.5 rounded-full", formData.isPublicProfile ? "bg-cyan" : "bg-muted")} />
+                  {formData.isPublicProfile ? "Enabled" : "Disabled"}
+                </span>
               </div>
               <p className="text-xs text-muted font-sans mt-0.5">
                 When enabled, anonymous visitors can view your developer profile at your public link.
@@ -851,7 +856,7 @@ const EditProfileTab = ({
               type="button"
               onClick={() => handleFieldChange("isPublicProfile", !formData.isPublicProfile)}
               className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                formData.isPublicProfile ? "bg-indigo" : "bg-surface-secondary border border-border-primary"
+                formData.isPublicProfile ? "bg-cyan" : "bg-surface-secondary border border-border-primary"
               }`}
               role="switch"
               aria-checked={formData.isPublicProfile}
@@ -898,7 +903,7 @@ const EditProfileTab = ({
                     <button
                       type="button"
                       className={`w-9 h-5 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                        isChecked ? "bg-indigo" : "bg-surface-secondary border border-border-primary"
+                        isChecked ? "bg-cyan" : "bg-surface-secondary border border-border-primary"
                       }`}
                       role="switch"
                       aria-checked={isChecked}

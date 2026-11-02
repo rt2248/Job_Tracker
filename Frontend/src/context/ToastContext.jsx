@@ -69,7 +69,7 @@ export function ToastProvider({ children }) {
                                 </span>
                             )}
                             {t.variant === "info" && (
-                                <span className="w-6 h-6 rounded-lg bg-indigo/15 text-indigo flex items-center justify-center text-xs shrink-0 font-bold border border-indigo/30">
+                                <span className="w-6 h-6 rounded-lg bg-cyan/15 text-cyan flex items-center justify-center text-xs shrink-0 font-bold border border-cyan/30">
                                     ℹ
                                 </span>
                             )}
@@ -92,7 +92,7 @@ export function ToastProvider({ children }) {
                                         t.action.onClick?.();
                                         removeToast(t.id);
                                     }}
-                                    className="text-xs font-medium px-2.5 py-1 text-indigo hover:text-indigo-light"
+                                    className="text-xs font-medium px-2.5 py-1 text-cyan hover:text-cyan/80"
                                 >
                                     {t.action.label}
                                 </Button>

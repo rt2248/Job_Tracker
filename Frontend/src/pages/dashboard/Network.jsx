@@ -1,7 +1,7 @@
 import React from "react"
 import Card from "../../components/shared/Card"
 import Button from "../../components/shared/Button"
-import Badge from "../../components/shared/Badge"
+import ThemeToggleButton from "../../components/shared/ThemeToggleButton"
 
 const Network = () => {
   return (
@@ -9,7 +9,7 @@ const Network = () => {
       <div className="max-w-5xl mx-auto">
         
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div className="flex items-start justify-between gap-4 mb-6">
           <div>
             <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight">
               Professional Network
@@ -18,14 +18,12 @@ const Network = () => {
               Track contacts, referrals, and recruiters connected to your job search.
             </p>
           </div>
-          <Badge variant="indigo" size="md">
-            0 Contacts
-          </Badge>
+          <ThemeToggleButton />
         </div>
 
         {/* Empty Network State Container */}
         <Card className="bg-surface/80 border-border-primary rounded-2xl p-8 sm:p-12 text-center flex flex-col items-center justify-center max-w-2xl mx-auto shadow-sm my-6">
-          <div className="w-14 h-14 rounded-2xl bg-indigo/15 border border-indigo/30 flex items-center justify-center text-indigo mb-4 shadow-sm">
+          <div className="w-14 h-14 rounded-2xl bg-cyan/15 border border-cyan/30 flex items-center justify-center text-cyan mb-4 shadow-sm">
             <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>

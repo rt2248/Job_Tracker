@@ -4,6 +4,7 @@ import dashboardIcon from "../../assets/icons/dashboard.svg"
 import appsIcon from "../../assets/icons/apps.svg"
 import networknodeIcon from "../../assets/icons/networknode.svg"
 import searchIcon from "../../assets/icons/search.svg"
+import insightsIcon from "../../assets/icons/insights.svg"
 import SidebarProfilePopover from "./SidebarProfilePopover"
 import { getApiUrl } from "../../utils/config"
 import { cn } from "../../utils/cn"
@@ -12,6 +13,7 @@ const navItems = [
     { title: "Dashboard", icon: dashboardIcon, link: "/dashboard" },
     { title: "Search Jobs", icon: searchIcon, link: "/jobsearch" },
     { title: "Applications", icon: appsIcon, link: "/applications" },
+    { title: "Insights", icon: insightsIcon, link: "/insights" },
     { title: "Network", icon: networknodeIcon, link: "/network" },
 ]
 
@@ -279,15 +281,15 @@ const SideBar = ({
                 aria-expanded={isSidebarOpen}
                 className={cn(
                     "fixed inset-y-0 left-0 z-50 flex flex-col justify-start items-center",
-                    "bg-white text-neutral-900 border-r border-neutral-200/90 transition-all duration-300 ease-in-out shrink-0 select-none",
-                    "md:m-3 md:rounded-3xl md:border md:border-neutral-200/90 md:h-[calc(100vh-1.5rem)]",
+                    "bg-white text-neutral-900 border-r border-neutral-300 transition-all duration-300 ease-in-out shrink-0 select-none",
+                    "md:m-3 md:rounded-3xl md:border md:border-neutral-300 md:h-[calc(100vh-1.5rem)]",
                     isSidebarOpen
                         ? "w-64 translate-x-0 shadow-2xl md:shadow-2xl"
                         : "-translate-x-full md:translate-x-0 md:w-16 shadow-2xl md:shadow-lg"
                 )}
             >
                 {/* Logo */}
-                <div className="logo overflow-hidden flex items-center justify-between px-4 h-16 w-full border-b border-neutral-200 shrink-0 md:rounded-t-3xl">
+                <div className="logo overflow-hidden flex items-center justify-between px-4 h-16 w-full border-b border-neutral-300 shrink-0 md:rounded-t-3xl">
                     <div className="flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded-xl bg-neutral-900 text-white flex items-center justify-center shrink-0 shadow-sm">
                             <span className="font-display font-bold text-sm">ET</span>
@@ -350,7 +352,7 @@ const SideBar = ({
                 </nav>
 
                 {/* Footer User Info Indicator & Profile Popover Trigger */}
-                <div className="relative mt-auto w-full p-2.5 border-t border-neutral-200/90 shrink-0 md:rounded-b-3xl">
+                <div className="relative mt-auto w-full p-2.5 border-t border-neutral-300 shrink-0 md:rounded-b-3xl">
                     {/* Expandable Profile Popover */}
                     {isProfileMenuOpen && (
                         <SidebarProfilePopover
@@ -375,9 +377,9 @@ const SideBar = ({
                         className={cn(
                             "w-full flex items-center rounded-xl transition-all duration-150 outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-neutral-400 select-none",
                             isSidebarOpen
-                                ? "gap-2.5 p-2 bg-neutral-100/80 hover:bg-neutral-200/70 border border-neutral-200 text-left"
+                                ? "gap-2.5 p-2 bg-neutral-100/80 hover:bg-neutral-200/70 border border-neutral-300 text-left"
                                 : "justify-center p-1.5 hover:bg-neutral-100/80 border border-transparent",
-                            isProfileMenuOpen && "bg-neutral-200/90 border-neutral-300 ring-1 ring-neutral-400/30"
+                            isProfileMenuOpen && "bg-neutral-200/90 border-neutral-400 ring-1 ring-neutral-400/30"
                         )}
                     >
                         <div className="w-8 h-8 rounded-full bg-neutral-900 text-white text-xs font-bold flex items-center justify-center shrink-0 shadow-sm overflow-hidden relative">

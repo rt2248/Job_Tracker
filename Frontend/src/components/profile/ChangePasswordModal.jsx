@@ -34,7 +34,7 @@ const PasswordInput = ({
           autoComplete={autoComplete}
           className={`w-full px-3 py-2 pr-10 text-xs sm:text-sm bg-surface-secondary text-ink placeholder:text-muted rounded-xl border ${
             error ? "border-red" : "border-border-primary"
-          } focus:border-indigo focus:ring-2 focus:ring-indigo/20 transition-all outline-none font-mono`}
+          } focus:border-cyan focus:ring-2 focus:ring-cyan/20 transition-all outline-none font-mono`}
         />
         <button
           type="button"

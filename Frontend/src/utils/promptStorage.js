@@ -1,3 +1,5 @@
+import { clearInsightsCache } from "../services/insightsCache";
+
 export const VISIT_EXPIRY_MS = 30 * 60 * 1000; // 30 minutes
 export const MIN_AWAY_TIME_MS = 8000; // 8 seconds
 export const DISMISS_COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24 hours
@@ -124,6 +126,7 @@ export function setActiveClaim(claim, userId = null) {
 
 export function clearPromptStorageOnLogout() {
     try {
+        clearInsightsCache();
         const keysToRemove = [];
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);

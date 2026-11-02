@@ -164,7 +164,7 @@ export default function Hero() {
                 <div className="space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs text-ink-muted">
                     <span>Recent update</span>
-                    <span className="font-mono">Stage {currentStage.step} of 07</span>
+                    <span className="font-technical">Stage {currentStage.step} of 07</span>
                   </div>
                   <p className="text-sm font-medium text-white">{currentStage.update}</p>
                 </div>
@@ -200,10 +200,6 @@ export default function Hero() {
             </div>
           </div>
 
-          <div aria-hidden="true" className="absolute -bottom-5 -left-3 hidden rounded-xl border border-white/10 bg-[#11151e]/95 px-4 py-3 shadow-xl backdrop-blur-sm sm:block md:-left-7">
-            <p className="text-[10px] uppercase tracking-[0.16em] text-ink-muted">One clear view</p>
-            <p className="mt-1 text-sm font-medium text-white">From saved to offer</p>
-          </div>
         </div>
       </div>
     </section>

@@ -5,7 +5,7 @@ import JobDetailModal from "../../components/shared/JobDetailModal"
 import Input from "../../components/shared/Input"
 import Select from "../../components/shared/Select"
 import Button from "../../components/shared/Button"
-import Badge from "../../components/shared/Badge"
+import ThemeToggleButton from "../../components/shared/ThemeToggleButton"
 import { useJobs } from "../../hooks/useJobs"
 
 const Applications = () => {
@@ -63,25 +63,26 @@ const Applications = () => {
       <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar">
           
           {/* Header Section */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div className="flex items-start justify-between gap-4 mb-6">
             <div>
-              <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight">
+              <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight flex items-baseline gap-2.5">
                 All Applications
+                {jobs && jobs.length > 0 && (
+                  <span className="font-mono text-xs sm:text-sm font-medium text-cyan">
+                    ({filteredJobs.length} {filteredJobs.length === 1 ? "record" : "records"})
+                  </span>
+                )}
               </h1>
               <p className="text-muted text-xs sm:text-sm mt-0.5 font-sans">
                 Comprehensive record of your active and historical job applications.
               </p>
             </div>
-            {jobs && jobs.length > 0 && (
-              <Badge variant="indigo" size="md">
-                {filteredJobs.length} {filteredJobs.length === 1 ? "Record" : "Records"}
-              </Badge>
-            )}
+            <ThemeToggleButton />
           </div>
 
           {/* Filtering & Search Toolbar */}
           {!isLoading && !error && jobs && jobs.length > 0 && (
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6 bg-surface/60 p-2.5 sm:p-3 rounded-xl border border-border-primary">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6 bg-surface/60 p-2.5 sm:p-3 rounded-xl border border-border-primary card-3d">
               <div className="flex-1 min-w-[200px]">
                 <Input
                   placeholder="Filter applications by role or company..."
@@ -126,7 +127,7 @@ const Applications = () => {
           {/* Loading State */}
           {isLoading && (
             <div className="flex flex-col items-center justify-center p-12 text-center">
-              <div className="w-8 h-8 rounded-full border-2 border-indigo border-t-transparent animate-spin mb-3" />
+              <div className="w-8 h-8 rounded-full border-2 border-cyan border-t-transparent animate-spin mb-3" />
               <p className="text-muted text-sm font-sans">Loading applications...</p>
             </div>
           )}

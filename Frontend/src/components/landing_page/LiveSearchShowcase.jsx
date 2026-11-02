@@ -99,13 +99,13 @@ export default function LiveSearchShowcase() {
 
   return (
     <section ref={sectionRef} id="discovery" className="py-24 md:py-32 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full px-4 sm:px-6 lg:w-[86%] lg:max-w-[1440px] lg:px-0">
         
         {/* Section Heading */}
         <div className="max-w-3xl mb-12">
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
-            <span>Find a role worth pursuing. </span>
-            <span className="text-metallic-silver">opportunities.</span>
+            <span>Find a role worth </span>
+            <span className="text-metallic-silver">pursuing.</span>
           </h2>
           <p className="text-base sm:text-lg text-ink-secondary leading-relaxed font-sans max-w-xl">
             Filter illustrative roles by skill or company, then follow a promising opportunity into your application pipeline.
@@ -116,14 +116,14 @@ export default function LiveSearchShowcase() {
         <div
           ref={panelRef}
           data-ui
-          className="w-full max-w-4xl surface-metallic-panel rounded-2xl p-6 sm:p-8 relative overflow-hidden bg-[#0a0d14]"
+          className="job-search-panel w-full surface-metallic-panel rounded-2xl p-6 sm:p-8 relative overflow-hidden bg-[#0a0d14]"
         >
           {/* Top Sheen */}
           <div className="absolute top-0 left-0 right-0 h-[1px] metallic-sheen-line" />
 
           {/* Interactive Search Input */}
           <div className="relative mb-6">
-            <label htmlFor="landing-job-search" className="flex items-center justify-between text-[13px] font-mono text-ink-muted mb-2">
+            <label htmlFor="landing-job-search" className="flex items-center justify-between text-[13px] font-ui text-ink-muted mb-2">
               <span>SEARCH SAMPLE ROLES BY TITLE, SKILL, OR COMPANY:</span>
               <span className="text-white/40">ROLE SEARCH</span>
             </label>
@@ -149,7 +149,7 @@ export default function LiveSearchShowcase() {
                 <button
                   type="button"
                   onClick={() => setQuery('')}
-                  className="text-[13px] font-mono text-ink-muted hover:text-white px-2.5 py-1 rounded bg-white/[0.06] transition-colors"
+                  className="text-[13px] font-ui text-ink-muted hover:text-white px-2.5 py-1 rounded bg-white/[0.06] transition-colors"
                 >
                   Clear
                 </button>

@@ -41,7 +41,7 @@ const Select = forwardRef(
             aria-describedby={errorId || helperId}
             className={cn(
               'w-full h-10 px-3 py-2 text-sm bg-surface-secondary text-ink rounded-lg border transition-all outline-none appearance-none pr-8 cursor-pointer',
-              'border-border-primary focus:border-indigo focus:ring-2 focus:ring-indigo/30',
+              'border-border-primary focus:border-cyan focus:ring-2 focus:ring-cyan/30',
               'disabled:opacity-50 disabled:cursor-not-allowed',
               error && 'border-red focus:border-red focus:ring-red/30',
               className

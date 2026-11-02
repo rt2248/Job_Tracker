@@ -20,19 +20,19 @@ function ListingCard({ listing, onClick }) {
         <Card
             hoverable
             onClick={onClick}
-            className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer group bg-surface-secondary/80 hover:bg-surface-elevated border-border-primary hover:border-indigo/40"
+            className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer group bg-surface-secondary/80 hover:bg-surface-elevated border-border-primary hover:border-cyan/40"
         >
             <div className="min-w-0 w-full sm:w-auto">
-                <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-display text-ink font-semibold truncate text-base sm:text-lg group-hover:text-indigo transition-colors">
-                        {listing.title}
-                    </h3>
-                    <JobTypeBadge jobType={listing.jobType} />
-                    <WorkModeBadge workMode={listing.workMode} />
-                </div>
-                <p className="text-muted text-xs sm:text-sm font-sans mt-1">
+                <h3 className="font-display text-ink font-semibold truncate text-base sm:text-lg group-hover:text-cyan transition-colors">
+                    {listing.title}
+                </h3>
+                <p className="text-muted text-xs sm:text-sm font-sans mt-1 flex items-center gap-2 flex-wrap">
                     <span className="text-ink-secondary font-medium">{listing.company}</span>
-                    {listing.location && <span> · {listing.location}</span>}
+                    {listing.location && <span>· {listing.location}</span>}
+                    <span className="text-border-primary/80">·</span>
+                    <JobTypeBadge jobType={listing.jobType} />
+                    <span className="text-border-primary/80">·</span>
+                    <WorkModeBadge workMode={listing.workMode} />
                 </p>
             </div>
 
@@ -55,7 +55,7 @@ function ListingCard({ listing, onClick }) {
                             const jobId = getJobId(listing.id);
                             navigate(jobId ? `/applications?job=${jobId}` : "/applications");
                         }}
-                        className="text-xs px-2.5 py-1 text-slate-300 hover:text-ink hover:border-indigo/40"
+                        className="text-xs px-2.5 py-1 text-ink-secondary hover:text-ink hover:border-cyan/40"
                     >
                         View in Tracker
                     </Button>

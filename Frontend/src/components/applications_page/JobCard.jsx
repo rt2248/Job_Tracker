@@ -12,16 +12,17 @@ function JobCard({ job, onClick }) {
         <Card
             hoverable
             onClick={onClick}
-            className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer group bg-surface-secondary/80 hover:bg-surface-elevated border-border-primary hover:border-indigo/40"
+            className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer group bg-surface-secondary/80 hover:bg-surface-elevated border-border-primary hover:border-cyan/40"
         >
             <div className="min-w-0 w-full sm:w-auto">
-                <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-display text-ink font-semibold truncate text-base sm:text-lg group-hover:text-indigo transition-colors">
-                        {job.role}
-                    </h3>
+                <h3 className="font-display text-ink font-semibold truncate text-base sm:text-lg group-hover:text-cyan transition-colors">
+                    {job.role}
+                </h3>
+                <p className="text-muted text-xs sm:text-sm font-sans mt-1 flex items-center gap-2">
+                    <span className="text-ink-secondary font-medium">{job.company}</span>
+                    <span className="text-border-primary/80">·</span>
                     <JobTypeBadge jobType={job.jobType} />
-                </div>
-                <p className="text-muted text-xs sm:text-sm font-sans mt-0.5">{job.company}</p>
+                </p>
             </div>
 
             <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-border-subtle">

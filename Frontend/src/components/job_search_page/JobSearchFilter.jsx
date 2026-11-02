@@ -13,7 +13,7 @@ function JobSearchFilterBar({ filters, updateFilter, clearFilters }) {
     const [isMoreFiltersOpen, setIsMoreFiltersOpen] = useState(false);
 
     return (
-        <div className="flex flex-col gap-3 mb-6 shrink-0 bg-surface/60 p-2.5 sm:p-3 rounded-xl border border-border-primary">
+        <div className="flex flex-col gap-3 mb-6 shrink-0 bg-surface/60 p-2.5 sm:p-3 rounded-xl border border-border-primary card-3d">
             <div className="grid grid-cols-1 sm:flex sm:flex-wrap items-stretch sm:items-center gap-3">
                 <div className="flex-1 min-w-[200px] w-full">
                     <Input

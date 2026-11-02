@@ -21,15 +21,16 @@ function JobDetailModal({ job, onClose }) {
         <Modal isOpen={Boolean(job)} onClose={onClose} size="lg">
             <ModalHeader onClose={onClose}>
                 <ModalTitle>{job.role}</ModalTitle>
-                <p className="text-muted text-sm font-sans mt-0.5">{job.company}</p>
+                <div className="flex items-center gap-2 text-sm font-sans mt-1 text-muted flex-wrap">
+                    <span className="text-ink-secondary font-medium">{job.company}</span>
+                    <span className="text-border-primary/80">·</span>
+                    <StatusBadge status={job.status} />
+                    <span className="text-border-primary/80">·</span>
+                    <JobTypeBadge jobType={job.jobType} />
+                </div>
             </ModalHeader>
 
             <ModalContent>
-                <div className="flex items-center gap-2 mb-6 flex-wrap">
-                    <StatusBadge status={job.status} />
-                    <JobTypeBadge jobType={job.jobType} />
-                </div>
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-surface-secondary/50 border border-border-subtle text-sm">
                     <div>
                         <p className="text-muted text-xs font-sans font-medium uppercase tracking-wider">Work Mode</p>

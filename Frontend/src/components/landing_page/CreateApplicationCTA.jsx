@@ -78,7 +78,7 @@ export default function CreateApplicationCTA() {
 
             {/* Quick-fill Pills */}
             <div className="pt-2">
-              <span className="text-[13px] font-mono text-ink-muted block mb-2">
+              <span className="text-[13px] font-ui text-ink-muted block mb-2">
                 EXAMPLE DETAILS:
               </span>
               <div className="flex flex-wrap gap-2">
@@ -87,7 +87,7 @@ export default function CreateApplicationCTA() {
                     key={item.name}
                     type="button"
                     onClick={() => handleQuickPick(item)}
-                    className="px-3 py-1.5 rounded-lg text-[13px] font-mono bg-surface-secondary/70 text-ink-secondary hover:text-white hover:bg-surface-elevated border border-white/[0.04] transition-all"
+                    className="px-3 py-1.5 rounded-lg text-[13px] font-ui bg-surface-secondary/70 text-ink-secondary hover:text-white hover:bg-surface-elevated border border-white/[0.04] transition-all"
                   >
                     + {item.name}
                   </button>
@@ -95,7 +95,7 @@ export default function CreateApplicationCTA() {
               </div>
             </div>
 
-            <div className="pt-4 text-[13px] font-mono text-ink-muted border-t border-white/[0.06] flex flex-wrap items-center gap-x-4 gap-y-1">
+            <div className="pt-4 text-[13px] font-ui text-ink-muted border-t border-white/[0.06] flex flex-wrap items-center gap-x-4 gap-y-1">
               <span>START WITH ONE APPLICATION</span>
               <span>·</span>
               <span>KEEP THE NEXT STEP VISIBLE</span>
@@ -124,14 +124,14 @@ export default function CreateApplicationCTA() {
                     Choose a starting point, then continue to signup.
                   </p>
                 </div>
-                <span className="font-mono text-[13px] px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="font-ui text-[13px] px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                   READY
                 </span>
               </div>
 
               {/* Company Input */}
               <div className="space-y-1.5">
-                <label htmlFor="cta-company" className="flex items-center justify-between text-[13px] font-mono text-ink-secondary">
+                <label htmlFor="cta-company" className="flex items-center justify-between text-[13px] font-ui text-ink-secondary">
                   <span>TARGET COMPANY</span>
                   <span className="text-white/40">NAME</span>
                 </label>
@@ -148,7 +148,7 @@ export default function CreateApplicationCTA() {
 
               {/* Role Input */}
               <div className="space-y-1.5">
-                <label htmlFor="cta-role" className="flex items-center justify-between text-[13px] font-mono text-ink-secondary">
+                <label htmlFor="cta-role" className="flex items-center justify-between text-[13px] font-ui text-ink-secondary">
                   <span>ROLE TITLE</span>
                   <span className="text-white/40">POSITION</span>
                 </label>
@@ -165,7 +165,7 @@ export default function CreateApplicationCTA() {
 
               {/* Status Selector */}
               <div className="space-y-1.5">
-                <label htmlFor="cta-status" className="flex items-center justify-between text-[13px] font-mono text-ink-secondary">
+                <label htmlFor="cta-status" className="flex items-center justify-between text-[13px] font-ui text-ink-secondary">
                   <span>INITIAL STAGE</span>
                   <span className="text-white/40">STAGE</span>
                 </label>
@@ -190,12 +190,12 @@ export default function CreateApplicationCTA() {
                   className="metallic-btn-primary w-full py-3.5 px-5 rounded-xl text-sm font-semibold inline-flex items-center justify-center gap-2 shadow-lg"
                 >
                   <span>Create Application &amp; Start Free</span>
-                  <span className="font-mono text-sm opacity-70">→</span>
+                  <span className="font-ui text-sm opacity-70">→</span>
                 </button>
               </div>
 
               <div className="text-center">
-                <span className="text-[13px] font-mono text-white/40">
+                <span className="text-[13px] font-ui text-white/40">
                   EXAMPLE FORM · CONTINUE TO SIGNUP
                 </span>
               </div>

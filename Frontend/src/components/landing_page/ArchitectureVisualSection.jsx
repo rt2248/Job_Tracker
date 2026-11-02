@@ -1,9 +1,10 @@
 import React, { useRef, useEffect } from 'react'
 import gsap from 'gsap'
 import applicationJourney from '../../assets/landing/application-journey.svg'
+import applicationJourneyLight from '../../assets/landing/application-journey-light.svg'
 import followUpNotes from '../../assets/landing/follow-up-notes.svg'
 
-export default function ArchitectureVisualSection() {
+export default function ArchitectureVisualSection({ theme = 'dark' }) {
   const sectionRef = useRef(null)
   const tile1Ref = useRef(null)
   const tile2Ref = useRef(null)
@@ -39,7 +40,12 @@ export default function ArchitectureVisualSection() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
           <article ref={tile1Ref} className="landing-story-panel md:col-span-7 overflow-hidden flex flex-col">
             <div className="relative w-full aspect-[1.55] overflow-hidden">
-              <img src={applicationJourney} alt="Illustrated path showing an opportunity moving from saved to applied, interview, follow-up, and decision" className="w-full h-full object-cover" loading="lazy" />
+              <img
+                src={theme === 'light' ? applicationJourneyLight : applicationJourney}
+                alt="Illustrated path showing an opportunity moving from saved to applied, interview, follow-up, and decision"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
             <div className="p-6 border-t landing-divider">
               <p className="landing-eyebrow mb-2">The application journey</p>

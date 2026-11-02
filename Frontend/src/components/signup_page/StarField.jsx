@@ -34,7 +34,7 @@ const STARS = [
 
 export default function StarField() {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div className="auth-starfield absolute inset-0 pointer-events-none overflow-hidden">
       {STARS.map((star, i) => (
         <span
           key={i}

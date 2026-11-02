@@ -19,6 +19,21 @@ const MATCH_CONDITION = `(
 // Prefer the job that came directly from this listing, then the newest.
 const MATCH_PRIORITY = `COALESCE(j.source_listing_id = l.id, false) DESC, j.created_at DESC`;
 
+/**
+ * Standardized status history logger executed within an existing client transaction
+ * @param {import('pg').PoolClient} client
+ * @param {{jobId: string, userId: string, fromStatus: string|null, toStatus: string, changedAt?: Date|string|null}} data
+ */
+const recordStatusHistory = async (client, { jobId, userId, fromStatus, toStatus, changedAt = null }) => {
+    const query = `
+        INSERT INTO job_status_history (job_id, user_id, from_status, to_status, changed_at)
+        VALUES ($1, $2, $3::job_status, $4::job_status, COALESCE($5, CURRENT_TIMESTAMP))
+        RETURNING id, changed_at;
+    `;
+    const res = await client.query(query, [jobId, userId, fromStatus, toStatus, changedAt]);
+    return res.rows[0];
+};
+
 const getJobsByUserId = async (userId) => {
     const result = await pool.query(
         "SELECT * FROM jobs WHERE user_id=$1 ORDER BY created_at DESC",
@@ -90,6 +105,14 @@ const createJobFromListing = async (userId, listingId) => {
             ]
         );
 
+        // Record initial status history event within the same transaction
+        await recordStatusHistory(client, {
+            jobId: inserted.rows[0].id,
+            userId,
+            fromStatus: null,
+            toStatus: "saved",
+        });
+
         await client.query("COMMIT");
         return { created: true, job: inserted.rows[0] };
     }
@@ -112,19 +135,86 @@ const createJobFromListing = async (userId, listingId) => {
 };
 
 const updateJobStatus = async (userId, jobId, status) => {
-    const result = await pool.query(
-        `UPDATE jobs
-         SET status = $1::job_status,
-             applied_date = CASE
-                 WHEN status = 'saved'::job_status AND $1::job_status = 'applied'::job_status AND applied_date IS NULL THEN CURRENT_DATE
-                 ELSE applied_date
-             END,
-             updated_at = CURRENT_TIMESTAMP
-         WHERE id = $2 AND user_id = $3
-         RETURNING *`,
-        [status, jobId, userId]
-    );
-    return result.rows[0];
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+
+        // 1. Acquire row-level lock on the target job row owned by this user
+        const currentJobRes = await client.query(
+            "SELECT * FROM jobs WHERE id = $1 AND user_id = $2 FOR UPDATE",
+            [jobId, userId]
+        );
+
+        if (currentJobRes.rows.length === 0) {
+            await client.query("ROLLBACK");
+            return null; // Job not found or not owned by user
+        }
+
+        const currentJob = currentJobRes.rows[0];
+        const previousStatus = currentJob.status;
+
+        // 2. Prevent duplicate history entries if status matches existing status
+        if (previousStatus === status) {
+            await client.query("COMMIT");
+            return currentJob;
+        }
+
+        // 3. Update job row and conditionally set applied_date when moving from saved to applied
+        const updateResult = await client.query(
+            `UPDATE jobs
+             SET status = $1::job_status,
+                 applied_date = CASE
+                     WHEN status = 'saved'::job_status AND $1::job_status = 'applied'::job_status AND applied_date IS NULL THEN CURRENT_DATE
+                     ELSE applied_date
+                 END,
+                 updated_at = CURRENT_TIMESTAMP
+             WHERE id = $2 AND user_id = $3
+             RETURNING *`,
+            [status, jobId, userId]
+        );
+        const updatedJob = updateResult.rows[0];
+
+        // 4. Record status transition in job_status_history within same transaction
+        await recordStatusHistory(client, {
+            jobId,
+            userId,
+            fromStatus: previousStatus,
+            toStatus: status,
+        });
+
+        await client.query("COMMIT");
+        return updatedJob;
+    } catch (error) {
+        await client.query("ROLLBACK").catch(() => {});
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
-module.exports = { getJobsByUserId, getTrackedListingMap, createJobFromListing, updateJobStatus };
+/**
+ * Retrieve chronological status history timeline for a specific job
+ * Enforces ownership using both jobId and userId
+ * @param {string} userId
+ * @param {string} jobId
+ * @returns {Promise<Array>}
+ */
+const getJobStatusHistory = async (userId, jobId) => {
+    const result = await pool.query(
+        `SELECT id, job_id, user_id, from_status, to_status, changed_at
+         FROM job_status_history
+         WHERE job_id = $1 AND user_id = $2
+         ORDER BY changed_at ASC, id ASC`,
+        [jobId, userId]
+    );
+    return result.rows;
+};
+
+module.exports = {
+    getJobsByUserId,
+    getTrackedListingMap,
+    createJobFromListing,
+    updateJobStatus,
+    getJobStatusHistory,
+    recordStatusHistory,
+};
