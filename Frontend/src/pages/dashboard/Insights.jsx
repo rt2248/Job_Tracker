@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import useInsights from "../../hooks/useInsights";
 import Card from "../../components/shared/Card";
 import Button from "../../components/shared/Button";
@@ -7,6 +7,7 @@ import StatusBadge from "../../components/applications_page/StatusBadge";
 import {
   SubmissionActivityChart,
   PipelineDistributionChart,
+  PipelineDistributionDetails,
   SkillFitChart,
 } from "../../components/insights";
 import { cn } from "../../utils/cn";
@@ -47,6 +48,8 @@ export default function Insights() {
     error,
     refetch,
   } = useInsights();
+
+  const [selectedStageKey, setSelectedStageKey] = useState(null);
 
   const volumeMetrics = summary?.volumeMetrics || {
     trackedOpportunities: 0,
@@ -265,28 +268,43 @@ export default function Insights() {
             </div>
           </section>
 
-          {/* 3. Submission Activity Chart */}
-          <section aria-labelledby="activity-chart-heading">
-            <h2 id="activity-chart-heading" className="sr-only">
-              Application Submission Activity Chart
+          {/* 3. Primary Charts Row: Application Pipeline Distribution (Left) & Submission Activity (Right) */}
+          <section aria-labelledby="primary-charts-heading">
+            <h2 id="primary-charts-heading" className="sr-only">
+              Application Pipeline Distribution and Submission Activity
             </h2>
-            <SubmissionActivityChart
-              dailySeries={summary?.submissionActivity?.dailySeries || []}
-              selectedRange={selectedRange}
-              onRangeChange={onRangeChange}
-              totalSubmittedInPeriod={summary?.submissionActivity?.totalSubmittedInPeriod}
-              isLoading={isRangeLoading}
-            />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+              {/* Left Column: Application Pipeline Distribution (Recharts Pie/Donut Chart) */}
+              <PipelineDistributionChart
+                pipelineData={pipeline}
+                activeInPipeline={snapshotMetrics.activeInPipeline}
+                selectedStageKey={selectedStageKey}
+                onSelectStageKey={setSelectedStageKey}
+                showDetails={false}
+                className="h-full flex flex-col justify-between"
+              />
+
+              {/* Right Column: Submission Activity (Activity Graph) */}
+              <SubmissionActivityChart
+                dailySeries={summary?.submissionActivity?.dailySeries || []}
+                selectedRange={selectedRange}
+                onRangeChange={onRangeChange}
+                totalSubmittedInPeriod={summary?.submissionActivity?.totalSubmittedInPeriod}
+                isLoading={isRangeLoading}
+                className="h-full flex flex-col justify-between"
+              />
+            </div>
           </section>
 
-          {/* 4. Application Pipeline Distribution */}
-          <section aria-labelledby="pipeline-chart-heading">
-            <h2 id="pipeline-chart-heading" className="sr-only">
-              Application Pipeline Distribution
+          {/* 4. Static Pipeline Information (Spans Full Available Width Beneath Both Charts) */}
+          <section aria-labelledby="pipeline-details-heading">
+            <h2 id="pipeline-details-heading" className="sr-only">
+              Pipeline Stage Breakdown and Legend
             </h2>
-            <PipelineDistributionChart
+            <PipelineDistributionDetails
               pipelineData={pipeline}
-              activeInPipeline={snapshotMetrics.activeInPipeline}
+              selectedStageKey={selectedStageKey}
+              onSelectStageKey={setSelectedStageKey}
             />
           </section>
 

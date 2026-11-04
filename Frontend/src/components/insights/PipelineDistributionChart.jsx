@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { cn } from "../../utils/cn";
 import EmptyStateVisual from "./EmptyStateVisual";
 
@@ -9,51 +10,65 @@ const STAGE_META = {
   saved: {
     label: "Saved",
     barColor: "bg-slate-500 dark:bg-slate-400",
+    color: "#64748b",
     textColor: "text-slate-400",
     accentBorder: "border-slate-500/40",
     shape: "circle",
+    isClosed: false,
   },
   applied: {
     label: "Applied",
     barColor: "bg-cyan",
+    color: "#06b6d4",
     textColor: "text-cyan",
     accentBorder: "border-cyan/40",
     shape: "triangle",
+    isClosed: false,
   },
   oa: {
     label: "Online Assessment",
     barColor: "bg-amber",
+    color: "#f59e0b",
     textColor: "text-amber",
     accentBorder: "border-amber/40",
     shape: "square",
+    isClosed: false,
   },
   interview: {
     label: "Interview",
     barColor: "bg-amber-400 dark:bg-yellow-400",
+    color: "#fbbf24",
     textColor: "text-amber-500 dark:text-yellow-400",
     accentBorder: "border-amber-400/40 dark:border-yellow-400/40",
     shape: "diamond",
+    isClosed: false,
   },
   offer: {
     label: "Offer",
     barColor: "bg-emerald-500 dark:bg-emerald-400",
+    color: "#10b981",
     textColor: "text-emerald-600 dark:text-emerald-400",
     accentBorder: "border-emerald-500/40",
     shape: "star",
+    isClosed: false,
   },
   accepted: {
     label: "Accepted",
     barColor: "bg-emerald-600 dark:bg-emerald-400",
+    color: "#059669",
     textColor: "text-emerald-600 dark:text-emerald-400",
     accentBorder: "border-emerald-600/40",
     shape: "check",
+    isClosed: true,
   },
   rejected: {
     label: "Rejected",
     barColor: "bg-red",
+    color: "#ef4444",
     textColor: "text-red",
     accentBorder: "border-red/40",
     shape: "cross",
+    isClosed: true,
   },
 };
 
@@ -108,22 +123,122 @@ function StageShapeIcon({ shape, className }) {
 }
 
 /**
- * PipelineDistributionChart - Reusable Pipeline Segmentation Component
+ * Custom Tooltip for the Pipeline Distribution Pie Chart
+ */
+function CustomPieTooltip({ active, payload, snapshotTotal }) {
+  if (!active || !payload || !payload.length) return null;
+  const data = payload[0].payload;
+  if (!data) return null;
+
+  const isClosed = data.isClosed;
+  const meta = STAGE_META[data.status] || {};
+  const calculatedPct =
+    snapshotTotal > 0
+      ? ((data.count / snapshotTotal) * 100).toFixed(1)
+      : "0.0";
+
+  return (
+    <div className="bg-surface-elevated/95 backdrop-blur-md border border-border-primary rounded-xl p-3 shadow-xl min-w-[180px] text-xs pointer-events-none transition-all">
+      <div className="flex items-center justify-between gap-2 pb-1.5 mb-1.5 border-b border-border-subtle">
+        <span className="font-display font-semibold text-ink flex items-center gap-1.5">
+          <StageShapeIcon shape={meta.shape} className={meta.textColor} />
+          {data.label}
+        </span>
+        <span
+          className={cn(
+            "text-[10px] font-medium px-1.5 py-0.5 rounded-full border",
+            !isClosed
+              ? "bg-cyan/10 text-cyan border-cyan/25"
+              : "bg-surface-secondary text-ink-secondary border-border-subtle"
+          )}
+        >
+          {!isClosed ? "Active Stage" : "Closed Outcome"}
+        </span>
+      </div>
+      <div className="space-y-1 font-sans">
+        <div className="flex items-center justify-between text-muted">
+          <span>Opportunities:</span>
+          <span className="font-mono font-bold text-ink">
+            {data.count} {data.count === 1 ? "opportunity" : "opportunities"}
+          </span>
+        </div>
+        <div className="flex items-center justify-between text-muted">
+          <span>Share of Total:</span>
+          <span className="font-mono font-bold text-cyan">
+            {calculatedPct}%
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * PipelineDistributionChart - Reusable Pipeline Segmentation Chart Card
  *
- * Visualizes current application distribution split across Active Pipeline and Closed Outcomes.
- * Preserves the architectural distinction between active stages (including offers) and evaluation-only active metrics.
+ * Visualizes current application distribution in an intuitive Recharts Donut Pie Chart.
+ * Designed to sit side-by-side with the Submission Activity graph on desktop.
  *
  * @param {Object} props
  * @param {Object} props.pipelineData - Data from GET /api/insights/pipeline
  * @param {number} [props.activeInPipeline] - KPI evaluation count (Applied + OA + Interview)
+ * @param {string} [props.selectedStageKey] - Controlled selected stage key for synchronized highlighting
+ * @param {(key: string|null) => void} [props.onSelectStageKey] - Selection change callback
+ * @param {boolean} [props.showDetails=false] - When true, also renders the static details card internally
  * @param {string} [props.className]
  */
 export default function PipelineDistributionChart({
   pipelineData,
   activeInPipeline,
+  selectedStageKey: externalSelectedStageKey,
+  onSelectStageKey: externalSetSelectedStageKey,
+  showDetails = false,
   className,
 }) {
-  const [selectedStageKey, setSelectedStageKey] = useState(null);
+  const [internalSelectedStageKey, setInternalSelectedStageKey] = useState(null);
+  const selectedStageKey =
+    externalSelectedStageKey !== undefined ? externalSelectedStageKey : internalSelectedStageKey;
+  const setSelectedStageKey = externalSetSelectedStageKey || setInternalSelectedStageKey;
+
+  const snapshotTotal = pipelineData?.snapshotTotal ?? 0;
+  const activeSegment = pipelineData?.activeSegment ?? { totalActive: 0, stages: [] };
+  const closedSegment = pipelineData?.closedSegment ?? { totalClosed: 0, stages: [] };
+
+  // Combine stages with display metadata for Recharts Pie chart (non-zero slices only)
+  const pieSlices = useMemo(() => {
+    if (!pipelineData) return [];
+    const items = [];
+    const active = pipelineData.activeSegment?.stages || [];
+    const closed = pipelineData.closedSegment?.stages || [];
+
+    for (const stage of active) {
+      if (stage.count > 0) {
+        const meta = STAGE_META[stage.status] || {};
+        items.push({
+          status: stage.status,
+          label: stage.label,
+          count: stage.count,
+          percentage: stage.percentage,
+          isClosed: false,
+          color: meta.color || "#06b6d4",
+        });
+      }
+    }
+    for (const stage of closed) {
+      if (stage.count > 0) {
+        const meta = STAGE_META[stage.status] || {};
+        items.push({
+          status: stage.status,
+          label: stage.label,
+          count: stage.count,
+          percentage: stage.percentage,
+          isClosed: true,
+          color: meta.color || "#ef4444",
+        });
+      }
+    }
+    return items;
+  }, [pipelineData]);
 
   if (!pipelineData) {
     return (
@@ -132,16 +247,6 @@ export default function PipelineDistributionChart({
       </div>
     );
   }
-
-  const {
-    snapshotTotal = 0,
-    activeSegment = { totalActive: 0, stages: [] },
-    closedSegment = { totalClosed: 0, stages: [] },
-    disclaimer = "This represents a point-in-time snapshot of current application stages, not a historical cohort conversion funnel.",
-  } = pipelineData;
-
-  const activeStages = activeSegment.stages || [];
-  const closedStages = closedSegment.stages || [];
 
   if (snapshotTotal === 0) {
     return (
@@ -162,30 +267,205 @@ export default function PipelineDistributionChart({
   return (
     <div
       className={cn(
-        "bg-surface border border-border-primary rounded-xl p-4 sm:p-6 transition-all",
+        "bg-surface border border-border-primary rounded-xl p-4 sm:p-6 transition-all flex flex-col justify-between",
         className
       )}
       role="region"
       aria-label="Application pipeline distribution"
     >
-      {/* Header */}
+      <div>
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="font-display text-ink text-base sm:text-lg font-semibold leading-tight">
+                Application Pipeline Distribution
+              </h3>
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-mono font-medium bg-surface-secondary text-ink-secondary border border-border-subtle">
+                {snapshotTotal} total tracked
+              </span>
+            </div>
+            <p className="text-xs text-muted mt-0.5">
+              Current point-in-time distribution of opportunities across stages
+            </p>
+          </div>
+
+          {/* High-level Segment Summary Badges */}
+          <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan/10 border border-cyan/25 text-xs">
+              <span className="w-2 h-2 rounded-full bg-cyan shrink-0" aria-hidden="true" />
+              <span className="font-sans text-ink-secondary">Active:</span>
+              <span className="font-mono font-bold text-cyan">{activeSegment.totalActive}</span>
+              <span className="text-muted text-[11px] font-mono">({activePct}%)</span>
+            </div>
+
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-secondary border border-border-subtle text-xs">
+              <span className="w-2 h-2 rounded-full bg-slate-400 shrink-0" aria-hidden="true" />
+              <span className="font-sans text-ink-secondary">Closed:</span>
+              <span className="font-mono font-bold text-ink">{closedSegment.totalClosed}</span>
+              <span className="text-muted text-[11px] font-mono">({closedPct}%)</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Distinction Callout: Active Segment vs Evaluation-Only Metric */}
+        {typeof activeInPipeline === "number" && (
+          <div className="mb-4 p-3 rounded-lg bg-surface-secondary/60 border border-border-subtle text-xs flex items-start gap-2.5">
+            <svg viewBox="0 0 16 16" className="w-4 h-4 text-cyan shrink-0 mt-0.5" fill="none">
+              <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
+              <path d="M8 7v4M8 5h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            <div className="leading-relaxed text-ink-secondary">
+              <span className="font-semibold text-ink">Semantic Note:</span>{" "}
+              The active pipeline contains <span className="font-mono text-cyan font-bold">{activeSegment.totalActive}</span> total opportunities (including saved and offers), while <span className="font-mono text-cyan font-bold">{activeInPipeline}</span> are actively undergoing employer evaluation (applied, assessment, and interviews).
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Donut Chart with Centered Total Tracked Opportunities */}
+      <div className="relative w-full h-64 sm:h-72 flex items-center justify-center my-auto">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
+            <Tooltip content={<CustomPieTooltip snapshotTotal={snapshotTotal} />} />
+            <Pie
+              data={pieSlices}
+              dataKey="count"
+              nameKey="label"
+              cx="50%"
+              cy="50%"
+              innerRadius={68}
+              outerRadius={102}
+              paddingAngle={pieSlices.length > 1 ? 2 : 0}
+              cornerRadius={pieSlices.length > 1 ? 3 : 0}
+              onClick={(data) => {
+                const status = data?.status || data?.payload?.status;
+                if (status) {
+                  setSelectedStageKey((prev) => (prev === status ? null : status));
+                }
+              }}
+              cursor="pointer"
+            >
+              {pieSlices.map((entry) => {
+                const isSelected = selectedStageKey === entry.status;
+                const isDimmed = selectedStageKey && !isSelected;
+
+                return (
+                  <Cell
+                    key={`pie-cell-${entry.status}`}
+                    fill={entry.color}
+                    stroke={
+                      isSelected
+                        ? "#ffffff"
+                        : "hsl(var(--surface-primary))"
+                    }
+                    strokeWidth={isSelected ? 2.5 : 1.5}
+                    opacity={isDimmed ? 0.35 : 1}
+                    style={{
+                      outline: "none",
+                      transition: "opacity 0.2s ease, stroke 0.2s ease",
+                    }}
+                  />
+                );
+              })}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+
+        {/* Centered Total Opportunities Indicator */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+          <span className="font-mono text-2xl sm:text-3xl font-bold text-ink leading-none">
+            {snapshotTotal}
+          </span>
+          <span className="text-[11px] sm:text-xs text-muted font-sans font-medium mt-1">
+            Total Tracked
+          </span>
+          <span className="text-[10px] text-muted/70 font-sans">
+            opportunities
+          </span>
+        </div>
+      </div>
+
+      {/* Optional Inlined Details (when showDetails is explicitly true) */}
+      {showDetails && (
+        <PipelineDistributionDetails
+          pipelineData={pipelineData}
+          selectedStageKey={selectedStageKey}
+          onSelectStageKey={setSelectedStageKey}
+          className="mt-6 border-t border-border-subtle pt-6 p-0 bg-transparent border-0 rounded-none"
+        />
+      )}
+    </div>
+  );
+}
+
+/**
+ * PipelineDistributionDetails - Full-width Static Pipeline Information Section
+ *
+ * Renders the stage legend, active & closed metrics, detailed stage breakdown cards,
+ * and point-in-time disclaimer. Positioned beneath the two-chart row spanning full available width.
+ *
+ * @param {Object} props
+ * @param {Object} props.pipelineData - Data from GET /api/insights/pipeline
+ * @param {string} [props.selectedStageKey] - Controlled selected stage key for synchronized highlighting
+ * @param {(key: string|null) => void} [props.onSelectStageKey] - Selection change callback
+ * @param {string} [props.className]
+ */
+export function PipelineDistributionDetails({
+  pipelineData,
+  selectedStageKey: externalSelectedStageKey,
+  onSelectStageKey: externalSetSelectedStageKey,
+  className,
+}) {
+  const [internalSelectedStageKey, setInternalSelectedStageKey] = useState(null);
+  const selectedStageKey =
+    externalSelectedStageKey !== undefined ? externalSelectedStageKey : internalSelectedStageKey;
+  const setSelectedStageKey = externalSetSelectedStageKey || setInternalSelectedStageKey;
+
+  if (!pipelineData || (pipelineData.snapshotTotal ?? 0) === 0) {
+    return null;
+  }
+
+  const {
+    snapshotTotal = 0,
+    activeSegment = { totalActive: 0, stages: [] },
+    closedSegment = { totalClosed: 0, stages: [] },
+    disclaimer = "This represents a point-in-time snapshot of current application stages, not a historical cohort conversion funnel.",
+  } = pipelineData;
+
+  const activeStages = activeSegment.stages || [];
+  const closedStages = closedSegment.stages || [];
+
+  const activePct = ((activeSegment.totalActive / snapshotTotal) * 100).toFixed(1);
+  const closedPct = ((closedSegment.totalClosed / snapshotTotal) * 100).toFixed(1);
+
+  return (
+    <div
+      className={cn(
+        "bg-surface border border-border-primary rounded-xl p-4 sm:p-6 transition-all",
+        className
+      )}
+      role="region"
+      aria-label="Application pipeline stage breakdown and legend"
+    >
+      {/* Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
         <div>
           <div className="flex items-center gap-2">
             <h3 className="font-display text-ink text-base sm:text-lg font-semibold leading-tight">
-              Application Pipeline Distribution
+              Pipeline Stage Breakdown &amp; Legend
             </h3>
             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-mono font-medium bg-surface-secondary text-ink-secondary border border-border-subtle">
               {snapshotTotal} total tracked
             </span>
           </div>
           <p className="text-xs text-muted mt-0.5">
-            Current point-in-time distribution of opportunities across stages
+            Detailed breakdown of opportunities across active evaluation stages and closed outcomes
           </p>
         </div>
 
         {/* High-level Segment Summary Badges */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan/10 border border-cyan/25 text-xs">
             <span className="w-2 h-2 rounded-full bg-cyan shrink-0" aria-hidden="true" />
             <span className="font-sans text-ink-secondary">Active:</span>
@@ -202,83 +482,120 @@ export default function PipelineDistributionChart({
         </div>
       </div>
 
-      {/* Distinction Callout: Active Segment vs Evaluation-Only Metric */}
-      {typeof activeInPipeline === "number" && (
-        <div className="mb-5 p-3 rounded-lg bg-surface-secondary/60 border border-border-subtle text-xs flex items-start gap-2.5">
-          <svg viewBox="0 0 16 16" className="w-4 h-4 text-cyan shrink-0 mt-0.5" fill="none">
-            <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
-            <path d="M8 7v4M8 5h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-          <div className="leading-relaxed text-ink-secondary">
-            <span className="font-semibold text-ink">Semantic Note:</span>{" "}
-            The active pipeline contains <span className="font-mono text-cyan font-bold">{activeSegment.totalActive}</span> total opportunities (including saved and offers), while <span className="font-mono text-cyan font-bold">{activeInPipeline}</span> are actively undergoing employer evaluation (applied, assessment, and interviews).
+      {/* Clear, Identifiable Stage Legend (Active Pipeline vs Closed Outcomes) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4 rounded-xl bg-surface-secondary/30 border border-border-subtle mb-6">
+        {/* Active Pipeline Stages */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between text-xs pb-1 border-b border-border-subtle/80">
+            <span className="font-sans font-semibold text-ink flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-cyan shrink-0" aria-hidden="true" />
+              Active Pipeline
+            </span>
+            <span className="font-mono text-xs font-bold text-cyan">
+              {activeSegment.totalActive} ({activePct}%)
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-1.5 pt-1">
+            {activeStages.map((stage) => {
+              const meta = STAGE_META[stage.status] || {};
+              const isSelected = selectedStageKey === stage.status;
+              const isDimmed = selectedStageKey && !isSelected;
+
+              return (
+                <button
+                  key={`legend-act-${stage.status}`}
+                  type="button"
+                  onClick={() => setSelectedStageKey(isSelected ? null : stage.status)}
+                  className={cn(
+                    "flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all text-left select-none border",
+                    "hover:bg-surface-secondary/80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan/70",
+                    isSelected
+                      ? "bg-surface-secondary border-border-accent/40 shadow-sm ring-1 ring-border-accent/30 font-medium"
+                      : "bg-surface/60 border-transparent",
+                    isDimmed && "opacity-35"
+                  )}
+                  aria-label={`${stage.label}: ${stage.count} opportunities (${stage.percentage}%)`}
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span
+                      className={cn(
+                        "p-1 rounded-md bg-surface border shrink-0",
+                        meta.accentBorder,
+                        meta.textColor
+                      )}
+                    >
+                      <StageShapeIcon shape={meta.shape} className={meta.textColor} />
+                    </span>
+                    <span className="font-sans text-xs text-ink-secondary truncate">
+                      {stage.label}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0 font-mono text-[11px] ml-2">
+                    <span className="font-bold text-ink">{stage.count}</span>
+                    <span className="text-muted">({stage.percentage}%)</span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
-      )}
 
-      {/* Proportional Segmented Track */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between text-xs text-muted font-sans font-medium mb-1.5">
-          <span>Active Pipeline ({activeSegment.totalActive})</span>
-          <span>Closed Outcomes ({closedSegment.totalClosed})</span>
-        </div>
+        {/* Closed Outcomes */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between text-xs pb-1 border-b border-border-subtle/80">
+            <span className="font-sans font-semibold text-ink flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-slate-400 shrink-0" aria-hidden="true" />
+              Closed Outcomes
+            </span>
+            <span className="font-mono text-xs font-bold text-ink">
+              {closedSegment.totalClosed} ({closedPct}%)
+            </span>
+          </div>
 
-        {/* Segmented Track Bar with Divider */}
-        <div className="w-full flex items-center h-4 sm:h-5 rounded-full overflow-hidden p-0.5 bg-surface-secondary border border-border-primary gap-0.5">
-          {/* Active Stages Proportional Track */}
-          {activeStages.filter((s) => s.count > 0).map((stage) => {
-            const meta = STAGE_META[stage.status] || {};
-            const widthPct = Math.max(2, (stage.count / snapshotTotal) * 100);
-            const isSelected = selectedStageKey === stage.status;
-            const isDimmed = selectedStageKey && !isSelected;
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
+            {closedStages.map((stage) => {
+              const meta = STAGE_META[stage.status] || {};
+              const isSelected = selectedStageKey === stage.status;
+              const isDimmed = selectedStageKey && !isSelected;
 
-            return (
-              <button
-                key={`bar-act-${stage.status}`}
-                type="button"
-                onClick={() => setSelectedStageKey(isSelected ? null : stage.status)}
-                style={{ width: `${widthPct}%`, height: "100%" }}
-                className={cn(
-                  "relative rounded-[2px] transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan/70",
-                  meta.barColor || "bg-cyan",
-                  isSelected && "brightness-125 scale-y-115 z-10 shadow-sm",
-                  isDimmed && "opacity-30"
-                )}
-                title={`${stage.label}: ${stage.count} (${stage.percentage}%)`}
-                aria-label={`${stage.label}: ${stage.count} (${stage.percentage}%)`}
-              />
-            );
-          })}
-
-          {/* Clean Visual Divider between Active and Closed */}
-          {activeSegment.totalActive > 0 && closedSegment.totalClosed > 0 && (
-            <div className="w-1.5 h-full bg-border-primary rounded-full shrink-0" aria-hidden="true" />
-          )}
-
-          {/* Closed Stages Proportional Track */}
-          {closedStages.filter((s) => s.count > 0).map((stage) => {
-            const meta = STAGE_META[stage.status] || {};
-            const widthPct = Math.max(2, (stage.count / snapshotTotal) * 100);
-            const isSelected = selectedStageKey === stage.status;
-            const isDimmed = selectedStageKey && !isSelected;
-
-            return (
-              <button
-                key={`bar-cls-${stage.status}`}
-                type="button"
-                onClick={() => setSelectedStageKey(isSelected ? null : stage.status)}
-                style={{ width: `${widthPct}%`, height: "100%" }}
-                className={cn(
-                  "relative rounded-[2px] transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan/70",
-                  meta.barColor || "bg-slate-500",
-                  isSelected && "brightness-125 scale-y-115 z-10 shadow-sm",
-                  isDimmed && "opacity-30"
-                )}
-                title={`${stage.label}: ${stage.count} (${stage.percentage}%)`}
-                aria-label={`${stage.label}: ${stage.count} (${stage.percentage}%)`}
-              />
-            );
-          })}
+              return (
+                <button
+                  key={`legend-cls-${stage.status}`}
+                  type="button"
+                  onClick={() => setSelectedStageKey(isSelected ? null : stage.status)}
+                  className={cn(
+                    "flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all text-left select-none border",
+                    "hover:bg-surface-secondary/80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan/70",
+                    isSelected
+                      ? "bg-surface-secondary border-border-accent/40 shadow-sm ring-1 ring-border-accent/30 font-medium"
+                      : "bg-surface/60 border-transparent",
+                    isDimmed && "opacity-35"
+                  )}
+                  aria-label={`${stage.label}: ${stage.count} opportunities (${stage.percentage}%)`}
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span
+                      className={cn(
+                        "p-1 rounded-md bg-surface border shrink-0",
+                        meta.accentBorder,
+                        meta.textColor
+                      )}
+                    >
+                      <StageShapeIcon shape={meta.shape} className={meta.textColor} />
+                    </span>
+                    <span className="font-sans text-xs text-ink-secondary truncate">
+                      {stage.label}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0 font-mono text-[11px] ml-2">
+                    <span className="font-bold text-ink">{stage.count}</span>
+                    <span className="text-muted">({stage.percentage}%)</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -436,3 +753,5 @@ export default function PipelineDistributionChart({
     </div>
   );
 }
+
+PipelineDistributionChart.Details = PipelineDistributionDetails;

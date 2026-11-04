@@ -331,7 +331,7 @@ const SideBar = ({
                                     "group py-2.5 px-3 flex items-center gap-3 text-sm font-sans rounded-xl text-left transition-all outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 hover:cursor-pointer",
                                     !isSidebarOpen && "md:justify-center md:px-0",
                                     isActive
-                                        ? "bg-neutral-200/90 text-neutral-950 font-bold border-l-2 border-neutral-950 shadow-sm"
+                                        ? "bg-neutral-200/90 text-neutral-950 font-bold  border-neutral-950 shadow-sm"
                                         : "text-neutral-700 font-medium hover:text-neutral-950 hover:bg-neutral-100/80"
                                 )}
                             >
@@ -377,7 +377,7 @@ const SideBar = ({
                         className={cn(
                             "w-full flex items-center rounded-xl transition-all duration-150 outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-neutral-400 select-none",
                             isSidebarOpen
-                                ? "gap-2.5 p-2 bg-neutral-100/80 hover:bg-neutral-200/70 border border-neutral-300 text-left"
+                                ? "gap-2.5 p-2 hover:bg-neutral-100/80 hover:border-neutral-300 text-left"
                                 : "justify-center p-1.5 hover:bg-neutral-100/80 border border-transparent",
                             isProfileMenuOpen && "bg-neutral-200/90 border-neutral-400 ring-1 ring-neutral-400/30"
                         )}
