@@ -10,27 +10,29 @@ const DeleteResumeModal = ({ isOpen, onClose, onConfirm, isDeleting, filename })
     closeOnOverlayClick={!isDeleting}
   >
     <ModalHeader className="justify-center text-center">
-      <ModalTitle className="text-center">Remove resume</ModalTitle>
+      <ModalTitle className="text-xl sm:text-2xl font-bold font-display text-center">Remove Resume</ModalTitle>
     </ModalHeader>
     <ModalContent>
-      <p className="text-sm text-ink-secondary font-sans leading-relaxed">
+      <p className="text-sm sm:text-base text-ink-secondary font-sans leading-relaxed">
         Are you sure you want to remove <span className="font-mono text-ink font-semibold">{filename}</span>? This will permanently remove the resume file from your account.
       </p>
     </ModalContent>
     <ModalFooter>
       <Button
         variant="secondary"
-        size="sm"
+        size="md"
         onClick={onClose}
         disabled={isDeleting}
+        className="text-sm sm:text-base px-4 py-2"
       >
         Cancel
       </Button>
       <Button
         variant="destructive"
-        size="sm"
+        size="md"
         onClick={onConfirm}
         isLoading={isDeleting}
+        className="text-sm sm:text-base px-4 py-2"
       >
         Remove Resume
       </Button>

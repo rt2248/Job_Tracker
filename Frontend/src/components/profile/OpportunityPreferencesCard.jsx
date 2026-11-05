@@ -12,15 +12,15 @@ const OpportunityPreferencesCard = ({ returnPromptsEnabled, onToggleReturnPrompt
           </svg>
         </div>
         <div>
-          <h3 className="text-base font-semibold font-display text-ink">Opportunity Preferences</h3>
-          <p className="text-[11px] text-muted font-sans">Discovery prompts and application tracking behaviors</p>
+          <h3 className="text-base sm:text-lg font-semibold font-display text-ink">Opportunity Preferences</h3>
+          <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">Discovery prompts and application tracking behaviors</p>
         </div>
       </div>
 
       <div className="p-4 rounded-xl bg-surface-secondary/40 border border-border-subtle flex items-center justify-between gap-4">
         <div className="min-w-0">
-          <span className="text-ink font-medium text-sm block">Return-triggered prompts</span>
-          <span className="text-muted text-xs font-sans mt-0.5 block leading-relaxed">
+          <span className="text-ink font-medium text-sm sm:text-base block">Return-triggered prompts</span>
+          <span className="text-muted text-xs sm:text-sm font-sans mt-1 block leading-relaxed">
             Ask to track opportunities when returning to Evolexa after viewing external job postings.
           </span>
         </div>

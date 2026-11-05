@@ -125,17 +125,17 @@ export default function RadialProgress({
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           {hasValue ? (
             <>
-              <span className={cn("font-mono font-bold leading-none tracking-tight", style.text, size < 55 ? "text-xs" : size < 80 ? "text-sm" : "text-base")}>
+              <span className={cn("font-mono font-bold leading-none tracking-tight", style.text, size < 55 ? "text-xs font-bold" : size < 80 ? "text-sm sm:text-base font-bold" : "text-base sm:text-lg font-bold")}>
                 {clampedValue}%
               </span>
               {sublabel && (
-                <span className="text-[10px] text-muted font-sans font-medium uppercase tracking-wider mt-0.5">
+                <span className="text-xs text-muted font-sans font-semibold uppercase tracking-wider mt-0.5">
                   {sublabel}
                 </span>
               )}
             </>
           ) : (
-            <span className="text-xs text-muted font-mono font-medium">N/A</span>
+            <span className="text-xs sm:text-sm text-muted font-mono font-medium">N/A</span>
           )}
         </div>
       )}

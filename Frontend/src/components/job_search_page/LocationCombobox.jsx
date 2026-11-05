@@ -49,7 +49,7 @@ function LocationCombobox({ value, onChange }) {
                 }}
                 onFocus={() => setIsOpen(true)}
                 placeholder="Location..."
-                className="h-9 text-xs sm:text-sm bg-surface-secondary/90"
+                className="h-10 text-sm bg-surface-secondary/90"
                 rightIcon={
                     value ? (
                         <button
@@ -71,7 +71,7 @@ function LocationCombobox({ value, onChange }) {
                             key={loc}
                             type="button"
                             onClick={() => handleSelect(loc)}
-                            className="w-full text-left px-3 py-1.5 text-xs sm:text-sm text-ink hover:bg-surface-overlay rounded-lg font-sans transition-colors hover:cursor-pointer"
+                            className="w-full text-left px-3 py-2 text-sm text-ink hover:bg-surface-overlay rounded-lg font-sans transition-colors hover:cursor-pointer"
                         >
                             {loc}
                         </button>

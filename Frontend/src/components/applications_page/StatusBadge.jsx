@@ -30,7 +30,7 @@ function StatusBadge({ status, className }) {
     const dotColor = STATUS_DOT_COLORS[status] || STATUS_DOT_COLORS[meta.color] || "bg-current";
 
     return (
-        <span className={cn("inline-flex items-center gap-1.5 text-xs font-medium font-sans shrink-0", textColor, className)}>
+        <span className={cn("inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium font-sans shrink-0", textColor, className)}>
             <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", dotColor)} aria-hidden="true" />
             {meta.label}
         </span>

@@ -24,7 +24,7 @@ function ListingDetailModal({ listing, onClose }) {
         <Modal isOpen={Boolean(listing)} onClose={onClose} size="lg">
             <ModalHeader onClose={onClose}>
                 <ModalTitle>{listing.title}</ModalTitle>
-                <p className="text-muted text-sm font-sans mt-1 flex items-center gap-2 flex-wrap">
+                <p className="text-muted text-sm sm:text-base font-sans mt-1.5 flex items-center gap-2 flex-wrap">
                     <span className="text-ink-secondary font-medium">{listing.company}</span>
                     {listing.location && <span>· {listing.location}</span>}
                     <span className="text-border-primary/80">·</span>
@@ -39,26 +39,26 @@ function ListingDetailModal({ listing, onClose }) {
             <ModalContent>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-surface-secondary/50 border border-border-subtle text-sm">
                     <div>
-                        <p className="text-muted text-xs font-sans font-medium uppercase tracking-wider">Compensation</p>
-                        <p className="text-cyan font-mono font-medium mt-1">{compensation || "—"}</p>
+                        <p className="text-muted text-xs sm:text-sm font-sans font-semibold uppercase tracking-wider">Compensation</p>
+                        <p className="text-cyan font-mono font-bold text-base sm:text-lg mt-1">{compensation || "—"}</p>
                     </div>
                     <div>
-                        <p className="text-muted text-xs font-sans font-medium uppercase tracking-wider">Date Posted</p>
-                        <p className="text-ink font-mono mt-1">{formatDate(listing.postedDate)}</p>
+                        <p className="text-muted text-xs sm:text-sm font-sans font-semibold uppercase tracking-wider">Date Posted</p>
+                        <p className="text-ink font-mono font-bold text-base sm:text-lg mt-1">{formatDate(listing.postedDate)}</p>
                     </div>
                 </div>
 
                 {listing.description && (
                     <div className="mt-5 p-4 rounded-xl bg-surface-secondary/30 border border-border-subtle">
-                        <p className="text-muted text-xs font-sans font-medium uppercase tracking-wider mb-1.5">Job Description</p>
-                        <p className="text-ink text-sm leading-relaxed font-sans whitespace-pre-wrap">{listing.description}</p>
+                        <p className="text-muted text-xs sm:text-sm font-sans font-semibold uppercase tracking-wider mb-1.5">Job Description</p>
+                        <p className="text-ink text-sm sm:text-base leading-relaxed font-sans whitespace-pre-wrap">{listing.description}</p>
                     </div>
                 )}
 
                 {listing.requirements && listing.requirements.length > 0 && (
                     <div className="mt-5 p-4 rounded-xl bg-surface-secondary/30 border border-border-subtle">
-                        <p className="text-muted text-xs font-sans font-medium uppercase tracking-wider mb-2">Requirements</p>
-                        <ul className="text-ink text-sm leading-relaxed font-sans space-y-1.5 list-disc list-inside">
+                        <p className="text-muted text-xs sm:text-sm font-sans font-semibold uppercase tracking-wider mb-2">Requirements</p>
+                        <ul className="text-ink text-sm sm:text-base leading-relaxed font-sans space-y-1.5 list-disc list-inside">
                             {listing.requirements.map((req, i) => (
                                 <li key={i} className="text-ink-secondary">{req}</li>
                             ))}
@@ -68,8 +68,8 @@ function ListingDetailModal({ listing, onClose }) {
 
                 {listing.tags && listing.tags.length > 0 && (
                     <div className="mt-5">
-                        <p className="text-muted text-xs font-sans font-medium uppercase tracking-wider mb-2">Skills & Tags</p>
-                        <div className="flex flex-wrap gap-2 text-xs font-sans font-medium">
+                        <p className="text-muted text-xs sm:text-sm font-sans font-semibold uppercase tracking-wider mb-2">Skills & Tags</p>
+                        <div className="flex flex-wrap gap-2 text-xs sm:text-sm font-sans font-medium">
                             {listing.tags.map((tag) => (
                                 <span key={tag} className="text-cyan/80">
                                     #{tag}

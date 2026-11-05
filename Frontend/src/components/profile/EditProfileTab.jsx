@@ -404,7 +404,7 @@ const EditProfileTab = ({
     <form onSubmit={handleSubmit} className="max-w-4xl mx-auto flex flex-col gap-6">
       {/* Unsaved Changes Banner */}
       {isDirty && (
-        <div className="p-3.5 rounded-xl bg-amber/10 border border-amber/30 flex items-center justify-between gap-3 text-xs text-amber animate-fadeIn">
+        <div className="p-3.5 rounded-xl bg-amber/10 border border-amber/30 flex items-center justify-between gap-3 text-xs sm:text-sm text-amber animate-fadeIn">
           <div className="flex items-center gap-2 font-medium">
             <span className="w-2 h-2 rounded-full bg-amber animate-pulse" />
             <span>You have unsaved changes in your profile.</span>
@@ -416,7 +416,7 @@ const EditProfileTab = ({
               size="sm"
               onClick={onCancelEdits}
               disabled={isSaving}
-              className="text-amber border-amber/40 hover:bg-amber/15 text-xs h-7 px-2.5"
+              className="text-amber border-amber/40 hover:bg-amber/15 text-xs sm:text-sm h-8 px-3"
             >
               Cancel
             </Button>
@@ -425,7 +425,7 @@ const EditProfileTab = ({
               variant="primary"
               size="sm"
               isLoading={isSaving}
-              className="text-xs h-7 px-3 bg-amber hover:bg-amber-light text-neutral-950 font-semibold"
+              className="text-xs sm:text-sm h-8 px-3.5 bg-amber hover:bg-amber-light text-neutral-950 font-semibold"
             >
               Save Now
             </Button>
@@ -436,8 +436,8 @@ const EditProfileTab = ({
       {/* 1. Avatar Section */}
       <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
         <CardHeader className="mb-4">
-          <CardTitle className="text-lg font-display">Profile Picture</CardTitle>
-          <p className="text-xs text-muted font-sans">
+          <CardTitle className="text-lg sm:text-xl font-display font-semibold">Profile Picture</CardTitle>
+          <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
             Supported formats: PNG, JPEG, WebP (Max 2MB). SVG and GIF formats are not allowed.
           </p>
         </CardHeader>
@@ -507,7 +507,7 @@ const EditProfileTab = ({
                     onClick={handleRemoveAvatar}
                     disabled={isRemovingAvatar || isUploadingAvatar}
                     isLoading={isRemovingAvatar}
-                    className="text-xs text-red hover:text-red hover:bg-red/10"
+                    className="text-xs sm:text-sm text-red hover:text-red hover:bg-red/10"
                   >
                     Remove Photo
                   </Button>
@@ -515,7 +515,7 @@ const EditProfileTab = ({
               </div>
 
               {avatarFile && (
-                <p className="text-[11px] text-muted font-mono">
+                <p className="text-xs text-muted font-mono">
                   Selected: {avatarFile.name} ({(avatarFile.size / 1024).toFixed(1)} KB) &ndash; Click &quot;Save Picture&quot; to apply.
                 </p>
               )}
@@ -527,8 +527,8 @@ const EditProfileTab = ({
       {/* 2. Identity Information */}
       <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
         <CardHeader className="mb-4">
-          <CardTitle className="text-lg font-display">Personal Information</CardTitle>
-          <p className="text-xs text-muted font-sans">
+          <CardTitle className="text-lg sm:text-xl font-display font-semibold">Personal Information</CardTitle>
+          <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
             Your legal or display name associated with your Job Tracker developer account.
           </p>
         </CardHeader>
@@ -561,16 +561,16 @@ const EditProfileTab = ({
       {/* 3. Professional Headline & Bio */}
       <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
         <CardHeader className="mb-4">
-          <CardTitle className="text-lg font-display">Professional Profile</CardTitle>
-          <p className="text-xs text-muted font-sans">
+          <CardTitle className="text-lg sm:text-xl font-display font-semibold">Professional Profile</CardTitle>
+          <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
             Summarize your role, specialization, and engineering journey.
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label htmlFor="headline-input" className="text-xs font-medium text-ink-secondary">Headline</label>
-              <span className="text-[10px] font-mono text-muted">
+              <label htmlFor="headline-input" className="text-xs sm:text-sm font-medium text-ink-secondary">Headline</label>
+              <span className="text-xs font-mono text-muted">
                 {formData.headline.length}/150
               </span>
             </div>
@@ -584,7 +584,7 @@ const EditProfileTab = ({
           </div>
 
           <div>
-            <label htmlFor="location-input" className="text-xs font-medium text-ink-secondary block mb-1.5">Location</label>
+            <label htmlFor="location-input" className="text-xs sm:text-sm font-medium text-ink-secondary block mb-1.5">Location</label>
             <Input
               id="location-input"
               value={formData.location}
@@ -596,8 +596,8 @@ const EditProfileTab = ({
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label htmlFor="bio-textarea" className="text-xs font-medium text-ink-secondary">Bio</label>
-              <span className="text-[10px] font-mono text-muted">
+              <label htmlFor="bio-textarea" className="text-xs sm:text-sm font-medium text-ink-secondary">Bio</label>
+              <span className="text-xs font-mono text-muted">
                 {formData.bio.length}/2000
               </span>
             </div>
@@ -617,8 +617,8 @@ const EditProfileTab = ({
       {/* 4. Technical Skills */}
       <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
         <CardHeader className="mb-4">
-          <CardTitle className="text-lg font-display">Technical Skills</CardTitle>
-          <p className="text-xs text-muted font-sans">
+          <CardTitle className="text-lg sm:text-xl font-display font-semibold">Technical Skills</CardTitle>
+          <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
             Add key technologies, languages, and frameworks in your toolbelt.
           </p>
         </CardHeader>
@@ -640,7 +640,7 @@ const EditProfileTab = ({
               type="button"
               variant="secondary"
               onClick={handleAddSkill}
-              className="shrink-0"
+              className="shrink-0 text-sm"
             >
               Add Skill
             </Button>
@@ -651,7 +651,7 @@ const EditProfileTab = ({
               {formData.skills.map((skill) => (
                 <span
                   key={skill}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium bg-surface-secondary text-ink border border-border-subtle"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs sm:text-sm font-medium bg-surface-secondary text-ink border border-border-subtle"
                 >
                   <span>{skill}</span>
                   <button
@@ -667,7 +667,7 @@ const EditProfileTab = ({
               ))}
             </div>
           ) : (
-            <p className="text-xs text-muted italic">No skills added yet.</p>
+            <p className="text-sm text-muted italic">No skills added yet.</p>
           )}
         </CardContent>
       </Card>
@@ -676,8 +676,8 @@ const EditProfileTab = ({
       <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between gap-3 mb-4">
           <div>
-            <CardTitle className="text-lg font-display">Professional Experience</CardTitle>
-            <p className="text-xs text-muted font-sans">
+            <CardTitle className="text-lg sm:text-xl font-display font-semibold">Professional Experience</CardTitle>
+            <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
               Add your relevant work history and technical achievements.
             </p>
           </div>
@@ -686,14 +686,14 @@ const EditProfileTab = ({
             variant="outline"
             size="sm"
             onClick={handleAddExperience}
-            className="shrink-0"
+            className="shrink-0 text-xs sm:text-sm"
           >
             + Add Position
           </Button>
         </CardHeader>
         <CardContent className="space-y-4">
           {formData.experience.length === 0 ? (
-            <p className="text-xs text-muted italic">
+            <p className="text-sm text-muted italic">
               No experience items yet. Click &quot;+ Add Position&quot; to list your experience.
             </p>
           ) : (
@@ -703,13 +703,13 @@ const EditProfileTab = ({
                 className="p-4 rounded-xl bg-surface-secondary/40 border border-border-subtle relative space-y-3"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-semibold text-muted">
+                  <span className="text-xs sm:text-sm font-mono font-semibold text-muted">
                     Position #{idx + 1}
                   </span>
                   <button
                     type="button"
                     onClick={() => handleRemoveExperience(idx)}
-                    className="text-xs text-red hover:underline cursor-pointer"
+                    className="text-xs sm:text-sm text-red hover:underline cursor-pointer"
                   >
                     Remove
                   </button>
@@ -762,13 +762,13 @@ const EditProfileTab = ({
                     onChange={(e) => handleUpdateExperience(idx, "current", e.target.checked)}
                     className="rounded border-border-primary text-cyan focus:ring-cyan/30 cursor-pointer"
                   />
-                  <label htmlFor={`current-role-${idx}`} className="text-xs text-ink-secondary cursor-pointer">
+                  <label htmlFor={`current-role-${idx}`} className="text-xs sm:text-sm text-ink-secondary cursor-pointer">
                     I currently work in this role
                   </label>
                 </div>
 
                 <div>
-                  <label htmlFor={`exp-desc-${idx}`} className="text-xs font-medium text-ink-secondary block mb-1">
+                  <label htmlFor={`exp-desc-${idx}`} className="text-xs sm:text-sm font-medium text-ink-secondary block mb-1">
                     Role Description & Accomplishments
                   </label>
                   <textarea
@@ -778,7 +778,7 @@ const EditProfileTab = ({
                     rows={2}
                     maxLength={2000}
                     placeholder="Summary of responsibilities, technologies utilized, and impact..."
-                    className="w-full px-3 py-2 text-xs bg-surface-secondary text-ink placeholder:text-muted rounded-lg border border-border-primary focus:border-cyan focus:ring-2 focus:ring-cyan/30 transition-all outline-none"
+                    className="w-full px-3 py-2 text-sm bg-surface-secondary text-ink placeholder:text-muted rounded-lg border border-border-primary focus:border-cyan focus:ring-2 focus:ring-cyan/30 transition-all outline-none"
                   />
                 </div>
               </div>
@@ -790,8 +790,8 @@ const EditProfileTab = ({
       {/* 6. Portfolio & Social Links */}
       <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
         <CardHeader className="mb-4">
-          <CardTitle className="text-lg font-display">Portfolio & Social Links</CardTitle>
-          <p className="text-xs text-muted font-sans">
+          <CardTitle className="text-lg sm:text-xl font-display font-semibold">Portfolio & Social Links</CardTitle>
+          <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
             Connect your personal portfolio, GitHub, LinkedIn, and social profiles.
           </p>
         </CardHeader>
@@ -828,8 +828,8 @@ const EditProfileTab = ({
       {/* 7. Public Profile & Granular Visibility Settings */}
       <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
         <CardHeader className="mb-4">
-          <CardTitle className="text-lg font-display">Public Profile & Privacy Controls</CardTitle>
-          <p className="text-xs text-muted font-sans">
+          <CardTitle className="text-lg sm:text-xl font-display font-semibold">Public Profile & Privacy Controls</CardTitle>
+          <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
             Configure how your profile appears to public visitors and potential employers.
           </p>
         </CardHeader>
@@ -838,17 +838,17 @@ const EditProfileTab = ({
           <div className="p-4 rounded-xl bg-surface-secondary/50 border border-border-subtle flex items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-sm text-ink font-display">Public Profile Mode</span>
+                <span className="font-semibold text-base text-ink font-display">Public Profile Mode</span>
                 <span className="text-border-primary/80">·</span>
                 <span className={cn(
-                  "text-xs font-sans font-medium flex items-center gap-1.5",
+                  "text-xs sm:text-sm font-sans font-medium flex items-center gap-1.5",
                   formData.isPublicProfile ? "text-cyan" : "text-muted"
                 )}>
                   <span className={cn("w-1.5 h-1.5 rounded-full", formData.isPublicProfile ? "bg-cyan" : "bg-muted")} />
                   {formData.isPublicProfile ? "Enabled" : "Disabled"}
                 </span>
               </div>
-              <p className="text-xs text-muted font-sans mt-0.5">
+              <p className="text-xs sm:text-sm text-muted font-sans mt-1">
                 When enabled, anonymous visitors can view your developer profile at your public link.
               </p>
             </div>
@@ -872,11 +872,11 @@ const EditProfileTab = ({
 
           {/* Granular Visibility Settings (active when public) */}
           <div className="space-y-3">
-            <h4 className="text-xs font-semibold text-ink-secondary tracking-wide uppercase font-mono">
+            <h4 className="text-xs sm:text-sm font-semibold text-ink-secondary tracking-wide uppercase font-mono">
               Granular Field Visibility {formData.isPublicProfile ? "(Active)" : "(Applied when public)"}
             </h4>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               {[
                 { key: "headline", label: "Headline", desc: "Show professional title/headline" },
                 { key: "bio", label: "Bio Summary", desc: "Show developer background text" },
@@ -897,8 +897,8 @@ const EditProfileTab = ({
                     className="p-3 rounded-xl bg-surface-secondary/30 border border-border-subtle flex items-center justify-between gap-3 cursor-pointer hover:bg-surface-secondary/60 transition-colors"
                   >
                     <div>
-                      <span className="font-medium text-ink block">{label}</span>
-                      <span className="text-[11px] text-muted block mt-0.5">{desc}</span>
+                      <span className="font-medium text-sm text-ink block">{label}</span>
+                      <span className="text-xs text-muted block mt-0.5">{desc}</span>
                     </div>
                     <button
                       type="button"
@@ -925,7 +925,7 @@ const EditProfileTab = ({
 
       {/* Action Bar */}
       <div className="sticky bottom-4 z-20 p-4 rounded-2xl bg-surface/95 backdrop-blur-md border border-border-primary shadow-xl flex items-center justify-between gap-4">
-        <div className="text-xs text-muted font-sans">
+        <div className="text-xs sm:text-sm text-muted font-sans">
           {isDirty ? (
             <span className="text-amber font-medium flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-amber animate-pulse" />
@@ -943,6 +943,7 @@ const EditProfileTab = ({
             size="md"
             onClick={onCancelEdits}
             disabled={isSaving}
+            className="text-sm sm:text-base px-4 py-2"
           >
             Cancel
           </Button>
@@ -951,6 +952,7 @@ const EditProfileTab = ({
             variant="primary"
             size="md"
             isLoading={isSaving}
+            className="text-sm sm:text-base px-5 py-2"
           >
             Save Changes
           </Button>

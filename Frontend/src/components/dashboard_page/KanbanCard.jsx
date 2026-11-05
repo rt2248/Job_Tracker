@@ -40,23 +40,23 @@ function KanbanCard({ job, onClick, onDragStart, isDragging }) {
                 isDragging && "opacity-40 scale-95 border-dashed border-cyan ring-2 ring-cyan/20"
             )}
         >
-            <h4 className="font-display text-ink text-sm font-semibold truncate group-hover:text-cyan transition-colors">
+            <h4 className="font-display text-ink text-base font-semibold truncate group-hover:text-cyan transition-colors">
                 {job.role}
             </h4>
 
-            <p className="text-muted text-xs font-sans mt-1 truncate flex items-center gap-1.5">
+            <p className="text-muted text-sm font-sans mt-1 truncate flex items-center gap-1.5">
                 <span className="truncate">{job.company}</span>
                 <span className="text-border-primary/80">·</span>
                 <JobTypeBadge jobType={job.jobType} />
             </p>
 
-            <div className="mt-3 pt-2.5 border-t border-border-subtle/60 flex flex-wrap items-center justify-between gap-1.5 text-[11px]">
+            <div className="mt-3 pt-2.5 border-t border-border-subtle/60 flex flex-wrap items-center justify-between gap-1.5 text-xs sm:text-sm">
                 {compensation ? (
                     <span className="text-cyan font-mono font-medium truncate">
                         {compensation}
                     </span>
                 ) : (
-                    <span className="text-muted font-sans text-[11px] truncate">
+                    <span className="text-muted font-sans text-xs sm:text-sm truncate">
                         {job.workMode || "Standard"}
                     </span>
                 )}

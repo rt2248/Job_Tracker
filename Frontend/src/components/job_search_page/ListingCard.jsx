@@ -4,6 +4,7 @@ import JobTypeBadge from "../shared/JobTypeBadge";
 import WorkModeBadge from "./WorkModeBadge";
 import Card from "../shared/Card";
 import Button from "../shared/Button";
+import AddToTrackerButton from "../shared/AddToTrackerButton";
 import { useTrackListing } from "../../hooks/useTrackListing";
 import { formatCompensation } from "../../utils/formatCompensation";
 import { formatRelativeDate } from "../../utils/formatRelativeDate";
@@ -23,10 +24,10 @@ function ListingCard({ listing, onClick }) {
             className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer group bg-surface-secondary/80 hover:bg-surface-elevated border-border-primary hover:border-cyan/40"
         >
             <div className="min-w-0 w-full sm:w-auto">
-                <h3 className="font-display text-ink font-semibold truncate text-base sm:text-lg group-hover:text-cyan transition-colors">
+                <h3 className="font-display text-ink font-semibold truncate text-lg sm:text-xl group-hover:text-cyan transition-colors">
                     {listing.title}
                 </h3>
-                <p className="text-muted text-xs sm:text-sm font-sans mt-1 flex items-center gap-2 flex-wrap">
+                <p className="text-muted text-sm sm:text-base font-sans mt-1.5 flex items-center gap-2 flex-wrap">
                     <span className="text-ink-secondary font-medium">{listing.company}</span>
                     {listing.location && <span>· {listing.location}</span>}
                     <span className="text-border-primary/80">·</span>
@@ -37,11 +38,11 @@ function ListingCard({ listing, onClick }) {
             </div>
 
             <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2.5 shrink-0 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-border-subtle">
-                <div className="text-xs font-sans text-left sm:text-right">
+                <div className="text-xs sm:text-sm font-sans text-left sm:text-right">
                     {compensation && (
-                        <div className="text-cyan font-mono font-medium text-xs sm:text-sm">{compensation}</div>
+                        <div className="text-cyan font-mono font-medium text-sm sm:text-base">{compensation}</div>
                     )}
-                    <div className="text-muted font-mono text-[11px] sm:text-xs">
+                    <div className="text-muted font-mono text-xs sm:text-sm">
                         {formatRelativeDate(listing.postedDate)}
                     </div>
                 </div>
@@ -55,30 +56,19 @@ function ListingCard({ listing, onClick }) {
                             const jobId = getJobId(listing.id);
                             navigate(jobId ? `/applications?job=${jobId}` : "/applications");
                         }}
-                        className="text-xs px-2.5 py-1 text-ink-secondary hover:text-ink hover:border-cyan/40"
+                        className="text-sm px-3 py-1.5 text-ink-secondary hover:text-ink hover:border-cyan/40"
                     >
                         View in Tracker
                     </Button>
                 ) : (
-                    <Button
-                        variant="primary"
-                        size="sm"
-                        disabled={inFlight}
+                    <AddToTrackerButton
+                        inFlight={inFlight}
                         onClick={(e) => {
                             e.stopPropagation();
                             addToTracker(listing);
                         }}
-                        className="text-xs px-2.5 py-1 flex items-center gap-1.5"
-                    >
-                        {inFlight ? (
-                            <>
-                                <span className="w-3 h-3 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                                Adding...
-                            </>
-                        ) : (
-                            "+ Add to Tracker"
-                        )}
-                    </Button>
+                        className="text-sm px-3 py-1.5"
+                    />
                 )}
             </div>
         </Card>

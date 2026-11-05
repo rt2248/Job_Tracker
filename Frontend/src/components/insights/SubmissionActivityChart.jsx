@@ -225,12 +225,12 @@ export default function SubmissionActivityChart({
       aria-label="Application submission activity chart"
     >
       {/* Header with Title and Range Filters */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 sm:mb-6">
         <div>
-          <h3 className="font-display text-ink text-base sm:text-lg font-semibold leading-tight">
+          <h3 className="font-display text-ink text-lg sm:text-xl font-semibold leading-tight">
             Submission Activity
           </h3>
-          <p className="text-xs text-muted mt-0.5">
+          <p className="text-sm text-muted mt-1">
             Timeline of {totalSubmissions} {totalSubmissions === 1 ? "application" : "applications"} submitted to employers
           </p>
         </div>
@@ -255,7 +255,7 @@ export default function SubmissionActivityChart({
                 aria-selected={isSelected}
                 onClick={() => onRangeChange && onRangeChange(tab.key)}
                 className={cn(
-                  "px-2.5 py-1 text-xs font-sans font-medium rounded-md transition-all select-none",
+                  "px-3 py-1.5 text-xs sm:text-sm font-sans font-medium rounded-md transition-all select-none",
                   "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan/70",
                   isSelected
                     ? "bg-surface text-cyan font-semibold shadow-sm border border-border-primary/50"
@@ -324,7 +324,7 @@ export default function SubmissionActivityChart({
                     x={padding.left - 8}
                     y={y + 3}
                     textAnchor="end"
-                    className="fill-muted font-mono text-[10px] select-none"
+                    className="fill-muted font-mono text-xs select-none"
                   >
                     {tickVal}
                   </text>
@@ -358,9 +358,9 @@ export default function SubmissionActivityChart({
               <text
                 key={`xlbl-${lbl.date}-${lbl.index}`}
                 x={lbl.x}
-                y={padding.top + plotHeight + 18}
+                y={padding.top + plotHeight + 20}
                 textAnchor="middle"
-                className="fill-muted font-sans text-[11px] select-none"
+                className="fill-muted font-sans text-xs select-none"
               >
                 {formatDateLabel(lbl.date)}
               </text>
@@ -429,23 +429,23 @@ export default function SubmissionActivityChart({
               <g
                 transform={`translate(${
                   Math.min(
-                    svgWidth - 75,
-                    Math.max(75, activePoint.x)
+                    svgWidth - 85,
+                    Math.max(85, activePoint.x)
                   )
                 }, ${
                   activePoint.y < 70
                     ? activePoint.y + 18
-                    : activePoint.y - 48
+                    : activePoint.y - 54
                 })`}
                 className="pointer-events-none transition-transform duration-75"
               >
                 {/* Tooltip Background Card */}
                 <rect
-                  x="-70"
-                  y="-12"
-                  width="140"
-                  height="42"
-                  rx="7"
+                  x="-82"
+                  y="-14"
+                  width="164"
+                  height="48"
+                  rx="8"
                   className="fill-surface-elevated stroke-border-primary"
                   strokeWidth="1"
                 />
@@ -453,9 +453,9 @@ export default function SubmissionActivityChart({
                 {/* Date string */}
                 <text
                   x="0"
-                  y="4"
+                  y="5"
                   textAnchor="middle"
-                  className="fill-muted font-sans text-[10px] font-medium"
+                  className="fill-muted font-sans text-xs font-medium"
                 >
                   {formatFullDate(activePoint.date)}
                 </text>
@@ -463,9 +463,9 @@ export default function SubmissionActivityChart({
                 {/* Count value */}
                 <text
                   x="0"
-                  y="20"
+                  y="23"
                   textAnchor="middle"
-                  className="fill-ink font-mono font-bold text-xs"
+                  className="fill-ink font-mono font-bold text-sm"
                 >
                   {activePoint.count} {activePoint.count === 1 ? "application" : "applications"}
                 </text>
@@ -474,7 +474,7 @@ export default function SubmissionActivityChart({
           </svg>
 
           {/* Footer note explaining zero days */}
-          <div className="flex items-center justify-between text-[11px] text-muted mt-2 pt-2 border-t border-border-subtle/60">
+          <div className="flex items-center justify-between text-xs sm:text-sm text-muted mt-4 pt-3 border-t border-border-subtle/60">
             <span>
               Dates with no marks indicate 0 applications submitted on that day
             </span>

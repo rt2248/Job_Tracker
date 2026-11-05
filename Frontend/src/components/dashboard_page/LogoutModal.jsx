@@ -54,12 +54,12 @@ const LogoutModal = ({ isOpen, onClose, onConfirm }) => {
                     </div>
 
                     {/* Title */}
-                    <h3 id="logout-modal-title" className="text-xl font-bold font-display text-ink tracking-tight">
+                    <h3 id="logout-modal-title" className="text-2xl font-bold font-display text-ink tracking-tight">
                         Logging Out?
                     </h3>
 
                     {/* Description */}
-                    <p className="mt-2 text-sm font-body text-muted leading-relaxed max-w-sm">
+                    <p className="mt-2 text-base font-body text-muted leading-relaxed max-w-sm">
                         Are you sure you want to end your current session? You will need to log back in to access your applications and dashboard.
                     </p>
                 </div>
@@ -69,14 +69,14 @@ const LogoutModal = ({ isOpen, onClose, onConfirm }) => {
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-4 py-2.5 rounded-xl bg-surface-secondary border border-border-primary text-ink font-body font-medium text-sm hover:bg-surface-elevated transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan/40 cursor-pointer"
+                        className="px-4 py-2.5 rounded-xl bg-surface-secondary border border-border-primary text-ink font-body font-medium text-sm sm:text-base hover:bg-surface-elevated transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan/40 cursor-pointer"
                     >
                         Cancel
                     </button>
                     <button
                         type="button"
                         onClick={onConfirm}
-                        className="px-5 py-2.5 rounded-xl bg-red/15 hover:bg-red/25 border border-red/30 text-red font-body font-semibold text-sm hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red/40 flex items-center gap-2 cursor-pointer"
+                        className="px-5 py-2.5 rounded-xl bg-red/15 hover:bg-red/25 border border-red/30 text-red font-body font-semibold text-sm sm:text-base hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red/40 flex items-center gap-2 cursor-pointer"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

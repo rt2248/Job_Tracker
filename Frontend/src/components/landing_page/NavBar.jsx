@@ -43,25 +43,25 @@ export default function NavBar({ theme, onToggleTheme }) {
           <div className="landing-nav-links hidden md:flex items-center gap-8 text-sm font-medium">
             <a
               href="#pipeline"
-              className="landing-nav-link text-white/70 hover:text-white transition-colors relative py-1 hover:after:w-full after:w-0 after:h-[1px] after:bg-white/40 after:absolute after:bottom-0 after:left-0 after:transition-all"
+              className="landing-nav-link bg-transparent text-white/70 hover:text-white transition-colors relative py-1 hover:after:w-full after:w-0 after:h-[1px] after:bg-current after:opacity-40 after:absolute after:bottom-0 after:left-0 after:transition-all"
             >
               Pipeline
             </a>
             <a
               href="#discovery"
-              className="landing-nav-link text-white/70 hover:text-white transition-colors relative py-1 hover:after:w-full after:w-0 after:h-[1px] after:bg-white/40 after:absolute after:bottom-0 after:left-0 after:transition-all"
+              className="landing-nav-link bg-transparent text-white/70 hover:text-white transition-colors relative py-1 hover:after:w-full after:w-0 after:h-[1px] after:bg-current after:opacity-40 after:absolute after:bottom-0 after:left-0 after:transition-all"
             >
               Discovery
             </a>
             <a
               href="#workflow"
-              className="landing-nav-link text-white/70 hover:text-white transition-colors relative py-1 hover:after:w-full after:w-0 after:h-[1px] after:bg-white/40 after:absolute after:bottom-0 after:left-0 after:transition-all"
+              className="landing-nav-link bg-transparent text-white/70 hover:text-white transition-colors relative py-1 hover:after:w-full after:w-0 after:h-[1px] after:bg-current after:opacity-40 after:absolute after:bottom-0 after:left-0 after:transition-all"
             >
               Workflow
             </a>
             <a
               href="#capabilities"
-              className="landing-nav-link text-white/70 hover:text-white transition-colors relative py-1 hover:after:w-full after:w-0 after:h-[1px] after:bg-white/40 after:absolute after:bottom-0 after:left-0 after:transition-all"
+              className="landing-nav-link bg-transparent text-white/70 hover:text-white transition-colors relative py-1 hover:after:w-full after:w-0 after:h-[1px] after:bg-current after:opacity-40 after:absolute after:bottom-0 after:left-0 after:transition-all"
             >
               Capabilities
             </a>

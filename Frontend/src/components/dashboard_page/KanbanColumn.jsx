@@ -72,9 +72,9 @@ function KanbanColumn({ status, jobs = [], onCardClick, onDropCard, draggingCard
                         status === "accepted" && "bg-green",
                         status === "rejected" && "bg-red"
                     )} />
-                    <h3 className="font-display text-ink text-sm font-semibold tracking-tight flex items-center gap-1.5">
+                    <h3 className="font-display text-ink text-base font-semibold tracking-tight flex items-center gap-1.5">
                         {meta.label}
-                        <span className="font-mono text-xs font-normal text-muted">
+                        <span className="font-mono text-sm font-normal text-muted">
                             ({jobs.length})
                         </span>
                     </h3>
@@ -88,10 +88,10 @@ function KanbanColumn({ status, jobs = [], onCardClick, onDropCard, draggingCard
                         "flex flex-col items-center justify-center py-8 px-4 rounded-xl border border-dashed text-center transition-all my-auto",
                         isDragOver ? "border-cyan/60 bg-cyan/10 text-cyan" : "border-border-subtle/80 text-muted/60"
                     )}>
-                        <p className="text-xs font-sans font-medium">
+                        <p className="text-sm font-sans font-medium">
                             {isDragOver ? "Drop application here" : "No applications"}
                         </p>
-                        <p className="text-[11px] text-muted/50 mt-1 font-sans">
+                        <p className="text-xs sm:text-sm text-muted/60 mt-1 font-sans">
                             {isDragOver ? "Release mouse to move" : "Drag cards to change status"}
                         </p>
                     </div>

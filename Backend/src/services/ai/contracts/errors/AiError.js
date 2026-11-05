@@ -2,13 +2,14 @@
  * @file AiError.js
  * @description Base class for all normalized AI domain errors.
  *
- * Stage 2B.1 — Option C Provider Abstraction Foundation.
+ * Stage 2B.1 / Stage 2B.2 — Option C Provider Abstraction Foundation.
  *
  * Security Requirements:
  * 1. Safe public-facing serialization (toPublicJson): Never leaks raw upstream error messages,
  *    provider response bodies, credentials, stack traces, or internal diagnostic context.
  * 2. Diagnostic logging serialization (toDiagnosticJson): Captures internal debug context
- *    while scrubbing sensitive authorization headers or keys.
+ *    using an explicit allowlist of safe diagnostic fields, preventing credential, PII,
+ *    and circular-reference leakage.
  */
 
 const AI_ERROR_CODES = Object.freeze({
@@ -27,6 +28,27 @@ const AI_ERROR_CODES = Object.freeze({
   MODEL_FAILURE: "AI_MODEL_FAILURE",
   SCHEMA_VALIDATION_ERROR: "AI_SCHEMA_VALIDATION_ERROR",
 });
+
+/**
+ * Explicit allowlist of permissible diagnostic context keys for server-side logging.
+ * Only primitive/scalar values are serialized; arbitrary nested objects, credentials,
+ * candidate PII, and request/response bodies are rejected.
+ */
+const ALLOWED_DIAGNOSTIC_KEYS = Object.freeze(
+  new Set([
+    "providerId",
+    "modelIdentifier",
+    "statusCode",
+    "timeoutMs",
+    "endpoint",
+    "attemptCount",
+    "errorType",
+    "reason",
+    "isOperational",
+    "networkErrorCode",
+    "retryCount",
+  ])
+);
 
 class AiError extends Error {
   /**
@@ -91,7 +113,8 @@ class AiError extends Error {
 
   /**
    * Sanitized internal diagnostic serialization for secure server-side observability.
-   * Scrubs API keys and authorization tokens before returning debug structure.
+   * Uses an explicit allowlist for diagnostic context and scrubs API keys and authorization tokens.
+   * Safe against circular references.
    *
    * @returns {Object}
    */
@@ -107,6 +130,22 @@ class AiError extends Error {
       return val;
     };
 
+    // Filter diagnostic context against explicit allowlist and scalar types
+    let sanitizedContext = null;
+    if (this.diagnosticContext && typeof this.diagnosticContext === "object" && !Array.isArray(this.diagnosticContext)) {
+      const filtered = {};
+      for (const [key, val] of Object.entries(this.diagnosticContext)) {
+        if (ALLOWED_DIAGNOSTIC_KEYS.has(key)) {
+          if (typeof val === "string" || typeof val === "number" || typeof val === "boolean") {
+            filtered[key] = typeof val === "string" ? scrubValue(val) : val;
+          }
+        }
+      }
+      if (Object.keys(filtered).length > 0) {
+        sanitizedContext = filtered;
+      }
+    }
+
     return {
       name: this.name,
       code: this.code,
@@ -114,7 +153,7 @@ class AiError extends Error {
       statusCode: this.statusCode,
       providerId: this.providerId,
       isOperational: this.isOperational,
-      diagnosticContext: this.diagnosticContext ? JSON.parse(scrubValue(JSON.stringify(this.diagnosticContext))) : null,
+      diagnosticContext: sanitizedContext,
       originalError: this.originalError
         ? {
             name: this.originalError.name,
@@ -128,4 +167,5 @@ class AiError extends Error {
 module.exports = {
   AiError,
   AI_ERROR_CODES,
+  ALLOWED_DIAGNOSTIC_KEYS,
 };

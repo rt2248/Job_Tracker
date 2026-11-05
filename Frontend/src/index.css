@@ -407,5 +407,71 @@
               0 2px 4px -2px rgba(15, 23, 42, 0.05) !important;
 }
 
+/* ==========================================================================
+   Add to Tracker & Network Primary Buttons - Standardized Light Mode Contrast Styling
+   Ensures primary action buttons display crisp white (#FFFFFF) text against
+   the blue background in Light Mode across all interaction states (default,
+   hover, active, focus), while preserving Dark Mode appearance.
+   ========================================================================== */
+[data-theme='light'] .add-to-tracker-btn,
+[data-theme='light'] .network-action-btn,
+[data-theme='light'] button.add-to-tracker-btn,
+[data-theme='light'] button.network-action-btn,
+.light .add-to-tracker-btn,
+.light .network-action-btn,
+.light button.add-to-tracker-btn,
+.light button.network-action-btn {
+  color: #ffffff !important;
+}
+
+[data-theme='light'] .add-to-tracker-btn:hover,
+[data-theme='light'] .network-action-btn:hover,
+[data-theme='light'] button.add-to-tracker-btn:hover,
+[data-theme='light'] button.network-action-btn:hover,
+.light .add-to-tracker-btn:hover,
+.light .network-action-btn:hover,
+.light button.add-to-tracker-btn:hover,
+.light button.network-action-btn:hover {
+  color: #ffffff !important;
+}
+
+[data-theme='light'] .add-to-tracker-btn:focus,
+[data-theme='light'] .network-action-btn:focus,
+[data-theme='light'] button.add-to-tracker-btn:focus,
+[data-theme='light'] button.network-action-btn:focus,
+[data-theme='light'] .add-to-tracker-btn:focus-visible,
+[data-theme='light'] .network-action-btn:focus-visible,
+[data-theme='light'] button.add-to-tracker-btn:focus-visible,
+[data-theme='light'] button.network-action-btn:focus-visible,
+.light .add-to-tracker-btn:focus,
+.light .network-action-btn:focus,
+.light button.add-to-tracker-btn:focus,
+.light button.network-action-btn:focus,
+.light .add-to-tracker-btn:focus-visible,
+.light .network-action-btn:focus-visible,
+.light button.add-to-tracker-btn:focus-visible,
+.light button.network-action-btn:focus-visible {
+  color: #ffffff !important;
+}
+
+[data-theme='light'] .add-to-tracker-btn:active,
+[data-theme='light'] .network-action-btn:active,
+[data-theme='light'] button.add-to-tracker-btn:active,
+[data-theme='light'] button.network-action-btn:active,
+.light .add-to-tracker-btn:active,
+.light .network-action-btn:active,
+.light button.add-to-tracker-btn:active,
+.light button.network-action-btn:active {
+  color: #ffffff !important;
+}
+
+[data-theme='light'] .add-to-tracker-btn span,
+[data-theme='light'] .network-action-btn span,
+.light .add-to-tracker-btn span,
+.light .network-action-btn span {
+  color: inherit !important;
+}
+
+
 
 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter } from "../shared/Modal"
 import Button from "../shared/Button"
-import visibilityIcon from "../../assets/icons/visibility.svg"
-import visibilityOffIcon from "../../assets/icons/visibilityoff.svg"
+import visibilityIcon from "../../assets/icons/actions/visibility.svg"
+import visibilityOffIcon from "../../assets/icons/actions/visibility-off.svg"
 import { useToast } from "../../hooks/useToast"
 import { getApiUrl } from "../../utils/config"
 
@@ -20,7 +20,7 @@ const PasswordInput = ({
 
   return (
     <div className="flex flex-col gap-1 w-full">
-      <label htmlFor={id} className="text-xs font-medium text-ink-secondary">
+      <label htmlFor={id} className="text-xs sm:text-sm font-medium text-ink-secondary">
         {label}
       </label>
       <div className="relative w-full">
@@ -32,7 +32,7 @@ const PasswordInput = ({
           placeholder={placeholder}
           disabled={disabled}
           autoComplete={autoComplete}
-          className={`w-full px-3 py-2 pr-10 text-xs sm:text-sm bg-surface-secondary text-ink placeholder:text-muted rounded-xl border ${
+          className={`w-full px-3 py-2 pr-10 text-sm bg-surface-secondary text-ink placeholder:text-muted rounded-xl border ${
             error ? "border-red" : "border-border-primary"
           } focus:border-cyan focus:ring-2 focus:ring-cyan/20 transition-all outline-none font-mono`}
         />
@@ -50,15 +50,15 @@ const PasswordInput = ({
           />
         </button>
       </div>
-      {error && <span className="text-[11px] text-red font-sans mt-0.5">{error}</span>}
+      {error && <span className="text-xs text-red font-sans mt-0.5">{error}</span>}
     </div>
   )
 }
 
 const RequirementItem = ({ met, label }) => (
-  <div className="flex items-center gap-1.5 text-[11px] transition-colors">
+  <div className="flex items-center gap-2 text-xs sm:text-sm transition-colors">
     <span
-      className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0 transition-colors ${
+      className={`w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-colors ${
         met ? "bg-green/15 text-green border border-green/30" : "bg-surface-secondary text-muted border border-border-subtle"
       }`}
     >
@@ -193,8 +193,8 @@ const ChangePasswordModal = ({ isOpen, onClose, onPasswordChanged }) => {
       <form onSubmit={handleSubmit}>
         <ModalHeader className="border-b border-border-subtle pb-4">
           <div>
-            <ModalTitle className="text-lg font-display text-ink">Change Account Password</ModalTitle>
-            <p className="text-xs text-muted font-sans mt-0.5">
+            <ModalTitle className="text-xl sm:text-2xl font-bold font-display text-ink">Change Account Password</ModalTitle>
+            <p className="text-xs sm:text-sm text-muted font-sans mt-1 leading-relaxed">
               Enter your current password and choose a secure new password. Changing your password will invalidate all previous sessions.
             </p>
           </div>
@@ -202,7 +202,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onPasswordChanged }) => {
 
         <ModalContent className="py-4 space-y-4">
           {generalError && (
-            <div className="p-3 rounded-xl bg-red/10 border border-red/30 text-xs text-red font-sans animate-fadeIn">
+            <div className="p-3 rounded-xl bg-red/10 border border-red/30 text-xs sm:text-sm text-red font-sans animate-fadeIn">
               {generalError}
             </div>
           )}
@@ -243,7 +243,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onPasswordChanged }) => {
 
           {/* Real-time policy criteria */}
           <div className="p-3.5 rounded-xl bg-surface-secondary/40 border border-border-subtle space-y-2">
-            <span className="text-[11px] font-semibold text-ink-secondary tracking-wide uppercase font-mono block">
+            <span className="text-xs font-semibold text-ink-secondary tracking-wide uppercase font-mono block">
               Password Requirements
             </span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5">
@@ -267,6 +267,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onPasswordChanged }) => {
             size="sm"
             onClick={onClose}
             disabled={isSubmitting}
+            className="text-xs sm:text-sm px-4 py-2"
           >
             Cancel
           </Button>
@@ -276,6 +277,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onPasswordChanged }) => {
             size="sm"
             isLoading={isSubmitting}
             disabled={isSubmitting || !allMet}
+            className="text-xs sm:text-sm px-4 py-2"
           >
             Update Password
           </Button>

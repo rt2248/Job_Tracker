@@ -65,15 +65,15 @@ const Applications = () => {
           {/* Header Section */}
           <div className="flex items-start justify-between gap-4 mb-6">
             <div>
-              <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight">
+              <h1 className="font-display text-2xl sm:text-3xl text-ink font-bold tracking-tight">
                 All Applications
               </h1>
               {jobs && jobs.length > 0 && (
-                <p className="font-mono text-xs sm:text-sm font-bold text-cyan mt-1">
+                <p className="font-mono text-sm sm:text-base font-bold text-cyan mt-1">
                   {filteredJobs.length} {filteredJobs.length === 1 ? "record" : "records"}
                 </p>
               )}
-              <p className="text-muted text-xs sm:text-sm mt-1 font-sans">
+              <p className="text-muted text-sm sm:text-base mt-1.5 font-sans leading-relaxed">
                 Comprehensive record of your active and historical job applications.
               </p>
             </div>
@@ -88,7 +88,7 @@ const Applications = () => {
                   placeholder="Filter applications by role or company..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-9 text-xs sm:text-sm bg-surface-secondary/90"
+                  className="h-10 text-sm bg-surface-secondary/90"
                 />
               </div>
               <div className="w-full sm:w-48">
@@ -96,7 +96,7 @@ const Applications = () => {
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                   placeholder="All Statuses"
-                  className="h-9 text-xs sm:text-sm bg-surface-secondary/90"
+                  className="h-10 text-sm bg-surface-secondary/90"
                 >
                   <option value="">All Statuses</option>
                   <option value="saved">Saved</option>
@@ -116,7 +116,7 @@ const Applications = () => {
                     setSearchQuery("")
                     setStatusFilter("")
                   }}
-                  className="text-xs text-muted hover:text-ink shrink-0"
+                  className="text-sm text-muted hover:text-ink shrink-0"
                 >
                   Reset
                 </Button>
@@ -128,25 +128,25 @@ const Applications = () => {
           {isLoading && (
             <div className="flex flex-col items-center justify-center p-12 text-center">
               <div className="w-8 h-8 rounded-full border-2 border-cyan border-t-transparent animate-spin mb-3" />
-              <p className="text-muted text-sm font-sans">Loading applications...</p>
+              <p className="text-muted text-base font-sans">Loading applications...</p>
             </div>
           )}
 
           {/* Error State */}
           {error && !isLoading && (
             <div className="flex flex-col items-center justify-center p-12 text-center">
-              <div className="p-3 rounded-xl bg-red/10 border border-red/30 text-red mb-3">
+              <div className="p-3 rounded-xl bg-red/10 border border-red/30 text-red text-sm sm:text-base mb-3">
                 ⚠️ {error}
               </div>
-              <p className="text-muted text-xs font-sans">Please check your network connection.</p>
+              <p className="text-muted text-sm font-sans">Please check your network connection.</p>
             </div>
           )}
 
           {/* Empty State */}
           {!isLoading && !error && jobs.length === 0 && (
             <div className="flex flex-col items-center justify-center p-12 text-center bg-surface/50 border border-border-primary rounded-2xl">
-              <p className="text-ink font-display text-lg font-semibold mb-1">No Applications Yet</p>
-              <p className="text-muted text-xs sm:text-sm max-w-sm">
+              <p className="text-ink font-display text-xl font-semibold mb-1">No Applications Yet</p>
+              <p className="text-muted text-sm sm:text-base max-w-sm">
                 Start tracking your job search by adding applications to your pipeline.
               </p>
             </div>
@@ -155,8 +155,8 @@ const Applications = () => {
           {/* No Filter Results State */}
           {!isLoading && !error && jobs.length > 0 && filteredJobs.length === 0 && (
             <div className="flex flex-col items-center justify-center p-12 text-center bg-surface/50 border border-border-primary rounded-2xl">
-              <p className="text-ink font-display text-base font-semibold mb-1">No Matching Applications</p>
-              <p className="text-muted text-xs sm:text-sm mb-4">
+              <p className="text-ink font-display text-lg font-semibold mb-1">No Matching Applications</p>
+              <p className="text-muted text-sm sm:text-base mb-4">
                 No applications match your current search or filter criteria.
               </p>
               <Button
@@ -166,6 +166,7 @@ const Applications = () => {
                   setSearchQuery("")
                   setStatusFilter("")
                 }}
+                className="text-sm px-4 py-2"
               >
                 Clear Filters
               </Button>

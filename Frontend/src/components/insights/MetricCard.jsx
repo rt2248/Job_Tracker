@@ -40,7 +40,7 @@ export default function MetricCard({
         <span
           className={cn(
             "font-sans font-semibold text-ink leading-tight",
-            compact ? "text-xs sm:text-sm" : "text-sm sm:text-base"
+            compact ? "text-sm" : "text-base sm:text-lg"
           )}
         >
           {label}
@@ -54,7 +54,7 @@ export default function MetricCard({
       <p
         className={cn(
           "font-mono font-bold",
-          compact ? "text-xl sm:text-2xl mt-1" : "text-2xl sm:text-3xl mt-2",
+          compact ? "text-2xl sm:text-3xl mt-1" : "text-3xl sm:text-4xl mt-1.5",
           valueColor
         )}
       >
@@ -65,7 +65,7 @@ export default function MetricCard({
         <p
           className={cn(
             "text-muted font-sans mt-0.5 leading-normal",
-            compact ? "text-[10px]" : "text-[11px]"
+            compact ? "text-xs mt-0.5" : "text-xs sm:text-sm mt-1"
           )}
         >
           {description}

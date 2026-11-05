@@ -21,7 +21,7 @@ function JobSearchFilterBar({ filters, updateFilter, clearFilters }) {
                         value={filters.search}
                         onChange={(e) => updateFilter("search", e.target.value)}
                         placeholder="Search jobs by title or company..."
-                        className="h-9 text-xs sm:text-sm bg-surface-secondary/90"
+                        className="h-10 text-sm bg-surface-secondary/90"
                     />
                 </div>
 
@@ -31,7 +31,7 @@ function JobSearchFilterBar({ filters, updateFilter, clearFilters }) {
                             value={filters.type}
                             onChange={(e) => updateFilter("type", e.target.value)}
                             placeholder="All Types"
-                            className="h-9 text-xs sm:text-sm bg-surface-secondary/90"
+                            className="h-10 text-sm bg-surface-secondary/90"
                         >
                             <option value="">All Types</option>
                             {LISTING_JOB_TYPES.map((type) => (
@@ -45,7 +45,7 @@ function JobSearchFilterBar({ filters, updateFilter, clearFilters }) {
                             value={filters.workMode}
                             onChange={(e) => updateFilter("workMode", e.target.value)}
                             placeholder="All Modes"
-                            className="h-9 text-xs sm:text-sm bg-surface-secondary/90"
+                            className="h-10 text-sm bg-surface-secondary/90"
                         >
                             <option value="">All Modes</option>
                             {Object.entries(WORK_MODE_META).map(([value, meta]) => (
@@ -66,7 +66,7 @@ function JobSearchFilterBar({ filters, updateFilter, clearFilters }) {
                             variant="secondary"
                             size="sm"
                             onClick={() => setIsMoreFiltersOpen((prev) => !prev)}
-                            className="h-9 text-xs sm:text-sm"
+                            className="h-10 text-sm"
                         >
                             More Filters
                         </Button>
@@ -83,7 +83,7 @@ function JobSearchFilterBar({ filters, updateFilter, clearFilters }) {
                         variant="ghost"
                         size="sm"
                         onClick={clearFilters}
-                        className="h-9 text-xs text-muted hover:text-ink shrink-0"
+                        className="h-10 text-sm text-muted hover:text-ink shrink-0"
                     >
                         Clear
                     </Button>

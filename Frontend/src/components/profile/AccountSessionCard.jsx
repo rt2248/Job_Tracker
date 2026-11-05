@@ -12,15 +12,15 @@ const AccountSessionCard = ({ onRequestSignOut }) => {
           </svg>
         </div>
         <div>
-          <h3 className="text-base font-semibold font-display text-ink">Account Session</h3>
-          <p className="text-[11px] text-muted font-sans">Active authentication session and device security</p>
+          <h3 className="text-base sm:text-lg font-semibold font-display text-ink">Account Session</h3>
+          <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">Active authentication session and device security</p>
         </div>
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-surface-secondary/40 border border-border-subtle">
         <div className="min-w-0">
-          <span className="text-sm font-medium text-ink block">Sign Out of Evolexa</span>
-          <span className="text-xs text-muted font-sans mt-0.5 block">
+          <span className="text-sm sm:text-base font-medium text-ink block">Sign Out of Evolexa</span>
+          <span className="text-xs sm:text-sm text-muted font-sans mt-1 block">
             Safely terminate your active authenticated session on this browser.
           </span>
         </div>
@@ -29,7 +29,7 @@ const AccountSessionCard = ({ onRequestSignOut }) => {
           variant="destructive"
           size="sm"
           onClick={onRequestSignOut}
-          className="shrink-0 text-xs px-4 cursor-pointer"
+          className="shrink-0 text-xs sm:text-sm px-4 cursor-pointer"
         >
           Sign Out
         </Button>

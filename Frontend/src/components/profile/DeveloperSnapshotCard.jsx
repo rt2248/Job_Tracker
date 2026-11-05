@@ -53,19 +53,19 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-ink font-display">
+              <span className="text-base font-semibold text-ink font-display">
                 Profile Visibility
               </span>
               <span className="text-border-primary/80">·</span>
               <span className={cn(
-                "text-xs font-sans font-medium flex items-center gap-1.5",
+                "text-xs sm:text-sm font-sans font-medium flex items-center gap-1.5",
                 profileData?.isPublicProfile ? "text-cyan" : "text-muted"
               )}>
                 <span className={cn("w-1.5 h-1.5 rounded-full", profileData?.isPublicProfile ? "bg-cyan" : "bg-muted")} />
                 {profileData?.isPublicProfile ? "Public" : "Private"}
               </span>
             </div>
-            <p className="text-xs text-muted mt-0.5 font-sans">
+            <p className="text-xs sm:text-sm text-muted mt-1 font-sans">
               {profileData?.isPublicProfile
                 ? "Your developer profile is public and visible via public link with server-side privacy enforcement."
                 : "Your profile is private and hidden from external visitors."}
@@ -78,7 +78,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
             variant="outline"
             size="sm"
             onClick={handleCopyPublicUrl}
-            className="shrink-0 gap-1.5"
+            className="shrink-0 gap-1.5 text-xs sm:text-sm"
           >
             {copiedLink ? (
               <span className="text-green text-xs font-mono">Copied!</span>
@@ -98,17 +98,17 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
       <Card className="bg-surface border-border-primary p-6 rounded-2xl">
         <CardHeader className="flex flex-row items-center justify-between gap-2 mb-3">
           <CardTitle className="text-base sm:text-lg">About & Bio</CardTitle>
-          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs text-cyan hover:text-cyan/80">
+          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs sm:text-sm text-cyan hover:text-cyan/80">
             Edit
           </Button>
         </CardHeader>
         <CardContent>
           {profileData?.bio ? (
-            <p className="text-sm text-ink-secondary leading-relaxed font-sans whitespace-pre-line">
+            <p className="text-sm sm:text-base text-ink-secondary leading-relaxed font-sans whitespace-pre-line">
               {profileData.bio}
             </p>
           ) : (
-            <p className="text-xs text-muted italic font-sans">
+            <p className="text-sm text-muted italic font-sans">
               No developer bio provided yet. Click &quot;Edit&quot; to add a summary of your experience and interests.
             </p>
           )}
@@ -119,7 +119,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
       <Card className="bg-surface border-border-primary p-6 rounded-2xl">
         <CardHeader className="flex flex-row items-center justify-between gap-2 mb-3">
           <CardTitle className="text-base sm:text-lg">Technical Stack & Skills</CardTitle>
-          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs text-cyan hover:text-cyan/80">
+          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs sm:text-sm text-cyan hover:text-cyan/80">
             Edit
           </Button>
         </CardHeader>
@@ -127,7 +127,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
           {hasSkills ? (
             <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
               {profileData.skills.map((skill, index) => (
-                <span key={skill} className="text-xs font-sans font-medium text-ink-secondary flex items-center gap-2">
+                <span key={skill} className="text-xs sm:text-sm font-sans font-medium text-ink-secondary flex items-center gap-2">
                   {skill}
                   {index < profileData.skills.length - 1 && (
                     <span className="text-border-primary/80">·</span>
@@ -136,7 +136,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
               ))}
             </div>
           ) : (
-            <p className="text-xs text-muted italic font-sans">
+            <p className="text-sm text-muted italic font-sans">
               No skills added yet. Showcase your stack by adding technical skills in the Edit Profile tab.
             </p>
           )}
@@ -147,7 +147,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
       <Card className="bg-surface border-border-primary p-6 rounded-2xl">
         <CardHeader className="flex flex-row items-center justify-between gap-2 mb-3">
           <CardTitle className="text-base sm:text-lg">Experience</CardTitle>
-          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs text-cyan hover:text-cyan/80">
+          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs sm:text-sm text-cyan hover:text-cyan/80">
             Edit
           </Button>
         </CardHeader>
@@ -160,24 +160,24 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
                   className="p-4 rounded-xl bg-surface-secondary/50 border border-border-subtle flex flex-col gap-1.5"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                    <span className="font-bold text-ink text-sm font-display">
+                    <span className="font-bold text-ink text-sm sm:text-base font-display">
                       {exp.title}
                     </span>
-                    <span className="text-[11px] font-mono text-muted">
+                    <span className="text-xs sm:text-sm font-mono text-muted">
                       {exp.startDate || "—"} &ndash; {exp.current ? "Present" : exp.endDate || "—"}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-ink-secondary font-medium">
+                  <div className="flex items-center gap-2 text-sm text-ink-secondary font-medium">
                     <span>{exp.company}</span>
                     {exp.location && (
                       <>
                         <span className="text-muted/60">&bull;</span>
-                        <span className="text-muted text-[11px]">{exp.location}</span>
+                        <span className="text-muted text-xs sm:text-sm">{exp.location}</span>
                       </>
                     )}
                   </div>
                   {exp.description && (
-                    <p className="text-xs text-muted mt-1 leading-relaxed font-sans whitespace-pre-line">
+                    <p className="text-xs sm:text-sm text-muted mt-1 leading-relaxed font-sans whitespace-pre-line">
                       {exp.description}
                     </p>
                   )}
@@ -185,7 +185,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
               ))}
             </div>
           ) : (
-            <p className="text-xs text-muted italic font-sans">
+            <p className="text-sm text-muted italic font-sans">
               No experience items added. Highlight your roles and milestones by editing your profile.
             </p>
           )}
@@ -196,7 +196,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
       <Card className="bg-surface border-border-primary p-6 rounded-2xl">
         <CardHeader className="flex flex-row items-center justify-between gap-2 mb-3">
           <CardTitle className="text-base sm:text-lg">Portfolio & Web Presence</CardTitle>
-          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs text-cyan hover:text-cyan/80">
+          <Button variant="ghost" size="sm" onClick={onNavigateToEdit} className="text-xs sm:text-sm text-cyan hover:text-cyan/80">
             Edit
           </Button>
         </CardHeader>
@@ -208,7 +208,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
                   href={socialLinks.portfolio}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs text-ink hover:border-cyan/50 transition-colors group"
+                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs sm:text-sm text-ink hover:border-cyan/50 transition-colors group"
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-cyan font-bold font-mono">PORTFOLIO</span>
@@ -222,7 +222,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
                   href={socialLinks.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs text-ink hover:border-cyan/50 transition-colors group"
+                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs sm:text-sm text-ink hover:border-cyan/50 transition-colors group"
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-cyan font-bold font-mono">GITHUB</span>
@@ -236,7 +236,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
                   href={socialLinks.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs text-ink hover:border-cyan/50 transition-colors group"
+                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs sm:text-sm text-ink hover:border-cyan/50 transition-colors group"
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-cyan font-bold font-mono">LINKEDIN</span>
@@ -250,7 +250,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
                   href={socialLinks.twitter}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs text-ink hover:border-cyan/50 transition-colors group"
+                  className="p-3 rounded-xl bg-surface-secondary border border-border-subtle flex items-center justify-between text-xs sm:text-sm text-ink hover:border-cyan/50 transition-colors group"
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-cyan font-bold font-mono">TWITTER</span>
@@ -261,7 +261,7 @@ const DeveloperSnapshotCard = ({ profileData, onNavigateToEdit }) => {
               )}
             </div>
           ) : (
-            <p className="text-xs text-muted italic font-sans">
+            <p className="text-sm text-muted italic font-sans">
               No portfolio or social links provided yet.
             </p>
           )}

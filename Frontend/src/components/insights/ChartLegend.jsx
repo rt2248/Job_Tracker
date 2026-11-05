@@ -32,7 +32,7 @@ export default function ChartLegend({
 
   return (
     <div
-      className={cn("flex flex-wrap items-center gap-x-4 gap-y-2 text-xs", className)}
+      className={cn("flex flex-wrap items-center gap-x-4 gap-y-2 text-sm", className)}
       role="list"
       aria-label="Chart legend"
     >
@@ -90,7 +90,7 @@ export default function ChartLegend({
 
             {/* Optional Percentage */}
             {item.percentage !== undefined && (
-              <span className="text-muted font-mono text-[11px]">
+              <span className="text-muted font-mono text-xs sm:text-sm">
                 ({item.percentage}%)
               </span>
             )}

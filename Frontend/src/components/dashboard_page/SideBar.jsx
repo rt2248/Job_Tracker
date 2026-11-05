@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState, useCallback } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
-import dashboardIcon from "../../assets/icons/dashboard.svg"
-import appsIcon from "../../assets/icons/apps.svg"
-import networknodeIcon from "../../assets/icons/networknode.svg"
-import searchIcon from "../../assets/icons/search.svg"
-import insightsIcon from "../../assets/icons/insights.svg"
+import dashboardIcon from "../../assets/icons/navigation/dashboard.svg"
+import appsIcon from "../../assets/icons/applications/apps.svg"
+import networknodeIcon from "../../assets/icons/navigation/network-node.svg"
+import searchIcon from "../../assets/icons/actions/search.svg"
+import insightsIcon from "../../assets/icons/analytics/insights.svg"
 import SidebarProfilePopover from "./SidebarProfilePopover"
 import { getApiUrl } from "../../utils/config"
 import { cn } from "../../utils/cn"
@@ -328,7 +328,7 @@ const SideBar = ({
                                 title={!isSidebarOpen ? item.title : undefined}
                                 aria-label={item.title}
                                 className={cn(
-                                    "group py-2.5 px-3 flex items-center gap-3 text-sm font-sans rounded-xl text-left transition-all outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 hover:cursor-pointer",
+                                    "group py-2.5 px-3 flex items-center gap-3 text-sm sm:text-base font-sans rounded-xl text-left transition-all outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 hover:cursor-pointer",
                                     !isSidebarOpen && "md:justify-center md:px-0",
                                     isActive
                                         ? "bg-neutral-200/90 text-neutral-950 font-bold  border-neutral-950 shadow-sm"
@@ -382,7 +382,7 @@ const SideBar = ({
                             isProfileMenuOpen && "bg-neutral-200/90 border-neutral-400 ring-1 ring-neutral-400/30"
                         )}
                     >
-                        <div className="w-8 h-8 rounded-full bg-neutral-900 text-white text-xs font-bold flex items-center justify-center shrink-0 shadow-sm overflow-hidden relative">
+                        <div className="w-8 h-8 rounded-full bg-neutral-900 text-white text-sm font-bold flex items-center justify-center shrink-0 shadow-sm overflow-hidden relative">
                             {avatarSrc ? (
                                 <img
                                     src={avatarSrc}
@@ -403,10 +403,10 @@ const SideBar = ({
                         {isSidebarOpen && (
                             <>
                                 <div className="flex flex-col min-w-0 flex-1">
-                                    <span className="text-xs font-bold text-neutral-950 truncate">
+                                    <span className="text-sm font-bold text-neutral-950 truncate">
                                         {fullName}
                                     </span>
-                                    <span className="text-[11px] text-neutral-500 font-medium truncate font-sans" title={userEmail}>
+                                    <span className="text-xs text-neutral-500 font-medium truncate font-sans" title={userEmail}>
                                         {userEmail}
                                     </span>
                                 </div>

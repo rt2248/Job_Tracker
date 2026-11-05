@@ -73,34 +73,34 @@ export default function SkillFitChart({
       aria-label="Skill-fit analysis"
     >
       {/* Header */}
-      <div className="mb-5">
-        <h3 className="font-display text-ink text-base sm:text-lg font-semibold leading-tight">
+      <div className="mb-6 sm:mb-7">
+        <h3 className="font-display text-ink text-lg sm:text-xl font-semibold leading-tight">
           Skill-Fit Analysis
         </h3>
-        <p className="text-xs text-muted mt-0.5">
+        <p className="text-sm text-muted mt-1">
           Automated keyword matching across {coverage.listingLinkedJobs} of {coverage.totalTrackedJobs} evaluated opportunities against your declared profile skills
         </p>
       </div>
 
       {/* Declared Profile Skills Pills */}
-      <div className="mb-5 p-3 sm:p-4 rounded-xl bg-surface-secondary/40 border border-border-subtle">
-        <div className="flex items-center justify-between gap-2 mb-2">
-          <span className="text-xs font-sans font-semibold text-ink flex items-center gap-1.5">
+      <div className="mb-8 sm:mb-9 p-3 sm:p-4 rounded-xl bg-surface-secondary/40 border border-border-subtle">
+        <div className="flex items-center justify-between gap-2 mb-2.5">
+          <span className="text-sm sm:text-base font-sans font-semibold text-ink flex items-center gap-1.5">
             <svg viewBox="0 0 14 14" className="w-3.5 h-3.5 text-cyan shrink-0" fill="none">
               <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
             Your Declared Skills ({userDeclaredSkills.length})
           </span>
-          <span className="text-[11px] text-muted">Configured in Profile</span>
+          <span className="text-xs sm:text-sm text-muted">Configured in Profile</span>
         </div>
 
         {userDeclaredSkills.length > 0 ? (
-          <div className="flex flex-wrap gap-1.5" role="list" aria-label="User profile skills list">
+          <div className="flex flex-wrap gap-2" role="list" aria-label="User profile skills list">
             {userDeclaredSkills.map((skill) => (
               <span
                 key={skill}
                 role="listitem"
-                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-sans font-medium bg-surface border border-border-primary text-ink-secondary"
+                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs sm:text-sm font-sans font-medium bg-surface border border-border-primary text-ink-secondary"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-cyan shrink-0" aria-hidden="true" />
                 {skill}
@@ -108,17 +108,17 @@ export default function SkillFitChart({
             ))}
           </div>
         ) : (
-          <p className="text-xs text-muted italic">
+          <p className="text-sm text-muted italic">
             No profile skills declared yet. Add skills in your Profile to enable keyword matching.
           </p>
         )}
       </div>
 
       {/* Coverage Bar & Transparency Caveat */}
-      <div className="mb-6 p-3 rounded-lg bg-surface-secondary/20 border border-border-subtle/80 flex flex-col gap-2">
-        <div className="flex items-center justify-between text-xs">
+      <div className="mb-8 sm:mb-9 p-3 rounded-lg bg-surface-secondary/20 border border-border-subtle/80 flex flex-col gap-2.5">
+        <div className="flex items-center justify-between text-sm">
           <span className="text-ink font-medium">Evaluation Coverage</span>
-          <span className="font-mono text-muted text-[11px]">
+          <span className="font-mono text-muted text-xs sm:text-sm">
             {coverage.listingLinkedJobs} linked / {coverage.unlinkedJobs} manual
           </span>
         </div>
@@ -137,7 +137,7 @@ export default function SkillFitChart({
           />
         </div>
 
-        <div className="flex items-start gap-1.5 text-[11px] text-muted leading-tight mt-0.5">
+        <div className="flex items-start gap-1.5 text-xs sm:text-sm text-muted leading-relaxed mt-1">
           <svg viewBox="0 0 12 12" className="w-3.5 h-3.5 text-muted shrink-0 mt-0.5" fill="none">
             <circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1" />
             <path d="M6 5v4M6 3.5h.01" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
@@ -155,15 +155,15 @@ export default function SkillFitChart({
           className="py-10"
         />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-6 sm:space-y-7">
           {/* Average Match Overview Card */}
           {averageMatch !== null && (
             <div className="flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-surface-secondary/50 border border-border-subtle">
               <div>
-                <h4 className="font-display text-sm font-semibold text-ink">
+                <h4 className="font-display text-base sm:text-lg font-semibold text-ink">
                   Average Opportunity Fit
                 </h4>
-                <p className="text-xs text-muted mt-0.5">
+                <p className="text-sm text-muted mt-1">
                   Mean match score across all {jobFitSummaries.length} evaluated listings
                 </p>
               </div>
@@ -181,7 +181,7 @@ export default function SkillFitChart({
           )}
 
           {/* Evaluated Listings Cards */}
-          <div className="space-y-3" role="list" aria-label="Evaluated job listings">
+          <div className="space-y-3.5 sm:space-y-4" role="list" aria-label="Evaluated job listings">
             {jobFitSummaries.map((job) => {
               const isSelected = selectedJobId === job.jobId;
               const variant = getMatchVariant(job.matchPercentage);
@@ -205,19 +205,19 @@ export default function SkillFitChart({
                   )}
                 >
                   {/* Job Row Header */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border-subtle/80">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 mb-2.5 border-b border-border-subtle/80">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h4 className="font-display text-sm sm:text-base font-semibold text-ink truncate">
+                        <h4 className="font-display text-base sm:text-lg font-semibold text-ink truncate">
                           {job.role}
                         </h4>
-                        <span className="text-muted text-xs font-sans">•</span>
-                        <span className="text-ink-secondary text-xs font-sans font-medium">
+                        <span className="text-muted text-xs sm:text-sm font-sans">•</span>
+                        <span className="text-ink-secondary text-sm font-sans font-medium">
                           {job.company}
                         </span>
-                        <StatusBadge status={job.status} className="ml-1" />
+                        <StatusBadge status={job.status} className="ml-1 text-xs sm:text-sm" />
                       </div>
-                      <p className="text-xs text-muted mt-0.5">
+                      <p className="text-sm text-muted mt-1">
                         {job.identifiableSkills.length} recognizable technical requirements
                       </p>
                     </div>
@@ -234,12 +234,12 @@ export default function SkillFitChart({
                   </div>
 
                   {/* Skills Breakdown Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-3 text-xs">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4 pt-3.5 text-sm">
                     {/* 1. Matched Skills */}
                     <div className="p-2.5 rounded-lg bg-surface/60 border border-border-subtle/80">
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="font-semibold text-ink flex items-center gap-1.5 text-[11px]">
-                          <svg viewBox="0 0 12 12" className="w-3 h-3 text-emerald-500 dark:text-emerald-400 shrink-0" fill="none">
+                        <span className="font-semibold text-ink flex items-center gap-1.5 text-xs sm:text-sm">
+                          <svg viewBox="0 0 12 12" className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" fill="none">
                             <path d="M2.5 6.5 L4.5 8.5 L9.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                           Matched Skills ({job.matchedSkills.length})
@@ -251,22 +251,22 @@ export default function SkillFitChart({
                           {job.matchedSkills.map((s) => (
                             <span
                               key={s}
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-sans font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25"
+                              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-xs sm:text-sm font-sans font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25"
                             >
                               ✓ {s}
                             </span>
                           ))}
                         </div>
                       ) : (
-                        <span className="text-[11px] text-muted italic">No overlapping skills detected</span>
+                        <span className="text-xs sm:text-sm text-muted italic">No overlapping skills detected</span>
                       )}
                     </div>
 
                     {/* 2. Missing Identifiable Skills */}
                     <div className="p-2.5 rounded-lg bg-surface/60 border border-border-subtle/80">
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="font-semibold text-ink flex items-center gap-1.5 text-[11px]">
-                          <svg viewBox="0 0 12 12" className="w-3 h-3 text-red shrink-0" fill="none">
+                        <span className="font-semibold text-ink flex items-center gap-1.5 text-xs sm:text-sm">
+                          <svg viewBox="0 0 12 12" className="w-3.5 h-3.5 text-red shrink-0" fill="none">
                             <path d="M3 3 L9 9 M9 3 L3 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                           </svg>
                           Missing Curated Skills ({job.missingSkills.length})
@@ -278,14 +278,14 @@ export default function SkillFitChart({
                           {job.missingSkills.map((s) => (
                             <span
                               key={s}
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-sans font-medium bg-red/10 text-red border border-red/25"
+                              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-xs sm:text-sm font-sans font-medium bg-red/10 text-red border border-red/25"
                             >
                               − {s}
                             </span>
                           ))}
                         </div>
                       ) : (
-                        <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+                        <span className="text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 font-medium">
                           All recognizable skills present in profile!
                         </span>
                       )}
@@ -294,8 +294,8 @@ export default function SkillFitChart({
                     {/* 3. Qualitative Requirements */}
                     {job.qualitativeRequirements && job.qualitativeRequirements.length > 0 && (
                       <div className="p-2.5 rounded-lg bg-surface/60 border border-border-subtle/80 md:col-span-2">
-                        <span className="font-semibold text-ink-secondary text-[11px] block mb-1.5 flex items-center gap-1">
-                          <svg viewBox="0 0 12 12" className="w-3 h-3 text-muted shrink-0" fill="none">
+                        <span className="font-semibold text-ink-secondary text-xs sm:text-sm block mb-1.5 flex items-center gap-1">
+                          <svg viewBox="0 0 12 12" className="w-3.5 h-3.5 text-muted shrink-0" fill="none">
                             <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.25" />
                             <path d="M6 5v3.5M6 3.5h.01" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
                           </svg>
@@ -305,7 +305,7 @@ export default function SkillFitChart({
                           {job.qualitativeRequirements.map((req, idx) => (
                             <span
                               key={idx}
-                              className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-sans bg-surface-secondary text-muted border border-border-subtle"
+                              className="inline-flex items-center px-2.5 py-0.5 rounded text-xs sm:text-sm font-sans bg-surface-secondary text-muted border border-border-subtle"
                             >
                               {req}
                             </span>
@@ -317,8 +317,8 @@ export default function SkillFitChart({
                     {/* 4. Unrecognized Technical Terms */}
                     {job.unrecognizedTerms && job.unrecognizedTerms.length > 0 && (
                       <div className="p-2.5 rounded-lg bg-surface/60 border border-border-subtle/80 md:col-span-2">
-                        <span className="font-semibold text-ink-secondary text-[11px] block mb-1.5 flex items-center gap-1">
-                          <svg viewBox="0 0 12 12" className="w-3 h-3 text-amber shrink-0" fill="none">
+                        <span className="font-semibold text-ink-secondary text-xs sm:text-sm block mb-1.5 flex items-center gap-1">
+                          <svg viewBox="0 0 12 12" className="w-3.5 h-3.5 text-amber shrink-0" fill="none">
                             <polygon points="6,1 11,10 1,10" stroke="currentColor" strokeWidth="1.25" />
                             <path d="M6 5v2.5M6 9h.01" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
                           </svg>
@@ -328,7 +328,7 @@ export default function SkillFitChart({
                           {job.unrecognizedTerms.map((term, idx) => (
                             <span
                               key={idx}
-                              className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-sans bg-surface-secondary text-amber/90 border border-amber/30 border-dashed"
+                              className="inline-flex items-center px-2.5 py-0.5 rounded text-xs sm:text-sm font-sans bg-surface-secondary text-amber/90 border border-amber/30 border-dashed"
                               title="Term detected in listing requirements but not present in curated skill vocabulary"
                             >
                               {term}
@@ -346,7 +346,7 @@ export default function SkillFitChart({
       )}
 
       {/* Mandatory Suitability Disclaimer Banner */}
-      <div className="mt-5 pt-3 border-t border-border-subtle/70 flex items-start gap-2 text-[11px] text-muted">
+      <div className="mt-5 pt-3 border-t border-border-subtle/70 flex items-start gap-2 text-xs sm:text-sm text-muted leading-relaxed">
         <svg viewBox="0 0 14 14" className="w-3.5 h-3.5 text-muted shrink-0 mt-0.5" fill="none">
           <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
           <path d="M7 6v4M7 4h.01" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />

@@ -138,15 +138,15 @@ function CustomPieTooltip({ active, payload, snapshotTotal }) {
       : "0.0";
 
   return (
-    <div className="bg-surface-elevated/95 backdrop-blur-md border border-border-primary rounded-xl p-3 shadow-xl min-w-[180px] text-xs pointer-events-none transition-all">
+    <div className="bg-surface-elevated/95 backdrop-blur-md border border-border-primary rounded-xl p-3 shadow-xl min-w-[210px] text-sm pointer-events-none transition-all">
       <div className="flex items-center justify-between gap-2 pb-1.5 mb-1.5 border-b border-border-subtle">
-        <span className="font-display font-semibold text-ink flex items-center gap-1.5">
+        <span className="font-display font-semibold text-ink text-sm sm:text-base flex items-center gap-1.5">
           <StageShapeIcon shape={meta.shape} className={meta.textColor} />
           {data.label}
         </span>
         <span
           className={cn(
-            "text-[10px] font-medium px-1.5 py-0.5 rounded-full border",
+            "text-xs font-medium px-2 py-0.5 rounded-full border",
             !isClosed
               ? "bg-cyan/10 text-cyan border-cyan/25"
               : "bg-surface-secondary text-ink-secondary border-border-subtle"
@@ -156,13 +156,13 @@ function CustomPieTooltip({ active, payload, snapshotTotal }) {
         </span>
       </div>
       <div className="space-y-1 font-sans">
-        <div className="flex items-center justify-between text-muted">
+        <div className="flex items-center justify-between text-xs sm:text-sm text-muted">
           <span>Opportunities:</span>
           <span className="font-mono font-bold text-ink">
             {data.count} {data.count === 1 ? "opportunity" : "opportunities"}
           </span>
         </div>
-        <div className="flex items-center justify-between text-muted">
+        <div className="flex items-center justify-between text-xs sm:text-sm text-muted">
           <span>Share of Total:</span>
           <span className="font-mono font-bold text-cyan">
             {calculatedPct}%
@@ -270,18 +270,18 @@ export default function PipelineDistributionChart({
     >
       <div>
         {/* Header */}
-        <div className="mb-4">
-          <h3 className="font-display text-ink text-base sm:text-lg font-semibold leading-tight">
+        <div className="mb-5 sm:mb-6">
+          <h3 className="font-display text-ink text-lg sm:text-xl font-semibold leading-tight">
             Application Pipeline Distribution
           </h3>
-          <p className="text-xs text-muted mt-0.5">
+          <p className="text-sm text-muted mt-1">
             Current point-in-time distribution of opportunities across stages
           </p>
         </div>
 
         {/* Distinction Callout: Active Segment vs Evaluation-Only Metric */}
         {typeof activeInPipeline === "number" && (
-          <div className="mb-4 p-3 rounded-lg bg-surface-secondary/60 border border-border-subtle text-xs flex items-start gap-2.5">
+          <div className="mb-5 p-3 rounded-lg bg-surface-secondary/60 border border-border-subtle text-sm flex items-start gap-2.5 leading-relaxed">
             <svg viewBox="0 0 16 16" className="w-4 h-4 text-cyan shrink-0 mt-0.5" fill="none">
               <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
               <path d="M8 7v4M8 5h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -295,9 +295,9 @@ export default function PipelineDistributionChart({
       </div>
 
       {/* Donut Chart with Centered Total Tracked Opportunities */}
-      <div className="relative w-full h-64 sm:h-72 flex items-center justify-center my-auto">
+      <div className="relative w-full h-64 sm:h-72 lg:h-80 flex items-center justify-center my-auto py-2">
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
+          <PieChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
             <Tooltip content={<CustomPieTooltip snapshotTotal={snapshotTotal} />} />
             <Pie
               data={pieSlices}
@@ -345,13 +345,13 @@ export default function PipelineDistributionChart({
 
         {/* Centered Total Opportunities Indicator */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-          <span className="font-mono text-2xl sm:text-3xl font-bold text-ink leading-none">
+          <span className="font-mono text-3xl sm:text-4xl font-bold text-ink leading-none">
             {snapshotTotal}
           </span>
-          <span className="text-[11px] sm:text-xs text-muted font-sans font-medium mt-1">
+          <span className="text-xs sm:text-sm text-muted font-sans font-semibold mt-1">
             Total Tracked
           </span>
-          <span className="text-[10px] text-muted/70 font-sans">
+          <span className="text-xs text-muted/70 font-sans">
             opportunities
           </span>
         </div>
@@ -416,25 +416,25 @@ export function PipelineDistributionDetails({
       aria-label="Current pipeline overview"
     >
       {/* Section Header */}
-      <h3 className="font-display text-ink text-base sm:text-lg font-semibold leading-tight mb-4">
+      <h3 className="font-display text-ink text-lg sm:text-xl font-semibold leading-tight mb-6 sm:mb-7">
         Current Pipeline Overview
       </h3>
 
       {/* Detailed Stage Cards Breakdown */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6 lg:gap-8">
         {/* 1. Active Stages Column */}
-        <div className="flex flex-col gap-2 p-3.5 sm:p-4 rounded-xl bg-surface-secondary/40 border border-border-subtle">
-          <div className="flex items-center justify-between pb-2 mb-1 border-b border-border-subtle/80">
-            <span className="font-display font-semibold text-xs sm:text-sm text-ink flex items-center gap-2">
+        <div className="flex flex-col gap-2.5 p-3.5 sm:p-4 rounded-xl bg-surface-secondary/40 border border-border-subtle">
+          <div className="flex items-center justify-between pb-3 mb-2 border-b border-border-subtle/80">
+            <span className="font-display font-semibold text-sm sm:text-base text-ink flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-cyan shrink-0" aria-hidden="true" />
               Active Opportunities
             </span>
-            <span className="font-mono text-xs font-bold text-cyan">
+            <span className="font-mono text-sm sm:text-base font-bold text-cyan">
               {activeSegment.totalActive} total
             </span>
           </div>
 
-          <div className="space-y-1.5" role="list" aria-label="Active stages list">
+          <div className="space-y-2" role="list" aria-label="Active stages list">
             {activeStages.map((stage) => {
               const meta = STAGE_META[stage.status] || {};
               const isSelected = selectedStageKey === stage.status;
@@ -464,7 +464,7 @@ export function PipelineDistributionDetails({
                     <span className={cn("p-1 rounded-md bg-surface border shrink-0", meta.accentBorder, meta.textColor)}>
                       <StageShapeIcon shape={meta.shape} className={meta.textColor} />
                     </span>
-                    <span className="font-sans text-xs font-medium text-ink-secondary truncate">
+                    <span className="font-sans text-sm font-medium text-ink-secondary truncate">
                       {stage.label}
                     </span>
                   </div>
@@ -478,11 +478,11 @@ export function PipelineDistributionDetails({
                       />
                     </div>
 
-                    <span className="font-mono text-xs font-bold text-ink w-7 text-right">
+                    <span className="font-mono text-sm font-bold text-ink w-8 text-right">
                       {stage.count}
                     </span>
 
-                    <span className="font-mono text-[11px] text-muted w-12 text-right">
+                    <span className="font-mono text-xs sm:text-sm text-muted w-14 text-right">
                       {stage.percentage}%
                     </span>
                   </div>
@@ -493,18 +493,18 @@ export function PipelineDistributionDetails({
         </div>
 
         {/* 2. Closed Outcomes Column */}
-        <div className="flex flex-col gap-2 p-3.5 sm:p-4 rounded-xl bg-surface-secondary/40 border border-border-subtle">
-          <div className="flex items-center justify-between pb-2 mb-1 border-b border-border-subtle/80">
-            <span className="font-display font-semibold text-xs sm:text-sm text-ink flex items-center gap-2">
+        <div className="flex flex-col gap-2.5 p-3.5 sm:p-4 rounded-xl bg-surface-secondary/40 border border-border-subtle">
+          <div className="flex items-center justify-between pb-3 mb-2 border-b border-border-subtle/80">
+            <span className="font-display font-semibold text-sm sm:text-base text-ink flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-slate-400 shrink-0" aria-hidden="true" />
               Closed Outcomes
             </span>
-            <span className="font-mono text-xs font-bold text-ink">
+            <span className="font-mono text-sm sm:text-base font-bold text-ink">
               {closedSegment.totalClosed} total
             </span>
           </div>
 
-          <div className="space-y-1.5" role="list" aria-label="Closed stages list">
+          <div className="space-y-2" role="list" aria-label="Closed stages list">
             {closedStages.map((stage) => {
               const meta = STAGE_META[stage.status] || {};
               const isSelected = selectedStageKey === stage.status;
@@ -534,7 +534,7 @@ export function PipelineDistributionDetails({
                     <span className={cn("p-1 rounded-md bg-surface border shrink-0", meta.accentBorder, meta.textColor)}>
                       <StageShapeIcon shape={meta.shape} className={meta.textColor} />
                     </span>
-                    <span className="font-sans text-xs font-medium text-ink-secondary truncate">
+                    <span className="font-sans text-sm font-medium text-ink-secondary truncate">
                       {stage.label}
                     </span>
                   </div>
@@ -548,11 +548,11 @@ export function PipelineDistributionDetails({
                       />
                     </div>
 
-                    <span className="font-mono text-xs font-bold text-ink w-7 text-right">
+                    <span className="font-mono text-sm font-bold text-ink w-8 text-right">
                       {stage.count}
                     </span>
 
-                    <span className="font-mono text-[11px] text-muted w-12 text-right">
+                    <span className="font-mono text-xs sm:text-sm text-muted w-14 text-right">
                       {stage.percentage}%
                     </span>
                   </div>
@@ -564,7 +564,7 @@ export function PipelineDistributionDetails({
       </div>
 
       {/* Mandatory Snapshot Disclaimer Banner */}
-      <div className="mt-5 pt-3 border-t border-border-subtle/70 flex items-start gap-2 text-[11px] text-muted">
+      <div className="mt-8 sm:mt-9 pt-4 border-t border-border-subtle/70 flex items-start gap-2 text-xs sm:text-sm text-muted leading-relaxed">
         <svg viewBox="0 0 14 14" className="w-3.5 h-3.5 text-muted shrink-0 mt-0.5" fill="none">
           <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
           <path d="M7 6v4M7 4h.01" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />

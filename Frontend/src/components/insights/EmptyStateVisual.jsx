@@ -127,12 +127,12 @@ export default function EmptyStateVisual({
 
       {/* Copy */}
       {title && (
-        <h4 className="font-display text-sm sm:text-base font-semibold text-ink mb-1">
+        <h4 className="font-display text-base sm:text-lg font-semibold text-ink mb-1.5">
           {title}
         </h4>
       )}
       {description && (
-        <p className="text-xs sm:text-sm text-muted max-w-sm mb-4 leading-relaxed">
+        <p className="text-sm sm:text-base text-muted max-w-md mb-4 leading-relaxed">
           {description}
         </p>
       )}

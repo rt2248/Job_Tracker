@@ -36,7 +36,7 @@ export default function SegmentedBar({
     return (
       <div
         className={cn(
-          "w-full rounded-full bg-surface-secondary border border-border-subtle flex items-center justify-center text-[11px] text-muted font-mono",
+          "w-full rounded-full bg-surface-secondary border border-border-subtle flex items-center justify-center text-xs text-muted font-mono",
           className
         )}
         style={{ height }}

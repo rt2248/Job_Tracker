@@ -2,7 +2,7 @@
  * @file executionBoundaryContract.js
  * @description Formal specification and reference execution boundary contract helper.
  *
- * Stage 2B.1 — Option C Provider Abstraction Foundation.
+ * Stage 2B.1 / Stage 2B.2 — Option C Provider Abstraction Foundation.
  *
  * Execution Boundary Contract Guarantees:
  * 1. Caller cancellation (HTTP 499) and local timeout (HTTP 504) are distinct, non-conflated outcomes.
@@ -11,7 +11,8 @@
  * 4. Boundary enforcement is independent of whether the underlying operation cooperates with abort signals.
  * 5. Late resolution suppression: A late provider resolution after timeout or cancellation is discarded
  *    and NEVER returned as a success.
- * 6. Leak-free resource cleanup: All timers and caller signal listeners are removed in a mandatory finally block.
+ * 6. Leak-free resource cleanup: A single caller abort listener is registered and deterministically
+ *    removed in a mandatory finally block on all execution paths.
  */
 
 const { AiCancellationError } = require("./errors/AiCancellationError");
@@ -44,17 +45,7 @@ async function executeWithBoundaryContract(
   let timeoutId = null;
   let timeoutFired = false;
   let boundarySettled = false;
-
-  const onCallerAbort = () => {
-    if (!boundarySettled) {
-      if (timeoutId) clearTimeout(timeoutId);
-      internalController.abort("CALLER_CANCELLED");
-    }
-  };
-
-  if (callerSignal) {
-    callerSignal.addEventListener("abort", onCallerAbort, { once: true });
-  }
+  let onCallerAbort = null;
 
   try {
     const timeoutPromise = new Promise((_, reject) => {
@@ -72,18 +63,23 @@ async function executeWithBoundaryContract(
 
     const callerAbortPromise = new Promise((_, reject) => {
       if (callerSignal) {
-        const checkAbort = () => {
-          reject(
-            new AiCancellationError("AI operation was cancelled by caller during execution", {
-              providerId,
-              diagnosticContext: { reason: "CALLER_SIGNAL_ABORTED" },
-            })
-          );
+        onCallerAbort = () => {
+          if (!boundarySettled) {
+            if (timeoutId) clearTimeout(timeoutId);
+            internalController.abort("CALLER_CANCELLED");
+            reject(
+              new AiCancellationError("AI operation was cancelled by caller during execution", {
+                providerId,
+                diagnosticContext: { reason: "CALLER_SIGNAL_ABORTED" },
+              })
+            );
+          }
         };
+
         if (callerSignal.aborted) {
-          checkAbort();
+          onCallerAbort();
         } else {
-          callerSignal.addEventListener("abort", checkAbort, { once: true });
+          callerSignal.addEventListener("abort", onCallerAbort, { once: true });
         }
       }
     });
@@ -93,13 +89,14 @@ async function executeWithBoundaryContract(
       (res) => {
         if (boundarySettled) {
           // Late resolution suppressed: do not return as success
-          return new Promise(() => {});
+          return null;
         }
         return res;
       },
       (err) => {
         if (boundarySettled) {
-          return new Promise(() => {});
+          // Late rejection suppressed: prevent unhandled rejection without allocating permanently pending promises
+          return null;
         }
         throw err;
       }
@@ -138,9 +135,10 @@ async function executeWithBoundaryContract(
       clearTimeout(timeoutId);
       timeoutId = null;
     }
-    if (callerSignal) {
-      // Guaranteed cleanup to eliminate memory leaks on long-lived caller signals
+    if (callerSignal && onCallerAbort) {
+      // Guaranteed single-listener cleanup to eliminate memory leaks on all paths
       callerSignal.removeEventListener("abort", onCallerAbort);
+      onCallerAbort = null;
     }
   }
 }

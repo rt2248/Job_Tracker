@@ -19,7 +19,7 @@ const CopyField = ({ label, icon, value, displayValue, copied, onCopy, title }) 
       {label}
     </span>
     <div className="flex items-center gap-1.5 min-w-0">
-      <span className="font-mono text-ink truncate text-[11px]" title={title || value}>
+      <span className="font-mono text-ink truncate text-xs sm:text-sm" title={title || value}>
         {displayValue || value || "—"}
       </span>
       <button
@@ -30,7 +30,7 @@ const CopyField = ({ label, icon, value, displayValue, copied, onCopy, title }) 
         aria-label={`Copy ${label}`}
       >
         {copied ? (
-          <span className="text-green text-[10px] font-mono">Copied</span>
+          <span className="text-green text-xs font-mono">Copied</span>
         ) : (
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -88,7 +88,7 @@ const ProfileIdentityCard = ({ userData, isLoadingUser }) => {
       </div>
 
       <div className="mt-4 w-full">
-        <h2 className="text-xl font-bold font-display text-ink tracking-tight truncate">
+        <h2 className="text-xl sm:text-2xl font-bold font-display text-ink tracking-tight truncate">
           {isLoadingUser ? (
             <span className="inline-block w-36 h-6 bg-surface-secondary rounded animate-pulse" />
           ) : (
@@ -97,13 +97,13 @@ const ProfileIdentityCard = ({ userData, isLoadingUser }) => {
         </h2>
 
         {userData?.headline && (
-          <p className="text-xs text-ink-secondary mt-1 font-sans line-clamp-2">
+          <p className="text-sm text-ink-secondary mt-1 font-sans line-clamp-2">
             {userData.headline}
           </p>
         )}
 
         {userData?.location && (
-          <div className="flex items-center justify-center gap-1 text-[11px] text-muted mt-1 font-sans">
+          <div className="flex items-center justify-center gap-1.5 text-xs sm:text-sm text-muted mt-1.5 font-sans">
             <svg className="w-3.5 h-3.5 text-muted/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -112,7 +112,7 @@ const ProfileIdentityCard = ({ userData, isLoadingUser }) => {
           </div>
         )}
 
-        <div className="flex items-center justify-center gap-1.5 text-xs font-mono text-muted mt-1.5">
+        <div className="flex items-center justify-center gap-1.5 text-xs sm:text-sm font-mono text-muted mt-1.5">
           <span>@{userData?.username || "username"}</span>
           <button
             type="button"
@@ -122,7 +122,7 @@ const ProfileIdentityCard = ({ userData, isLoadingUser }) => {
             aria-label="Copy username"
           >
             {copiedUsername ? (
-              <span className="text-green text-[10px] font-mono">Copied</span>
+              <span className="text-green text-xs font-mono">Copied</span>
             ) : (
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -132,7 +132,7 @@ const ProfileIdentityCard = ({ userData, isLoadingUser }) => {
         </div>
       </div>
 
-      <div className="w-full mt-6 pt-4 border-t border-border-subtle flex flex-col divide-y divide-border-subtle text-left text-xs font-sans">
+      <div className="w-full mt-6 pt-4 border-t border-border-subtle flex flex-col divide-y divide-border-subtle text-left text-sm font-sans">
         <CopyField
           label="Email"
           icon={
@@ -161,7 +161,7 @@ const ProfileIdentityCard = ({ userData, isLoadingUser }) => {
 
         <div className="py-2.5 flex items-center justify-between gap-2">
           <span className="text-muted">Account Status</span>
-          <span className="text-xs font-sans font-medium text-green flex items-center gap-1.5">
+          <span className="text-xs sm:text-sm font-sans font-medium text-green flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-green" />
             Active
           </span>
@@ -174,7 +174,7 @@ const ProfileIdentityCard = ({ userData, isLoadingUser }) => {
             </svg>
             Member Since
           </span>
-          <span className="font-mono text-ink font-medium text-[11px]">
+          <span className="font-mono text-ink font-medium text-xs sm:text-sm">
             {formatDate(userData?.createdAt)}
           </span>
         </div>

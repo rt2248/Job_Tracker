@@ -127,13 +127,13 @@ const Dashboard = () => {
           {/* Dashboard Header Section */}
           <div className="flex items-start justify-between gap-4 mb-6 shrink-0">
             <div>
-              <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight">
+              <h1 className="font-display text-2xl sm:text-3xl text-ink font-bold tracking-tight">
                 Application Pipeline
               </h1>
-              <p className="font-mono text-xs sm:text-sm font-bold text-cyan mt-1">
+              <p className="font-mono text-sm sm:text-base font-bold text-cyan mt-1">
                 {metrics.active} active
               </p>
-              <p className="text-muted text-xs sm:text-sm mt-1 font-sans">
+              <p className="text-muted text-sm sm:text-base mt-1.5 font-sans leading-relaxed">
                 Track, manage, and move your career opportunities through each stage.
               </p>
             </div>
@@ -144,34 +144,34 @@ const Dashboard = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 shrink-0">
             <Card className="p-3.5 sm:p-4 bg-surface/80 border-border-primary">
               <div className="flex items-center justify-between">
-                <span className="text-muted text-xs font-sans font-medium uppercase tracking-wider">Total Applications</span>
+                <span className="text-muted text-xs sm:text-sm font-sans font-semibold uppercase tracking-wider">Total Applications</span>
                 <span className="w-2 h-2 rounded-full bg-cyan" />
               </div>
-              <p className="font-mono text-2xl sm:text-3xl font-bold text-ink mt-2">{metrics.total}</p>
+              <p className="font-mono text-3xl sm:text-4xl font-bold text-ink mt-2">{metrics.total}</p>
             </Card>
 
             <Card className="p-3.5 sm:p-4 bg-surface/80 border-border-primary">
               <div className="flex items-center justify-between">
-                <span className="text-muted text-xs font-sans font-medium uppercase tracking-wider">In Pipeline</span>
+                <span className="text-muted text-xs sm:text-sm font-sans font-semibold uppercase tracking-wider">In Pipeline</span>
                 <span className="w-2 h-2 rounded-full bg-amber" />
               </div>
-              <p className="font-mono text-2xl sm:text-3xl font-bold text-ink mt-2">{metrics.active}</p>
+              <p className="font-mono text-3xl sm:text-4xl font-bold text-ink mt-2">{metrics.active}</p>
             </Card>
 
             <Card className="p-3.5 sm:p-4 bg-surface/80 border-border-primary">
               <div className="flex items-center justify-between">
-                <span className="text-muted text-xs font-sans font-medium uppercase tracking-wider">Interviews</span>
+                <span className="text-muted text-xs sm:text-sm font-sans font-semibold uppercase tracking-wider">Interviews</span>
                 <span className="w-2 h-2 rounded-full bg-red" />
               </div>
-              <p className="font-mono text-2xl sm:text-3xl font-bold text-ink mt-2">{metrics.interviews}</p>
+              <p className="font-mono text-3xl sm:text-4xl font-bold text-ink mt-2">{metrics.interviews}</p>
             </Card>
 
             <Card className="p-3.5 sm:p-4 bg-surface/80 border-border-primary">
               <div className="flex items-center justify-between">
-                <span className="text-muted text-xs font-sans font-medium uppercase tracking-wider">Offers & Accepted</span>
+                <span className="text-muted text-xs sm:text-sm font-sans font-semibold uppercase tracking-wider">Offers & Accepted</span>
                 <span className="w-2 h-2 rounded-full bg-green" />
               </div>
-              <p className="font-mono text-2xl sm:text-3xl font-bold text-green mt-2">{metrics.offers}</p>
+              <p className="font-mono text-3xl sm:text-4xl font-bold text-green mt-2">{metrics.offers}</p>
             </Card>
           </div>
 
@@ -185,7 +185,7 @@ const Dashboard = () => {
                 placeholder="Search pipeline by role or company..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-9 text-xs sm:text-sm bg-surface-secondary/90"
+                className="h-10 text-sm bg-surface-secondary/90"
               />
             </div>
             <div className="w-full sm:w-48">
@@ -193,7 +193,7 @@ const Dashboard = () => {
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
                 placeholder="All Job Types"
-                className="h-9 text-xs sm:text-sm bg-surface-secondary/90"
+                className="h-10 text-sm bg-surface-secondary/90"
               >
                 <option value="">All Job Types</option>
                 <option value="fulltime">Full Time</option>
@@ -210,7 +210,7 @@ const Dashboard = () => {
                   setSearchQuery("")
                   setSelectedType("")
                 }}
-                className="text-xs text-muted hover:text-ink shrink-0"
+                className="text-sm text-muted hover:text-ink shrink-0"
               >
                 Reset Filters
               </Button>
@@ -221,17 +221,17 @@ const Dashboard = () => {
           {isLoading && (
             <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
               <div className="w-8 h-8 rounded-full border-2 border-cyan border-t-transparent animate-spin mb-3" />
-              <p className="text-muted text-sm font-sans">Loading application pipeline...</p>
+              <p className="text-muted text-base font-sans">Loading application pipeline...</p>
             </div>
           )}
 
           {/* Error State */}
           {error && !isLoading && (
             <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-              <div className="p-3 rounded-xl bg-red/10 border border-red/30 text-red mb-3">
+              <div className="p-3 rounded-xl bg-red/10 border border-red/30 text-red text-sm sm:text-base mb-3">
                 ⚠️ {error}
               </div>
-              <p className="text-muted text-xs font-sans">Please refresh the page or check your connection.</p>
+              <p className="text-muted text-sm font-sans">Please refresh the page or check your connection.</p>
             </div>
           )}
 

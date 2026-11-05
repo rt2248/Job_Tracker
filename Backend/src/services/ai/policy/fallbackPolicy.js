@@ -2,7 +2,7 @@
  * @file fallbackPolicy.js
  * @description Policy definitions and helpers for AI error fallback eligibility and circuit-breaker accounting.
  *
- * Stage 2B.1 — Option C Provider Abstraction Foundation.
+ * Stage 2B.1 / Stage 2B.2 — Option C Provider Abstraction Foundation.
  *
  * Architecture Invariants:
  * 1. Fallback execution belongs to the application domain orchestrator (CareerStrategistService in Milestone 2B.4),
@@ -10,7 +10,7 @@
  * 2. Operational provider issues (rate limits, capacity, timeouts, network drops) are eligible for deterministic heuristics fallback.
  * 3. Client cancellations, bugs, schema drift, and configuration errors are STRICTLY FORBIDDEN from triggering fallback.
  * 4. Circuit breaker accounting evaluates failure per logical provider operation (not per transport attempt).
- *    Client cancellations, authentication bugs, and configuration errors do NOT count as breaker operational failures.
+ *    Client cancellations, authentication bugs, configuration errors, and model failures do NOT count as breaker operational failures.
  */
 
 const { AI_ERROR_CODES } = require("../contracts/errors/AiError");
@@ -74,6 +74,7 @@ function isFallbackEligible(error) {
  * - Excludes authentication bugs (AI_AUTHENTICATION_ERROR — bad API key, not transient outage).
  * - Excludes configuration bugs (AI_CONFIGURATION_ERROR — developer bug).
  * - Excludes context length bugs (AI_CONTEXT_WINDOW_EXCEEDED — input bug).
+ * - Excludes model failures (AI_MODEL_FAILURE — model syntax defect, not network outage).
  * - Excludes schema validation bugs (AI_SCHEMA_VALIDATION_ERROR — model drift, handled separately).
  * - Includes transient operational errors: CAPACITY_UNAVAILABLE, BAD_GATEWAY, GATEWAY_TIMEOUT, NETWORK_ERROR.
  *
@@ -90,12 +91,13 @@ function countsTowardsCircuitBreaker(error) {
     return false;
   }
 
-  // Non-operational errors that must NEVER trip the circuit breaker
+  // Non-operational / non-outage errors that must NEVER trip the circuit breaker
   const excludedFromBreaker = [
     AI_ERROR_CODES.CANCELLATION,
     AI_ERROR_CODES.AUTHENTICATION_ERROR,
     AI_ERROR_CODES.CONFIGURATION_ERROR,
     AI_ERROR_CODES.CONTEXT_WINDOW_EXCEEDED,
+    AI_ERROR_CODES.MODEL_FAILURE,
     AI_ERROR_CODES.SCHEMA_VALIDATION_ERROR,
   ];
 
@@ -103,7 +105,7 @@ function countsTowardsCircuitBreaker(error) {
     return false;
   }
 
-  // Operational provider outages that indicate provider unavailability
+  // Operational provider outages that indicate provider infrastructure unavailability
   const tripsBreaker = [
     AI_ERROR_CODES.CAPACITY_UNAVAILABLE,
     AI_ERROR_CODES.BAD_GATEWAY,

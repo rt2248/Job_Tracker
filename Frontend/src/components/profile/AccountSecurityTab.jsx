@@ -24,47 +24,47 @@ const AccountSecurityTab = ({
       {/* 1. Account Information Card */}
       <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
         <CardHeader className="mb-4">
-          <CardTitle className="text-lg sm:text-xl font-display">Account Information</CardTitle>
-          <p className="text-xs sm:text-sm text-muted font-sans">
+          <CardTitle className="text-lg sm:text-xl font-display font-semibold">Account Information</CardTitle>
+          <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
             Core authentication credentials, identity, and account timestamps.
           </p>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs font-sans">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm font-sans">
             <div className="p-3.5 rounded-xl bg-surface-secondary/70 border border-border-subtle flex flex-col gap-1">
               <span className="text-muted font-medium">Email Address</span>
-              <span className="font-mono text-ink font-semibold truncate text-sm" title={userData?.email}>
+              <span className="font-mono text-ink font-semibold truncate text-sm sm:text-base" title={userData?.email}>
                 {userData?.email || "—"}
               </span>
-              <span className="text-[10px] text-muted font-sans mt-0.5">
+              <span className="text-xs text-muted font-sans mt-0.5">
                 Email changes require verification infrastructure
               </span>
             </div>
 
             <div className="p-3.5 rounded-xl bg-surface-secondary/70 border border-border-subtle flex flex-col gap-1">
               <span className="text-muted font-medium">Username</span>
-              <span className="font-mono text-ink font-semibold truncate text-sm">
+              <span className="font-mono text-ink font-semibold truncate text-sm sm:text-base">
                 @{userData?.username || "—"}
               </span>
             </div>
 
             <div className="p-3.5 rounded-xl bg-surface-secondary/70 border border-border-subtle flex flex-col gap-1">
               <span className="text-muted font-medium">Account ID</span>
-              <span className="font-mono text-muted text-[11px] truncate" title={userData?.id}>
+              <span className="font-mono text-muted text-xs sm:text-sm truncate" title={userData?.id}>
                 {userData?.id || "—"}
               </span>
             </div>
 
             <div className="p-3.5 rounded-xl bg-surface-secondary/70 border border-border-subtle flex flex-col gap-1">
               <span className="text-muted font-medium">Member Since</span>
-              <span className="font-mono text-ink text-xs">
+              <span className="font-mono text-ink text-xs sm:text-sm">
                 {formatDate(userData?.createdAt)}
               </span>
             </div>
 
             <div className="p-3.5 rounded-xl bg-surface-secondary/70 border border-border-subtle flex flex-col gap-1">
               <span className="text-muted font-medium">Password Last Changed</span>
-              <span className="font-mono text-ink text-xs">
+              <span className="font-mono text-ink text-xs sm:text-sm">
                 {passwordChangedText}
               </span>
             </div>
@@ -84,8 +84,8 @@ const AccountSecurityTab = ({
       {/* 4. Credentials & Security Management */}
       <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
         <CardHeader className="mb-4">
-          <CardTitle className="text-lg font-display">Security & Credentials</CardTitle>
-          <p className="text-xs text-muted font-sans mt-0.5">
+          <CardTitle className="text-lg sm:text-xl font-display font-semibold">Security & Credentials</CardTitle>
+          <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
             Manage your master account credentials and session security.
           </p>
         </CardHeader>
@@ -100,8 +100,8 @@ const AccountSecurityTab = ({
                   </svg>
                 </div>
                 <div>
-                  <span className="font-semibold text-xs sm:text-sm text-ink block">Account Password</span>
-                  <p className="text-[11px] text-muted font-sans mt-0.5">
+                  <span className="font-semibold text-sm sm:text-base text-ink block">Account Password</span>
+                  <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
                     Last updated: <span className="font-mono text-ink-secondary">{passwordChangedText}</span>
                   </p>
                 </div>
@@ -111,7 +111,7 @@ const AccountSecurityTab = ({
                 variant="outline"
                 size="sm"
                 onClick={() => setShowPasswordModal(true)}
-                className="shrink-0 self-start sm:self-center"
+                className="shrink-0 self-start sm:self-center text-xs sm:text-sm"
               >
                 Change Password
               </Button>
@@ -126,13 +126,13 @@ const AccountSecurityTab = ({
                   </svg>
                 </div>
                 <div>
-                  <span className="font-semibold text-xs text-ink block">Two-Factor Authentication (2FA)</span>
-                  <p className="text-[11px] text-muted font-sans mt-0.5">
+                  <span className="font-semibold text-sm sm:text-base text-ink block">Two-Factor Authentication (2FA)</span>
+                  <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
                     TOTP multi-factor authentication and recovery codes are planned for a future security update.
                   </p>
                 </div>
               </div>
-              <span className="self-start sm:self-center text-xs font-sans font-medium text-muted">
+              <span className="self-start sm:self-center text-xs sm:text-sm font-sans font-medium text-muted">
                 Planned
               </span>
             </div>
@@ -144,8 +144,8 @@ const AccountSecurityTab = ({
       <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h3 className="text-base font-semibold font-display text-ink">Active Session</h3>
-            <p className="text-xs text-muted font-sans mt-0.5">
+            <h3 className="text-base sm:text-lg font-semibold font-display text-ink">Active Session</h3>
+            <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
               Signed in as <span className="font-mono text-ink font-semibold">{userData?.email}</span>.
             </p>
           </div>
@@ -153,7 +153,7 @@ const AccountSecurityTab = ({
             variant="destructive"
             size="sm"
             onClick={onRequestSignOut}
-            className="shrink-0"
+            className="shrink-0 text-xs sm:text-sm"
           >
             Sign Out
           </Button>

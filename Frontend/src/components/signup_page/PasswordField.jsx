@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import visibilityIcon from '../../assets/icons/visibility.svg';
-import visibilityOffIcon from '../../assets/icons/visibilityoff.svg';
+import visibilityIcon from '../../assets/icons/actions/visibility.svg';
+import visibilityOffIcon from '../../assets/icons/actions/visibility-off.svg';
 import FieldError from './FieldError';
 
 const PasswordField = ({ label, placeholder, name, register, rules, error, width = 'w-full' }) => {

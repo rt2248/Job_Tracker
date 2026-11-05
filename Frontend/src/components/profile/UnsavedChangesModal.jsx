@@ -10,27 +10,29 @@ const UnsavedChangesModal = ({ isOpen, onConfirmDiscard, onCancel }) => (
     closeOnOverlayClick={true}
   >
     <ModalHeader className="justify-center text-center">
-      <ModalTitle className="text-center text-lg sm:text-xl text-ink font-display">
+      <ModalTitle className="text-center text-xl sm:text-2xl font-bold font-display text-ink">
         Discard unsaved changes?
       </ModalTitle>
     </ModalHeader>
     <ModalContent>
-      <p className="text-sm text-ink-secondary font-sans leading-relaxed text-center">
+      <p className="text-sm sm:text-base text-ink-secondary font-sans leading-relaxed text-center">
         You have modified your profile settings. If you leave or cancel now, your unsaved edits will be discarded.
       </p>
     </ModalContent>
     <ModalFooter className="flex items-center justify-between gap-3 pt-4 border-t border-border-subtle mt-4">
       <Button
         variant="secondary"
-        size="sm"
+        size="md"
         onClick={onCancel}
+        className="text-sm sm:text-base px-4 py-2"
       >
         Keep Editing
       </Button>
       <Button
         variant="destructive"
-        size="sm"
+        size="md"
         onClick={onConfirmDiscard}
+        className="text-sm sm:text-base px-4 py-2"
       >
         Discard Changes
       </Button>

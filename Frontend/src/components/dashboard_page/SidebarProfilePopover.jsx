@@ -74,7 +74,7 @@ const SidebarProfilePopover = ({
     >
       {/* A. Profile Identity Section */}
       <div className="flex items-center gap-2.5 p-1.5 min-w-0">
-        <div className="w-9 h-9 rounded-full bg-neutral-900 text-white text-xs font-bold flex items-center justify-center shrink-0 shadow-xs overflow-hidden relative ring-2 ring-neutral-900/10">
+        <div className="w-9 h-9 rounded-full bg-neutral-900 text-white text-sm font-bold flex items-center justify-center shrink-0 shadow-xs overflow-hidden relative ring-2 ring-neutral-900/10">
           {avatarSrc ? (
             <img
               src={avatarSrc}
@@ -100,10 +100,10 @@ const SidebarProfilePopover = ({
             </div>
           ) : (
             <>
-              <span className="text-xs font-bold font-display text-neutral-950 truncate tracking-tight">
+              <span className="text-sm font-bold font-display text-neutral-950 truncate tracking-tight">
                 {fullName}
               </span>
-              <span className="text-[11px] text-neutral-500 font-medium truncate font-sans" title={userEmail}>
+              <span className="text-xs text-neutral-500 font-medium truncate font-sans" title={userEmail}>
                 {userEmail}
               </span>
             </>
@@ -127,7 +127,7 @@ const SidebarProfilePopover = ({
               onClick={() => onSelectTab(item.id)}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "group flex items-center gap-2 px-2 py-1.5 rounded-lg text-left text-xs font-medium transition-all duration-150 outline-none cursor-pointer border select-none min-h-[30px]",
+                "group flex items-center gap-2 px-2 py-1.5 rounded-lg text-left text-sm font-medium transition-all duration-150 outline-none cursor-pointer border select-none min-h-[32px]",
                 "focus-visible:ring-2 focus-visible:ring-neutral-400",
                 isActive
                   ? "bg-neutral-900 text-white font-semibold border-neutral-900 shadow-xs"
@@ -145,7 +145,7 @@ const SidebarProfilePopover = ({
                 {item.icon}
               </span>
 
-              <span className="truncate flex-1 tracking-tight font-sans text-xs">
+              <span className="truncate flex-1 tracking-tight font-sans text-sm">
                 {item.label}
               </span>
 

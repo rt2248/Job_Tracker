@@ -8,9 +8,9 @@ import FieldError from '../../components/signup_page/FieldError';
 import PasswordField from '../../components/signup_page/PasswordField';
 import useAppTheme from '../../hooks/useAppTheme';
 import './auth-page.css';
-import googleIcon from '../../assets/logos/google.svg';
-import codeSarthi from '../../assets/logos/codesarthi.svg';
-import arrowBack from '../../assets/icons/arrowback.svg';
+import googleIcon from '../../assets/logos/platforms/google.svg';
+import codeSarthi from '../../assets/logos/platforms/codesarthi.svg';
+import arrowBack from '../../assets/icons/navigation/arrow-back.svg';
 import { getApiUrl } from '../../utils/config';
 
 const Login = () => {

@@ -86,12 +86,12 @@ export default function DashboardInsightsSection({ className }) {
           <div className="w-2 h-2 rounded-full bg-cyan shrink-0 animate-pulse" aria-hidden="true" />
           <h2
             id="dashboard-insights-heading"
-            className="font-display text-base sm:text-lg text-ink font-semibold tracking-tight"
+            className="font-display text-lg sm:text-xl text-ink font-semibold tracking-tight"
           >
             Your Insights
           </h2>
-          <span className="text-muted text-xs font-sans hidden sm:inline">•</span>
-          <p className="text-muted text-xs font-sans hidden sm:inline">
+          <span className="text-muted text-sm font-sans hidden sm:inline">•</span>
+          <p className="text-muted text-sm font-sans hidden sm:inline">
             30-day velocity, active pipeline, and follow-up alerts
           </p>
         </div>
@@ -99,7 +99,7 @@ export default function DashboardInsightsSection({ className }) {
         <button
           type="button"
           onClick={() => navigate("/insights")}
-          className="inline-flex items-center gap-1.5 text-xs font-sans font-semibold text-cyan hover:text-cyan/80 transition-colors self-start sm:self-auto cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan/70 rounded"
+          className="inline-flex items-center gap-1.5 text-sm font-sans font-semibold text-cyan hover:text-cyan/80 transition-colors self-start sm:self-auto cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan/70 rounded"
           aria-label="View all insights on dedicated page"
         >
           View All Insights
@@ -187,7 +187,7 @@ export default function DashboardInsightsSection({ className }) {
                   role="region"
                   aria-label="Priority recommendation"
                   className={cn(
-                    "p-3.5 rounded-xl border text-xs transition-all flex flex-col justify-between",
+                    "p-3.5 rounded-xl border text-sm transition-all flex flex-col justify-between",
                     topRecommendation.type === "warning"
                       ? "bg-amber-500/10 border-amber-500/30 text-ink"
                       : topRecommendation.type === "positive"
@@ -196,7 +196,7 @@ export default function DashboardInsightsSection({ className }) {
                   )}
                 >
                   <div>
-                    <div className="flex items-center gap-1.5 mb-1">
+                    <div className="flex items-center gap-1.5 mb-1.5">
                       <span
                         className={cn(
                           "w-2 h-2 rounded-full shrink-0",
@@ -208,11 +208,11 @@ export default function DashboardInsightsSection({ className }) {
                         )}
                         aria-hidden="true"
                       />
-                      <span className="font-display font-semibold text-xs text-ink">
+                      <span className="font-display font-semibold text-sm sm:text-base text-ink">
                         {topRecommendation.title}
                       </span>
                     </div>
-                    <p className="text-muted leading-relaxed line-clamp-2 pl-3.5">
+                    <p className="text-muted text-xs sm:text-sm leading-relaxed line-clamp-2 pl-3.5">
                       {topRecommendation.message}
                     </p>
                   </div>
@@ -221,7 +221,7 @@ export default function DashboardInsightsSection({ className }) {
                     <button
                       type="button"
                       onClick={() => navigate("/insights")}
-                      className="text-[11px] font-sans font-medium text-cyan hover:underline cursor-pointer"
+                      className="text-xs sm:text-sm font-sans font-semibold text-cyan hover:underline cursor-pointer"
                     >
                       Action details →
                     </button>
@@ -233,11 +233,11 @@ export default function DashboardInsightsSection({ className }) {
               <div
                 role="region"
                 aria-label="Stale applications preview"
-                className="p-3.5 rounded-xl bg-surface border border-border-subtle/80 text-xs flex-1 flex flex-col justify-between"
+                className="p-3.5 rounded-xl bg-surface border border-border-subtle/80 text-sm flex-1 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-display font-semibold text-xs text-ink flex items-center gap-1.5">
+                    <span className="font-display font-semibold text-sm sm:text-base text-ink flex items-center gap-1.5">
                       <span
                         className={cn(
                           "w-2 h-2 rounded-full shrink-0",
@@ -249,7 +249,7 @@ export default function DashboardInsightsSection({ className }) {
                     </span>
                     <span
                       className={cn(
-                        "px-1.5 py-0.5 rounded text-[10px] font-mono font-bold",
+                        "px-2 py-0.5 rounded text-xs font-mono font-bold",
                         staleAlerts.staleCount > 0
                           ? "bg-amber/15 text-amber"
                           : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
@@ -261,13 +261,13 @@ export default function DashboardInsightsSection({ className }) {
 
                   {staleAlerts.staleCount > 0 ? (
                     <div className="space-y-1.5">
-                      <p className="text-[11px] text-muted leading-snug">
+                      <p className="text-xs sm:text-sm text-muted leading-relaxed">
                         {staleAlerts.staleCount} {staleAlerts.staleCount === 1 ? "application has" : "applications have"} been inactive for &gt; 14 days without stage movement:
                       </p>
                       {staleAlerts.applications.slice(0, 2).map((app) => (
                         <div
                           key={app.id}
-                          className="p-2 rounded bg-surface-secondary/50 border border-border-subtle/60 flex items-center justify-between gap-2 text-[11px]"
+                          className="p-2.5 rounded bg-surface-secondary/50 border border-border-subtle/60 flex items-center justify-between gap-2 text-xs sm:text-sm"
                         >
                           <div className="min-w-0 truncate">
                             <span className="font-semibold text-ink">{app.company}</span>
@@ -280,7 +280,7 @@ export default function DashboardInsightsSection({ className }) {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-[11px] text-muted leading-relaxed py-1">
+                    <p className="text-xs sm:text-sm text-muted leading-relaxed py-1">
                       All your active applications in Applied and Assessment have had stage movement within the last 14 days.
                     </p>
                   )}
@@ -290,7 +290,7 @@ export default function DashboardInsightsSection({ className }) {
                   <button
                     type="button"
                     onClick={() => navigate("/insights")}
-                    className="text-[11px] font-sans font-medium text-cyan hover:underline cursor-pointer"
+                    className="text-xs sm:text-sm font-sans font-semibold text-cyan hover:underline cursor-pointer"
                   >
                     View pipeline radar →
                   </button>

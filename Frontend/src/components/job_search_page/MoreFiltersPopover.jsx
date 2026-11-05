@@ -29,7 +29,7 @@ function MoreFiltersPopover({ filters, updateFilter, onClose }) {
     return (
         <Popover isOpen={true} onClose={onClose} align="right" className="w-72 sm:w-80 flex flex-col gap-4">
             <div className="flex items-center justify-between border-b border-border-subtle pb-2">
-                <span className="font-display font-semibold text-ink text-sm">Advanced Filters</span>
+                <span className="font-display font-semibold text-ink text-base">Advanced Filters</span>
                 <button
                     onClick={onClose}
                     className="text-muted hover:text-ink text-sm p-1 rounded-lg hover:bg-surface-overlay"
@@ -42,7 +42,7 @@ function MoreFiltersPopover({ filters, updateFilter, onClose }) {
                 label="Experience Level"
                 value={filters.experienceLevel || ""}
                 onChange={(e) => updateFilter("experienceLevel", e.target.value)}
-                className="h-9 text-xs sm:text-sm bg-surface-secondary"
+                className="h-10 text-sm bg-surface-secondary"
             >
                 <option value="">Any Experience</option>
                 {Object.entries(EXPERIENCE_LEVEL_META).map(([value, meta]) => (
@@ -51,14 +51,14 @@ function MoreFiltersPopover({ filters, updateFilter, onClose }) {
             </Select>
 
             <div>
-                <label className="text-xs font-medium text-ink-secondary block mb-1.5">Salary Range (₹)</label>
+                <label className="text-sm font-medium text-ink-secondary block mb-1.5">Salary Range (₹)</label>
                 <div className="flex items-center gap-2">
                     <Input
                         type="number"
                         value={stagedSalaryMin}
                         onChange={(e) => setStagedSalaryMin(e.target.value)}
                         placeholder="Min"
-                        className="h-9 text-xs bg-surface-secondary"
+                        className="h-9 text-sm bg-surface-secondary"
                     />
                     <span className="text-muted font-sans">–</span>
                     <Input
@@ -66,14 +66,14 @@ function MoreFiltersPopover({ filters, updateFilter, onClose }) {
                         value={stagedSalaryMax}
                         onChange={(e) => setStagedSalaryMax(e.target.value)}
                         placeholder="Max"
-                        className="h-9 text-xs bg-surface-secondary"
+                        className="h-9 text-sm bg-surface-secondary"
                     />
                 </div>
                 <Button
                     variant="ghost"
                     size="sm"
                     onClick={handleApplySalary}
-                    className="mt-2 text-xs text-cyan hover:text-cyan p-0 h-auto font-medium"
+                    className="mt-2 text-sm text-cyan hover:text-cyan p-0 h-auto font-semibold"
                 >
                     Apply salary range
                 </Button>
@@ -83,7 +83,7 @@ function MoreFiltersPopover({ filters, updateFilter, onClose }) {
                 label="Date Posted"
                 value={filters.postedWithin || ""}
                 onChange={(e) => updateFilter("postedWithin", e.target.value)}
-                className="h-9 text-xs sm:text-sm bg-surface-secondary"
+                className="h-10 text-sm bg-surface-secondary"
             >
                 {POSTED_WITHIN_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -92,7 +92,7 @@ function MoreFiltersPopover({ filters, updateFilter, onClose }) {
 
             {allTags.length > 0 && (
                 <div>
-                    <label className="text-xs font-medium text-ink-secondary block mb-1.5">Filter by Tags</label>
+                    <label className="text-sm font-medium text-ink-secondary block mb-1.5">Filter by Tags</label>
                     <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto custom-scrollbar p-1">
                         {allTags.map((tag) => {
                             const isSelected = (filters.tags || []).includes(tag);
@@ -102,7 +102,7 @@ function MoreFiltersPopover({ filters, updateFilter, onClose }) {
                                     type="button"
                                     onClick={() => toggleTag(tag)}
                                     className={cn(
-                                        "px-2.5 py-1 rounded-lg text-xs font-medium font-sans transition-all cursor-pointer border",
+                                        "px-2.5 py-1 rounded-lg text-xs sm:text-sm font-medium font-sans transition-all cursor-pointer border",
                                         isSelected
                                             ? "bg-cyan/15 text-cyan border-cyan/40 shadow-xs"
                                             : "bg-surface-secondary/70 text-muted hover:text-ink border-border-subtle hover:border-border-primary"

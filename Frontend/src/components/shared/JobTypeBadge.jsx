@@ -15,7 +15,7 @@ function JobTypeBadge({ jobType, className }) {
     const colorClass = TEXT_COLORS[meta.color] || "text-cyan";
 
     return (
-        <span className={cn("text-xs font-medium font-sans shrink-0", colorClass, className)}>
+        <span className={cn("text-xs sm:text-sm font-medium font-sans shrink-0", colorClass, className)}>
             {meta.label}
         </span>
     );
