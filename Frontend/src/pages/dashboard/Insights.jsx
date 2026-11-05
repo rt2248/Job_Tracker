@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import useInsights from "../../hooks/useInsights";
-import Card from "../../components/shared/Card";
 import Button from "../../components/shared/Button";
 import ThemeToggleButton from "../../components/shared/ThemeToggleButton";
 import StatusBadge from "../../components/applications_page/StatusBadge";
@@ -9,6 +8,7 @@ import {
   PipelineDistributionChart,
   PipelineDistributionDetails,
   SkillFitChart,
+  MetricCard,
 } from "../../components/insights";
 import { cn } from "../../utils/cn";
 
@@ -83,14 +83,9 @@ export default function Insights() {
       {/* 1. Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6 shrink-0">
         <div>
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight">
-              Insights & Analytics
-            </h1>
-            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-sans font-medium bg-cyan/10 text-cyan border border-cyan/25">
-              Live Opportunity Telemetry
-            </span>
-          </div>
+          <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight">
+            Insights & Analytics
+          </h1>
           <p className="text-muted text-xs sm:text-sm mt-1 font-sans max-w-2xl">
             Real-time pipeline metrics, submission momentum, stage conversion distributions, and skill matching generated from your tracked opportunities.
           </p>
@@ -179,49 +174,37 @@ export default function Insights() {
                 All-Time Cumulative Volume
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                <Card className="p-3.5 sm:p-4 bg-surface border-border-primary">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted text-xs font-sans font-medium">Tracked</span>
-                    <span className="w-2 h-2 rounded-full bg-slate-400" aria-hidden="true" />
-                  </div>
-                  <p className="font-mono text-2xl sm:text-3xl font-bold text-ink mt-2">
-                    {volumeMetrics.trackedOpportunities}
-                  </p>
-                  <p className="text-[11px] text-muted font-sans mt-0.5">Total added to tracker</p>
-                </Card>
+                <MetricCard
+                  label="Tracked"
+                  value={volumeMetrics.trackedOpportunities}
+                  description="Total added to tracker"
+                  indicatorColor="bg-slate-400"
+                  valueColor="text-ink"
+                />
 
-                <Card className="p-3.5 sm:p-4 bg-surface border-border-primary">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted text-xs font-sans font-medium">Submitted</span>
-                    <span className="w-2 h-2 rounded-full bg-cyan" aria-hidden="true" />
-                  </div>
-                  <p className="font-mono text-2xl sm:text-3xl font-bold text-cyan mt-2">
-                    {volumeMetrics.submittedApplications}
-                  </p>
-                  <p className="text-[11px] text-muted font-sans mt-0.5">Non-saved applications</p>
-                </Card>
+                <MetricCard
+                  label="Submitted"
+                  value={volumeMetrics.submittedApplications}
+                  description="Non-saved applications"
+                  indicatorColor="bg-cyan"
+                  valueColor="text-cyan"
+                />
 
-                <Card className="p-3.5 sm:p-4 bg-surface border-border-primary">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted text-xs font-sans font-medium">Cumulative Offers</span>
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" aria-hidden="true" />
-                  </div>
-                  <p className="font-mono text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">
-                    {volumeMetrics.cumulativeOffers}
-                  </p>
-                  <p className="text-[11px] text-muted font-sans mt-0.5">Offer + Accepted</p>
-                </Card>
+                <MetricCard
+                  label="Cumulative Offers"
+                  value={volumeMetrics.cumulativeOffers}
+                  description="Offer + Accepted"
+                  indicatorColor="bg-emerald-500"
+                  valueColor="text-emerald-600 dark:text-emerald-400"
+                />
 
-                <Card className="p-3.5 sm:p-4 bg-surface border-border-primary">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted text-xs font-sans font-medium">Rejections</span>
-                    <span className="w-2 h-2 rounded-full bg-red" aria-hidden="true" />
-                  </div>
-                  <p className="font-mono text-2xl sm:text-3xl font-bold text-red mt-2">
-                    {volumeMetrics.cumulativeRejections}
-                  </p>
-                  <p className="text-[11px] text-muted font-sans mt-0.5">Closed without offer</p>
-                </Card>
+                <MetricCard
+                  label="Rejections"
+                  value={volumeMetrics.cumulativeRejections}
+                  description="Closed without offer"
+                  indicatorColor="bg-red"
+                  valueColor="text-red"
+                />
               </div>
             </div>
 
@@ -232,38 +215,29 @@ export default function Insights() {
                 Current Pipeline State
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <Card className="p-3.5 sm:p-4 bg-surface border-border-primary">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted text-xs font-sans font-medium">Active in Pipeline</span>
-                    <span className="w-2 h-2 rounded-full bg-cyan" aria-hidden="true" />
-                  </div>
-                  <p className="font-mono text-2xl sm:text-3xl font-bold text-ink mt-2">
-                    {snapshotMetrics.activeInPipeline}
-                  </p>
-                  <p className="text-[11px] text-muted font-sans mt-0.5">Applied, OA &amp; Interview</p>
-                </Card>
+                <MetricCard
+                  label="Active in Pipeline"
+                  value={snapshotMetrics.activeInPipeline}
+                  description="Applied, OA &amp; Interview"
+                  indicatorColor="bg-cyan"
+                  valueColor="text-ink"
+                />
 
-                <Card className="p-3.5 sm:p-4 bg-surface border-border-primary">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted text-xs font-sans font-medium">Interviews in Progress</span>
-                    <span className="w-2 h-2 rounded-full bg-amber-400 dark:bg-yellow-400" aria-hidden="true" />
-                  </div>
-                  <p className="font-mono text-2xl sm:text-3xl font-bold text-amber-500 dark:text-yellow-400 mt-2">
-                    {snapshotMetrics.interviewsInProgress}
-                  </p>
-                  <p className="text-[11px] text-muted font-sans mt-0.5">Active interview rounds</p>
-                </Card>
+                <MetricCard
+                  label="Interviews in Progress"
+                  value={snapshotMetrics.interviewsInProgress}
+                  description="Active interview rounds"
+                  indicatorColor="bg-amber-400 dark:bg-yellow-400"
+                  valueColor="text-amber-500 dark:text-yellow-400"
+                />
 
-                <Card className="p-3.5 sm:p-4 bg-surface border-border-primary">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted text-xs font-sans font-medium">Pending Offers</span>
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" aria-hidden="true" />
-                  </div>
-                  <p className="font-mono text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">
-                    {snapshotMetrics.pendingOffers}
-                  </p>
-                  <p className="text-[11px] text-muted font-sans mt-0.5">Awaiting decision</p>
-                </Card>
+                <MetricCard
+                  label="Pending Offers"
+                  value={snapshotMetrics.pendingOffers}
+                  description="Awaiting decision"
+                  indicatorColor="bg-emerald-500"
+                  valueColor="text-emerald-600 dark:text-emerald-400"
+                />
               </div>
             </div>
           </section>
@@ -299,7 +273,7 @@ export default function Insights() {
           {/* 4. Static Pipeline Information (Spans Full Available Width Beneath Both Charts) */}
           <section aria-labelledby="pipeline-details-heading">
             <h2 id="pipeline-details-heading" className="sr-only">
-              Pipeline Stage Breakdown and Legend
+              Pipeline Stage Breakdown
             </h2>
             <PipelineDistributionDetails
               pipelineData={pipeline}
@@ -316,15 +290,12 @@ export default function Insights() {
             {/* Rule-Based Recommendations */}
             <div className="bg-surface border border-border-primary rounded-xl p-4 sm:p-6 flex flex-col">
               <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <h3 id="recommendations-heading" className="font-display text-ink text-base sm:text-lg font-semibold leading-tight">
-                    Smart Recommendations
-                  </h3>
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-mono font-medium bg-surface-secondary text-ink-secondary border border-border-subtle">
-                    {ruleBasedInsights.length}
-                  </span>
-                </div>
-                <span className="text-xs text-muted">Rule-based signals</span>
+                <h3 id="recommendations-heading" className="font-display text-ink text-base sm:text-lg font-semibold leading-tight">
+                  Smart Recommendations
+                </h3>
+                <span className="text-xs text-muted">
+                  {ruleBasedInsights.length} {ruleBasedInsights.length === 1 ? "rule-based signal" : "rule-based signals"}
+                </span>
               </div>
 
               {ruleBasedInsights.length > 0 ? (

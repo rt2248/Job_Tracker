@@ -17,15 +17,15 @@ const JobSearch = () => {
                     {/* Header Section */}
                     <div className="flex items-start justify-between gap-4 mb-6">
                         <div>
-                            <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight flex items-baseline gap-2.5">
+                            <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight">
                                 Job Discovery
-                                {listings && listings.length > 0 && (
-                                    <span className="font-mono text-xs sm:text-sm font-medium text-cyan">
-                                        ({listings.length} {listings.length === 1 ? "listing" : "listings"})
-                                    </span>
-                                )}
                             </h1>
-                            <p className="text-muted text-xs sm:text-sm mt-0.5 font-sans">
+                            {listings && listings.length > 0 && (
+                                <p className="font-mono text-xs sm:text-sm font-bold text-cyan mt-1">
+                                    {listings.length} {listings.length === 1 ? "listing" : "listings"}
+                                </p>
+                            )}
+                            <p className="text-muted text-xs sm:text-sm mt-1 font-sans">
                                 Explore and filter available career opportunities.
                             </p>
                         </div>

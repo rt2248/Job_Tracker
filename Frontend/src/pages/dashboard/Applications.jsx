@@ -65,15 +65,15 @@ const Applications = () => {
           {/* Header Section */}
           <div className="flex items-start justify-between gap-4 mb-6">
             <div>
-              <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight flex items-baseline gap-2.5">
+              <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight">
                 All Applications
-                {jobs && jobs.length > 0 && (
-                  <span className="font-mono text-xs sm:text-sm font-medium text-cyan">
-                    ({filteredJobs.length} {filteredJobs.length === 1 ? "record" : "records"})
-                  </span>
-                )}
               </h1>
-              <p className="text-muted text-xs sm:text-sm mt-0.5 font-sans">
+              {jobs && jobs.length > 0 && (
+                <p className="font-mono text-xs sm:text-sm font-bold text-cyan mt-1">
+                  {filteredJobs.length} {filteredJobs.length === 1 ? "record" : "records"}
+                </p>
+              )}
+              <p className="text-muted text-xs sm:text-sm mt-1 font-sans">
                 Comprehensive record of your active and historical job applications.
               </p>
             </div>

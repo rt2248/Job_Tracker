@@ -20,6 +20,7 @@ const {
   ERROR_TYPES,
   classify429Error,
   parseRateLimitHeaders,
+  parseResetTimeToMs,
 } = require("./groqClient");
 const { MetricsReporter } = require("./metricsReporter");
 
@@ -87,8 +88,26 @@ async function runTests() {
     assert.strictEqual(res, ERROR_TYPES.RATE_LIMITED);
   });
 
-  it("classifies explicit daily quota exhaustion as QUOTA_EXHAUSTED", () => {
+  it("classifies Stage 2A.10 live Groq 429 TPM error containing billing URL as RATE_LIMITED (defect fix)", () => {
+    const exactStage2A10Error = "Rate limit reached for model openai/gpt-oss-120b in organization org_01m6k0jtmyenc976m6w4n2qcsx service tier on_demand on tokens per minute (TPM): Limit 8000, Used 6092, Requested 4059. Please try again in 16.1325s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing";
+    const res = classify429Error(exactStage2A10Error);
+    assert.strictEqual(res, ERROR_TYPES.RATE_LIMITED, "Live Groq 429 TPM error with billing URL must classify as RATE_LIMITED, not QUOTA_EXHAUSTED");
+  });
+
+  it("strips generic URLs so documentation and upgrade links do not trigger false quota exhaustion", () => {
+    const msgWithDocLink = "Rate limit reached: please try again in 10s. Read our documentation at https://console.groq.com/docs/billing-and-quotas";
+    const res = classify429Error(msgWithDocLink);
+    assert.strictEqual(res, ERROR_TYPES.RATE_LIMITED);
+  });
+
+  it("classifies explicit daily request quota exhaustion as QUOTA_EXHAUSTED", () => {
     const msg = "You exceeded your current quota: requests_per_day limit 14400 reached for project.";
+    const res = classify429Error(msg);
+    assert.strictEqual(res, ERROR_TYPES.QUOTA_EXHAUSTED);
+  });
+
+  it("classifies explicit daily token quota exhaustion as QUOTA_EXHAUSTED", () => {
+    const msg = "Daily quota exceeded on tokens_per_day for model openai/gpt-oss-120b: Limit 500000, Used 500000. Reset in 12h.";
     const res = classify429Error(msg);
     assert.strictEqual(res, ERROR_TYPES.QUOTA_EXHAUSTED);
   });
@@ -101,6 +120,12 @@ async function runTests() {
 
   it("defaults ambiguous 429 responses to RATE_LIMITED without false daily quota claims", () => {
     const res = classify429Error("Too Many Requests");
+    assert.strictEqual(res, ERROR_TYPES.RATE_LIMITED);
+  });
+
+  it("defaults ambiguous 429 JSON objects without daily indicators to RATE_LIMITED", () => {
+    const details = { error: { message: "Too many concurrent requests", type: "rate_limit_error" } };
+    const res = classify429Error("Too many requests", details);
     assert.strictEqual(res, ERROR_TYPES.RATE_LIMITED);
   });
 
@@ -160,6 +185,17 @@ async function runTests() {
     assert.strictEqual(telemetry.remainingTokens, "unavailable");
     assert.strictEqual(telemetry.resetRequests, "unavailable");
     assert.strictEqual(telemetry.resetTokens, "unavailable");
+  });
+
+  it("parses rate limit reset time strings across all standard provider formats", () => {
+    assert.strictEqual(parseResetTimeToMs("500ms"), 500);
+    assert.strictEqual(parseResetTimeToMs("16.1325s"), 16133);
+    assert.strictEqual(parseResetTimeToMs("45.69s"), 45690);
+    assert.strictEqual(parseResetTimeToMs("2m"), 120000);
+    assert.strictEqual(parseResetTimeToMs("1m30s"), 90000);
+    assert.strictEqual(parseResetTimeToMs("unavailable"), 0);
+    assert.strictEqual(parseResetTimeToMs(null), 0);
+    assert.strictEqual(parseResetTimeToMs(""), 0);
   });
 
   // ---------------------------------------------------------------------------

@@ -8,3 +8,4 @@ export { default as RadialProgress } from "./RadialProgress";
 export { default as EmptyStateVisual } from "./EmptyStateVisual";
 export { default as ChartLegend } from "./ChartLegend";
 export { default as SegmentedBar } from "./SegmentedBar";
+export { default as MetricCard } from "./MetricCard";

@@ -127,13 +127,13 @@ const Dashboard = () => {
           {/* Dashboard Header Section */}
           <div className="flex items-start justify-between gap-4 mb-6 shrink-0">
             <div>
-              <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight flex items-baseline gap-2.5">
+              <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight">
                 Application Pipeline
-                <span className="font-mono text-xs sm:text-sm font-medium text-cyan">
-                  ({metrics.active} active)
-                </span>
               </h1>
-              <p className="text-muted text-xs sm:text-sm mt-0.5 font-sans">
+              <p className="font-mono text-xs sm:text-sm font-bold text-cyan mt-1">
+                {metrics.active} active
+              </p>
+              <p className="text-muted text-xs sm:text-sm mt-1 font-sans">
                 Track, manage, and move your career opportunities through each stage.
               </p>
             </div>

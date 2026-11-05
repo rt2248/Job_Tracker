@@ -73,26 +73,13 @@ export default function SkillFitChart({
       aria-label="Skill-fit analysis"
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
-        <div>
-          <div className="flex items-center gap-2">
-            <h3 className="font-display text-ink text-base sm:text-lg font-semibold leading-tight">
-              Skill-Fit Analysis
-            </h3>
-            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-mono font-medium bg-cyan/10 text-cyan border border-cyan/25">
-              {coverage.listingLinkedJobs} of {coverage.totalTrackedJobs} evaluated
-            </span>
-          </div>
-          <p className="text-xs text-muted mt-0.5">
-            Automated keyword matching of job listing requirements against your declared profile skills
-          </p>
-        </div>
-
-        {/* Coverage Percentage Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-surface-secondary border border-border-subtle self-start sm:self-auto text-xs">
-          <span className="text-muted font-sans">Coverage:</span>
-          <span className="font-mono font-bold text-ink">{coverage.coveragePercentage}%</span>
-        </div>
+      <div className="mb-5">
+        <h3 className="font-display text-ink text-base sm:text-lg font-semibold leading-tight">
+          Skill-Fit Analysis
+        </h3>
+        <p className="text-xs text-muted mt-0.5">
+          Automated keyword matching across {coverage.listingLinkedJobs} of {coverage.totalTrackedJobs} evaluated opportunities against your declared profile skills
+        </p>
       </div>
 
       {/* Declared Profile Skills Pills */}

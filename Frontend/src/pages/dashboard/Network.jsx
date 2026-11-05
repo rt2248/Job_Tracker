@@ -14,7 +14,7 @@ const Network = () => {
             <h1 className="font-display text-xl sm:text-2xl text-ink font-semibold tracking-tight">
               Professional Network
             </h1>
-            <p className="text-muted text-xs sm:text-sm mt-0.5 font-sans">
+            <p className="text-muted text-xs sm:text-sm mt-1 font-sans">
               Track contacts, referrals, and recruiters connected to your job search.
             </p>
           </div>

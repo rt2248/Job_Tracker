@@ -26,13 +26,16 @@
 const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, "../../.env") });
 
-const { GroqClient, DEFAULT_MODEL, ERROR_TYPES } = require("./groqClient");
+const { GroqClient, DEFAULT_MODEL, ERROR_TYPES, parseResetTimeToMs } = require("./groqClient");
 const { SYNTHETIC_SCENARIOS } = require("./syntheticProfiles");
 const { buildAssessmentPrompt } = require("./promptBuilder");
 const { MetricsReporter } = require("./metricsReporter");
 
-// Pacing interval between scenarios (ms) to maintain safe RPM/TPM margins
-const REQUEST_PACING_MS = 2000;
+// Default pacing interval between scenarios (ms) to maintain safe RPM/TPM margins.
+// Groq enforces an 8,000 TPM limit on openai/gpt-oss-120b in the on-demand tier.
+// 65,000ms ensures the 60-second sliding token window resets completely before each invocation.
+const DEFAULT_LIVE_PACING_MS = 65000;
+const DEFAULT_DRY_RUN_PACING_MS = 0;
 
 async function runHarness() {
   const args = process.argv.slice(2);
@@ -41,25 +44,65 @@ async function runHarness() {
   const simulate429 = args.includes("--simulate-429");
   const simulateQuota = args.includes("--simulate-quota");
   const scenarioArg = args.find((a) => a.startsWith("--scenario="));
+  const resumeFromArg = args.find((a) => a.startsWith("--resume-from=") || a.startsWith("--from="));
   const modelArg = args.find((a) => a.startsWith("--model="));
+  const pacingArg = args.find((a) => a.startsWith("--pacing=") || a.startsWith("--pacing-ms="));
 
   const targetModel = modelArg
     ? modelArg.split("=")[1].trim()
     : process.env.GROQ_MODEL || DEFAULT_MODEL;
 
+  let requestPacingMs = pacingArg
+    ? parseInt(pacingArg.split("=")[1].trim(), 10)
+    : (forceDryRun ? DEFAULT_DRY_RUN_PACING_MS : DEFAULT_LIVE_PACING_MS);
+
   let selectedScenarios = SYNTHETIC_SCENARIOS;
 
-  if (scenarioArg) {
-    const rawVal = scenarioArg.split("=")[1].trim();
-    const scenarioNum = parseInt(rawVal.replace(/^scenario-?/i, ""), 10);
-    const targetId = `SCENARIO-${scenarioNum}`;
-    const matched = SYNTHETIC_SCENARIOS.filter((s) => s.id === targetId || s.id === rawVal.toUpperCase());
-    if (matched.length > 0) {
-      selectedScenarios = matched;
+  if (resumeFromArg) {
+    const rawVal = resumeFromArg.split("=")[1].trim();
+    const fromNum = parseInt(rawVal.replace(/^scenario-?/i, ""), 10);
+    if (!isNaN(fromNum) && fromNum >= 1 && fromNum <= SYNTHETIC_SCENARIOS.length) {
+      selectedScenarios = SYNTHETIC_SCENARIOS.filter((_, idx) => (idx + 1) >= fromNum);
     } else {
-      console.error(`[Error] Unknown scenario argument: ${rawVal}. Valid options: 1 to 7.`);
+      console.error(`[Error] Invalid resume-from argument: ${rawVal}. Valid options: 1 to ${SYNTHETIC_SCENARIOS.length}.`);
       process.exitCode = 1;
       return;
+    }
+  } else if (scenarioArg) {
+    const rawVal = scenarioArg.split("=")[1].trim();
+    const rangeMatch = rawVal.match(/^(\d+)\.\.(\d+)$/) || rawVal.match(/^(\d+)-(\d+)$/);
+
+    if (rangeMatch) {
+      const start = parseInt(rangeMatch[1], 10);
+      const end = parseInt(rangeMatch[2], 10);
+      selectedScenarios = SYNTHETIC_SCENARIOS.filter((_, idx) => {
+        const num = idx + 1;
+        return num >= start && num <= end;
+      });
+      if (selectedScenarios.length === 0) {
+        console.error(`[Error] Scenario range ${rawVal} matched no scenarios. Valid range: 1 to ${SYNTHETIC_SCENARIOS.length}.`);
+        process.exitCode = 1;
+        return;
+      }
+    } else if (rawVal.includes(",")) {
+      const nums = rawVal.split(",").map((v) => parseInt(v.trim().replace(/^scenario-?/i, ""), 10));
+      selectedScenarios = SYNTHETIC_SCENARIOS.filter((_, idx) => nums.includes(idx + 1));
+      if (selectedScenarios.length === 0) {
+        console.error(`[Error] Scenario list ${rawVal} matched no scenarios.`);
+        process.exitCode = 1;
+        return;
+      }
+    } else {
+      const scenarioNum = parseInt(rawVal.replace(/^scenario-?/i, ""), 10);
+      const targetId = `SCENARIO-${scenarioNum}`;
+      const matched = SYNTHETIC_SCENARIOS.filter((s) => s.id === targetId || s.id === rawVal.toUpperCase());
+      if (matched.length > 0) {
+        selectedScenarios = matched;
+      } else {
+        console.error(`[Error] Unknown scenario argument: ${rawVal}. Valid options: 1 to ${SYNTHETIC_SCENARIOS.length}.`);
+        process.exitCode = 1;
+        return;
+      }
     }
   }
 
@@ -71,8 +114,8 @@ async function runHarness() {
   console.log("==========================================================================================");
   console.log(`• Target Provider:        GroqCloud (https://api.groq.com/openai/v1)`);
   console.log(`• Target Model:           ${targetModel}`);
-  console.log(`• Scenarios to Run:       ${selectedScenarios.length} scenario(s)`);
-  console.log(`• Pacing Between Calls:   ${REQUEST_PACING_MS}ms (RPM safety pacing)`);
+  console.log(`• Scenarios to Run:       ${selectedScenarios.length} scenario(s) (${selectedScenarios.map((s) => s.id).join(", ")})`);
+  console.log(`• Pacing Between Calls:   ${requestPacingMs}ms (TPM sliding-window reset pacing)`);
   console.log(`• Execution Mode:         ${forceDryRun ? "MANUAL DRY-RUN (--dry-run flag active)" : `LIVE GROQ INFERENCE (${targetModel})`}`);
 
   // PRE-FLIGHT VERIFICATION
@@ -117,6 +160,7 @@ async function runHarness() {
   const isLiveExecution = preflight.accessible && !forceDryRun;
   let stopEncountered = false;
   let stopReason = null;
+  let lastRateLimits = null;
 
   for (let i = 0; i < selectedScenarios.length; i++) {
     const scenario = selectedScenarios[i];
@@ -159,8 +203,10 @@ async function runHarness() {
     if (isLiveExecution) {
       // Live execution via GroqCloud
       if (i > 0) {
-        console.log(`  [Pacing] Waiting ${REQUEST_PACING_MS}ms for RPM compliance...`);
-        await new Promise((r) => setTimeout(r, REQUEST_PACING_MS));
+        const headerWaitMs = parseResetTimeToMs(lastRateLimits?.resetTokens);
+        const effectiveWaitMs = Math.max(requestPacingMs, headerWaitMs);
+        console.log(`  [Pacing] Waiting ${(effectiveWaitMs / 1000).toFixed(1)}s for TPM sliding window (configured: ${requestPacingMs}ms, header reset: ${lastRateLimits?.resetTokens || "unavailable"})...`);
+        await new Promise((r) => setTimeout(r, effectiveWaitMs));
       }
 
       const apiResult = await client.generateAssessment({ systemPrompt, userPrompt });
@@ -169,6 +215,7 @@ async function runHarness() {
       usage = apiResult.usage || usage;
       errorType = apiResult.errorType;
       rateLimits = apiResult.rateLimits || null;
+      lastRateLimits = rateLimits;
 
       if (apiResult.success && apiResult.data) {
         assessment = apiResult.data;

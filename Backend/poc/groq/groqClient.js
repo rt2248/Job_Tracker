@@ -43,31 +43,71 @@ const ERROR_TYPES = {
 /**
  * Distinguishes temporary RPM/TPM rate limits from explicit daily/account quota exhaustion.
  *
+ * Stage 2A.11 Corrections:
+ * - Strips generic URLs (e.g. "https://console.groq.com/settings/billing") so upgrade links
+ *   do not falsely trigger quota or billing classification.
+ * - Explicit TPM/RPM rate limits are classified as RATE_LIMITED (e.g. tokens per minute, requests per minute).
+ * - Explicit daily request or token quota exhaustion is classified as QUOTA_EXHAUSTED.
+ * - Explicit credit or billing exhaustion is classified as QUOTA_EXHAUSTED when not part of an RPM/TPM message.
+ * - Ambiguous 429 responses default to RATE_LIMITED.
+ *
  * @param {string} [errorMessage=""]
  * @param {Object} [errorDetails=null]
  * @returns {string} One of ERROR_TYPES.QUOTA_EXHAUSTED or ERROR_TYPES.RATE_LIMITED
  */
 function classify429Error(errorMessage = "", errorDetails = null) {
-  const text = (
-    String(errorMessage) + " " + JSON.stringify(errorDetails || {})
-  ).toLowerCase();
+  const rawText = String(errorMessage) + " " + JSON.stringify(errorDetails || {});
 
-  // Explicit daily quota, account credit, or project exhaustion indicators
-  if (
-    text.includes("daily") ||
-    text.includes("quota exceeded") ||
-    text.includes("exceeded your current quota") ||
-    text.includes("credit") ||
-    text.includes("billing") ||
-    text.includes("limit: 14400") ||
-    text.includes("requests_per_day") ||
-    text.includes("tokens_per_day") ||
-    text.includes("rpd")
-  ) {
+  // 1. Strip URLs (e.g., https://console.groq.com/settings/billing) so documentation and upgrade links
+  // do not falsely trigger billing or quota keywords
+  const textWithoutUrls = rawText.replace(/https?:\/\/[^\s"'>]+/gi, "").toLowerCase();
+
+  // 2. Explicit TPM/RPM rate limits take precedence over general keywords
+  const isTpmOrRpm =
+    textWithoutUrls.includes("tokens per minute") ||
+    textWithoutUrls.includes("(tpm)") ||
+    textWithoutUrls.includes("requests per minute") ||
+    textWithoutUrls.includes("(rpm)") ||
+    textWithoutUrls.includes("rate limit reached") ||
+    textWithoutUrls.includes("try again in") ||
+    textWithoutUrls.includes("please try again");
+
+  // 3. Explicit daily quota exhaustion indicators
+  const isDailyQuota =
+    textWithoutUrls.includes("requests_per_day") ||
+    textWithoutUrls.includes("tokens_per_day") ||
+    textWithoutUrls.includes("daily request limit") ||
+    textWithoutUrls.includes("daily limit") ||
+    textWithoutUrls.includes("daily quota") ||
+    textWithoutUrls.includes("limit: 14400") ||
+    textWithoutUrls.includes("rpd");
+
+  // 4. Explicit credit or billing exhaustion indicators (ignoring stripped upgrade links)
+  const isCreditExhausted =
+    textWithoutUrls.includes("insufficient_quota") ||
+    textWithoutUrls.includes("credit expired") ||
+    textWithoutUrls.includes("credit limit exceeded") ||
+    textWithoutUrls.includes("exceeded your current quota") ||
+    textWithoutUrls.includes("quota exceeded") ||
+    textWithoutUrls.includes("account suspended") ||
+    textWithoutUrls.includes("billing account");
+
+  // If explicit daily quota is present, classify as QUOTA_EXHAUSTED
+  if (isDailyQuota) {
     return ERROR_TYPES.QUOTA_EXHAUSTED;
   }
 
-  // Otherwise, temporary rate limiting (RPM, TPM, or burst limits)
+  // If explicit credit or billing exhaustion is present and NOT an explicit TPM/RPM message
+  if (isCreditExhausted && !isTpmOrRpm) {
+    return ERROR_TYPES.QUOTA_EXHAUSTED;
+  }
+
+  // If explicit TPM/RPM limit was detected, classify as RATE_LIMITED
+  if (isTpmOrRpm) {
+    return ERROR_TYPES.RATE_LIMITED;
+  }
+
+  // 5. Default ambiguous 429 responses to RATE_LIMITED
   return ERROR_TYPES.RATE_LIMITED;
 }
 
@@ -892,10 +932,41 @@ class GroqClient {
   }
 }
 
+/**
+ * Parses header reset intervals (e.g., "45.69s", "500ms", "1m30s", "2m") into milliseconds.
+ *
+ * @param {string|null} timeStr
+ * @returns {number} Wait time in milliseconds (0 if unavailable or invalid)
+ */
+function parseResetTimeToMs(timeStr) {
+  if (!timeStr || typeof timeStr !== "string" || timeStr === "unavailable") {
+    return 0;
+  }
+  const str = timeStr.trim().toLowerCase();
+  if (str.endsWith("ms")) {
+    return Math.round(parseFloat(str) || 0);
+  }
+  if (str.includes("m") && str.includes("s")) {
+    const parts = str.split("m");
+    const minutes = parseFloat(parts[0]) || 0;
+    const seconds = parseFloat(parts[1]) || 0;
+    return Math.round((minutes * 60 + seconds) * 1000);
+  }
+  if (str.endsWith("m")) {
+    return Math.round((parseFloat(str) || 0) * 60 * 1000);
+  }
+  if (str.endsWith("s")) {
+    return Math.round((parseFloat(str) || 0) * 1000);
+  }
+  const numeric = parseFloat(str);
+  return isNaN(numeric) ? 0 : Math.round(numeric * 1000);
+}
+
 module.exports = {
   GroqClient,
   DEFAULT_MODEL,
   ERROR_TYPES,
   classify429Error,
   parseRateLimitHeaders,
+  parseResetTimeToMs,
 };

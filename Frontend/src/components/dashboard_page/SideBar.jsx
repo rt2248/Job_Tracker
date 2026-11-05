@@ -378,7 +378,7 @@ const SideBar = ({
                             "w-full flex items-center rounded-xl transition-all duration-150 outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-neutral-400 select-none",
                             isSidebarOpen
                                 ? "gap-2.5 p-2 hover:bg-neutral-100/80 hover:border-neutral-300 text-left"
-                                : "justify-center p-1.5 hover:bg-neutral-100/80 border border-transparent",
+                                : "justify-center p-1.5",
                             isProfileMenuOpen && "bg-neutral-200/90 border-neutral-400 ring-1 ring-neutral-400/30"
                         )}
                     >

@@ -202,7 +202,6 @@ export default function PipelineDistributionChart({
 
   const snapshotTotal = pipelineData?.snapshotTotal ?? 0;
   const activeSegment = pipelineData?.activeSegment ?? { totalActive: 0, stages: [] };
-  const closedSegment = pipelineData?.closedSegment ?? { totalClosed: 0, stages: [] };
 
   // Combine stages with display metadata for Recharts Pie chart (non-zero slices only)
   const pieSlices = useMemo(() => {
@@ -260,10 +259,6 @@ export default function PipelineDistributionChart({
     );
   }
 
-  // Calculate percentage shares of total
-  const activePct = ((activeSegment.totalActive / snapshotTotal) * 100).toFixed(1);
-  const closedPct = ((closedSegment.totalClosed / snapshotTotal) * 100).toFixed(1);
-
   return (
     <div
       className={cn(
@@ -275,37 +270,13 @@ export default function PipelineDistributionChart({
     >
       <div>
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="font-display text-ink text-base sm:text-lg font-semibold leading-tight">
-                Application Pipeline Distribution
-              </h3>
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-mono font-medium bg-surface-secondary text-ink-secondary border border-border-subtle">
-                {snapshotTotal} total tracked
-              </span>
-            </div>
-            <p className="text-xs text-muted mt-0.5">
-              Current point-in-time distribution of opportunities across stages
-            </p>
-          </div>
-
-          {/* High-level Segment Summary Badges */}
-          <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan/10 border border-cyan/25 text-xs">
-              <span className="w-2 h-2 rounded-full bg-cyan shrink-0" aria-hidden="true" />
-              <span className="font-sans text-ink-secondary">Active:</span>
-              <span className="font-mono font-bold text-cyan">{activeSegment.totalActive}</span>
-              <span className="text-muted text-[11px] font-mono">({activePct}%)</span>
-            </div>
-
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-secondary border border-border-subtle text-xs">
-              <span className="w-2 h-2 rounded-full bg-slate-400 shrink-0" aria-hidden="true" />
-              <span className="font-sans text-ink-secondary">Closed:</span>
-              <span className="font-mono font-bold text-ink">{closedSegment.totalClosed}</span>
-              <span className="text-muted text-[11px] font-mono">({closedPct}%)</span>
-            </div>
-          </div>
+        <div className="mb-4">
+          <h3 className="font-display text-ink text-base sm:text-lg font-semibold leading-tight">
+            Application Pipeline Distribution
+          </h3>
+          <p className="text-xs text-muted mt-0.5">
+            Current point-in-time distribution of opportunities across stages
+          </p>
         </div>
 
         {/* Distinction Callout: Active Segment vs Evaluation-Only Metric */}
@@ -427,7 +398,6 @@ export function PipelineDistributionDetails({
   }
 
   const {
-    snapshotTotal = 0,
     activeSegment = { totalActive: 0, stages: [] },
     closedSegment = { totalClosed: 0, stages: [] },
     disclaimer = "This represents a point-in-time snapshot of current application stages, not a historical cohort conversion funnel.",
@@ -436,9 +406,6 @@ export function PipelineDistributionDetails({
   const activeStages = activeSegment.stages || [];
   const closedStages = closedSegment.stages || [];
 
-  const activePct = ((activeSegment.totalActive / snapshotTotal) * 100).toFixed(1);
-  const closedPct = ((closedSegment.totalClosed / snapshotTotal) * 100).toFixed(1);
-
   return (
     <div
       className={cn(
@@ -446,158 +413,12 @@ export function PipelineDistributionDetails({
         className
       )}
       role="region"
-      aria-label="Application pipeline stage breakdown and legend"
+      aria-label="Current pipeline overview"
     >
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
-        <div>
-          <div className="flex items-center gap-2">
-            <h3 className="font-display text-ink text-base sm:text-lg font-semibold leading-tight">
-              Pipeline Stage Breakdown &amp; Legend
-            </h3>
-            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-mono font-medium bg-surface-secondary text-ink-secondary border border-border-subtle">
-              {snapshotTotal} total tracked
-            </span>
-          </div>
-          <p className="text-xs text-muted mt-0.5">
-            Detailed breakdown of opportunities across active evaluation stages and closed outcomes
-          </p>
-        </div>
-
-        {/* High-level Segment Summary Badges */}
-        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan/10 border border-cyan/25 text-xs">
-            <span className="w-2 h-2 rounded-full bg-cyan shrink-0" aria-hidden="true" />
-            <span className="font-sans text-ink-secondary">Active:</span>
-            <span className="font-mono font-bold text-cyan">{activeSegment.totalActive}</span>
-            <span className="text-muted text-[11px] font-mono">({activePct}%)</span>
-          </div>
-
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-secondary border border-border-subtle text-xs">
-            <span className="w-2 h-2 rounded-full bg-slate-400 shrink-0" aria-hidden="true" />
-            <span className="font-sans text-ink-secondary">Closed:</span>
-            <span className="font-mono font-bold text-ink">{closedSegment.totalClosed}</span>
-            <span className="text-muted text-[11px] font-mono">({closedPct}%)</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Clear, Identifiable Stage Legend (Active Pipeline vs Closed Outcomes) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4 rounded-xl bg-surface-secondary/30 border border-border-subtle mb-6">
-        {/* Active Pipeline Stages */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-xs pb-1 border-b border-border-subtle/80">
-            <span className="font-sans font-semibold text-ink flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-cyan shrink-0" aria-hidden="true" />
-              Active Pipeline
-            </span>
-            <span className="font-mono text-xs font-bold text-cyan">
-              {activeSegment.totalActive} ({activePct}%)
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-1.5 pt-1">
-            {activeStages.map((stage) => {
-              const meta = STAGE_META[stage.status] || {};
-              const isSelected = selectedStageKey === stage.status;
-              const isDimmed = selectedStageKey && !isSelected;
-
-              return (
-                <button
-                  key={`legend-act-${stage.status}`}
-                  type="button"
-                  onClick={() => setSelectedStageKey(isSelected ? null : stage.status)}
-                  className={cn(
-                    "flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all text-left select-none border",
-                    "hover:bg-surface-secondary/80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan/70",
-                    isSelected
-                      ? "bg-surface-secondary border-border-accent/40 shadow-sm ring-1 ring-border-accent/30 font-medium"
-                      : "bg-surface/60 border-transparent",
-                    isDimmed && "opacity-35"
-                  )}
-                  aria-label={`${stage.label}: ${stage.count} opportunities (${stage.percentage}%)`}
-                >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span
-                      className={cn(
-                        "p-1 rounded-md bg-surface border shrink-0",
-                        meta.accentBorder,
-                        meta.textColor
-                      )}
-                    >
-                      <StageShapeIcon shape={meta.shape} className={meta.textColor} />
-                    </span>
-                    <span className="font-sans text-xs text-ink-secondary truncate">
-                      {stage.label}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5 shrink-0 font-mono text-[11px] ml-2">
-                    <span className="font-bold text-ink">{stage.count}</span>
-                    <span className="text-muted">({stage.percentage}%)</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Closed Outcomes */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-xs pb-1 border-b border-border-subtle/80">
-            <span className="font-sans font-semibold text-ink flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-slate-400 shrink-0" aria-hidden="true" />
-              Closed Outcomes
-            </span>
-            <span className="font-mono text-xs font-bold text-ink">
-              {closedSegment.totalClosed} ({closedPct}%)
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
-            {closedStages.map((stage) => {
-              const meta = STAGE_META[stage.status] || {};
-              const isSelected = selectedStageKey === stage.status;
-              const isDimmed = selectedStageKey && !isSelected;
-
-              return (
-                <button
-                  key={`legend-cls-${stage.status}`}
-                  type="button"
-                  onClick={() => setSelectedStageKey(isSelected ? null : stage.status)}
-                  className={cn(
-                    "flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all text-left select-none border",
-                    "hover:bg-surface-secondary/80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan/70",
-                    isSelected
-                      ? "bg-surface-secondary border-border-accent/40 shadow-sm ring-1 ring-border-accent/30 font-medium"
-                      : "bg-surface/60 border-transparent",
-                    isDimmed && "opacity-35"
-                  )}
-                  aria-label={`${stage.label}: ${stage.count} opportunities (${stage.percentage}%)`}
-                >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span
-                      className={cn(
-                        "p-1 rounded-md bg-surface border shrink-0",
-                        meta.accentBorder,
-                        meta.textColor
-                      )}
-                    >
-                      <StageShapeIcon shape={meta.shape} className={meta.textColor} />
-                    </span>
-                    <span className="font-sans text-xs text-ink-secondary truncate">
-                      {stage.label}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5 shrink-0 font-mono text-[11px] ml-2">
-                    <span className="font-bold text-ink">{stage.count}</span>
-                    <span className="text-muted">({stage.percentage}%)</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      <h3 className="font-display text-ink text-base sm:text-lg font-semibold leading-tight mb-4">
+        Current Pipeline Overview
+      </h3>
 
       {/* Detailed Stage Cards Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">

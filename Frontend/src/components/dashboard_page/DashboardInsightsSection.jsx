@@ -1,9 +1,8 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import useInsights from "../../hooks/useInsights";
-import Card from "../shared/Card";
 import Button from "../shared/Button";
-import { SubmissionActivityChart } from "../insights";
+import { SubmissionActivityChart, MetricCard } from "../insights";
 import { cn } from "../../utils/cn";
 
 /**
@@ -124,60 +123,48 @@ export default function DashboardInsightsSection({ className }) {
           {/* B. Key Metrics (4 Compact Cards) */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
             {/* 1. Tracked Opportunities */}
-            <Card className="p-3 bg-surface border-border-subtle/80 hover:border-border-accent/30 transition-all">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-sans font-medium text-muted uppercase tracking-wider">
-                  Tracked
-                </span>
-                <span className="w-2 h-2 rounded-full bg-slate-400" aria-hidden="true" />
-              </div>
-              <p className="font-mono text-xl sm:text-2xl font-bold text-ink mt-1">
-                {volumeMetrics.trackedOpportunities}
-              </p>
-              <p className="text-[10px] text-muted font-sans mt-0.5">Total opportunities</p>
-            </Card>
+            <MetricCard
+              compact
+              label="Tracked"
+              value={volumeMetrics.trackedOpportunities}
+              description="Total opportunities"
+              indicatorColor="bg-slate-400"
+              valueColor="text-ink"
+              className="border-border-subtle/80 hover:border-border-accent/30"
+            />
 
             {/* 2. Submitted Applications */}
-            <Card className="p-3 bg-surface border-border-subtle/80 hover:border-border-accent/30 transition-all">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-sans font-medium text-muted uppercase tracking-wider">
-                  Submitted
-                </span>
-                <span className="w-2 h-2 rounded-full bg-cyan" aria-hidden="true" />
-              </div>
-              <p className="font-mono text-xl sm:text-2xl font-bold text-cyan mt-1">
-                {volumeMetrics.submittedApplications}
-              </p>
-              <p className="text-[10px] text-muted font-sans mt-0.5">Non-saved applications</p>
-            </Card>
+            <MetricCard
+              compact
+              label="Submitted"
+              value={volumeMetrics.submittedApplications}
+              description="Non-saved applications"
+              indicatorColor="bg-cyan"
+              valueColor="text-cyan"
+              className="border-border-subtle/80 hover:border-border-accent/30"
+            />
 
             {/* 3. Active in Pipeline */}
-            <Card className="p-3 bg-surface border-border-subtle/80 hover:border-border-accent/30 transition-all">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-sans font-medium text-muted uppercase tracking-wider">
-                  Active
-                </span>
-                <span className="w-2 h-2 rounded-full bg-amber" aria-hidden="true" />
-              </div>
-              <p className="font-mono text-xl sm:text-2xl font-bold text-ink mt-1">
-                {snapshotMetrics.activeInPipeline}
-              </p>
-              <p className="text-[10px] text-muted font-sans mt-0.5">Applied, OA &amp; Interview</p>
-            </Card>
+            <MetricCard
+              compact
+              label="Active"
+              value={snapshotMetrics.activeInPipeline}
+              description="Applied, OA &amp; Interview"
+              indicatorColor="bg-amber"
+              valueColor="text-ink"
+              className="border-border-subtle/80 hover:border-border-accent/30"
+            />
 
             {/* 4. Pending Offers */}
-            <Card className="p-3 bg-surface border-border-subtle/80 hover:border-border-accent/30 transition-all">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-sans font-medium text-muted uppercase tracking-wider">
-                  Offers
-                </span>
-                <span className="w-2 h-2 rounded-full bg-emerald-500" aria-hidden="true" />
-              </div>
-              <p className="font-mono text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
-                {snapshotMetrics.pendingOffers}
-              </p>
-              <p className="text-[10px] text-muted font-sans mt-0.5">Awaiting response</p>
-            </Card>
+            <MetricCard
+              compact
+              label="Offers"
+              value={snapshotMetrics.pendingOffers}
+              description="Awaiting response"
+              indicatorColor="bg-emerald-500"
+              valueColor="text-emerald-600 dark:text-emerald-400"
+              className="border-border-subtle/80 hover:border-border-accent/30"
+            />
           </div>
 
           {/* C & D: Submission Activity Preview & Actionable Insights Split */}

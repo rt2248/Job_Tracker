@@ -227,16 +227,11 @@ export default function SubmissionActivityChart({
       {/* Header with Title and Range Filters */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
         <div>
-          <div className="flex items-center gap-2">
-            <h3 className="font-display text-ink text-base sm:text-lg font-semibold leading-tight">
-              Submission Activity
-            </h3>
-            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-mono font-medium bg-cyan/10 text-cyan border border-cyan/25">
-              {totalSubmissions} {totalSubmissions === 1 ? "application" : "applications"}
-            </span>
-          </div>
+          <h3 className="font-display text-ink text-base sm:text-lg font-semibold leading-tight">
+            Submission Activity
+          </h3>
           <p className="text-xs text-muted mt-0.5">
-            Timeline of applications submitted to employers
+            Timeline of {totalSubmissions} {totalSubmissions === 1 ? "application" : "applications"} submitted to employers
           </p>
         </div>
 
