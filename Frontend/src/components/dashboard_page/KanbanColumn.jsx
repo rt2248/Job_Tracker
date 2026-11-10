@@ -14,7 +14,7 @@ const HEADER_ACCENT_CLASSES = {
     red: "border-t-red",
 };
 
-function KanbanColumn({ status, jobs = [], onCardClick, onDropCard, draggingCardId }) {
+function KanbanColumn({ status, jobs = [], onCardClick, onDropCard, draggingCardId, isHighlighted = false }) {
     const [isDragOver, setIsDragOver] = useState(false);
     const meta = STATUS_META[status] || { label: status, color: "muted" };
     const accentClass = HEADER_ACCENT_CLASSES[meta.color] || "border-t-cyan";
@@ -50,13 +50,15 @@ function KanbanColumn({ status, jobs = [], onCardClick, onDropCard, draggingCard
 
     return (
         <div
+            id={`kanban-col-${status}`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             className={cn(
                 "bg-surface/90 border border-border-primary border-t-2 rounded-2xl w-[280px] sm:w-80 shrink-0 flex flex-col max-h-full transition-all duration-200 card-3d",
                 accentClass,
-                isDragOver && "bg-surface-elevated border-cyan/60 ring-2 ring-cyan/30 scale-[1.01]"
+                isDragOver && "bg-surface-elevated border-cyan/60 ring-2 ring-cyan/30 scale-[1.01]",
+                isHighlighted && "ring-2 ring-cyan border-cyan shadow-md"
             )}
         >
             {/* Column Header */}
@@ -86,7 +88,7 @@ function KanbanColumn({ status, jobs = [], onCardClick, onDropCard, draggingCard
                 {jobs.length === 0 ? (
                     <div className={cn(
                         "flex flex-col items-center justify-center py-8 px-4 rounded-xl border border-dashed text-center transition-all my-auto",
-                        isDragOver ? "border-cyan/60 bg-cyan/10 text-cyan" : "border-border-subtle/80 text-muted/60"
+                        isDragOver ? "border-cyan/60 bg-cyan/10 text-cyan" : "border-border-subtle text-muted/60"
                     )}>
                         <p className="text-sm font-sans font-medium">
                             {isDragOver ? "Drop application here" : "No applications"}

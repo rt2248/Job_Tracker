@@ -67,8 +67,8 @@
   --lp-text: #f4f7fb;
   --lp-muted: #a2adbd;
   --lp-faint: #748196;
-  --lp-line: rgba(211, 226, 247, 0.13);
-  --lp-soft-line: rgba(211, 226, 247, 0.08);
+  --lp-line: rgba(211, 226, 247, 0.30);
+  --lp-soft-line: rgba(211, 226, 247, 0.22);
   --lp-blue: #a8d9ff;
   --lp-blue-strong: #5bb7f5;
   --lp-blue-wash: rgba(91, 183, 245, 0.11);
@@ -89,8 +89,8 @@
   --lp-text: #071321;
   --lp-muted: #42566b;
   --lp-faint: #60778d;
-  --lp-line: rgba(29, 78, 121, 0.19);
-  --lp-soft-line: rgba(29, 78, 121, 0.11);
+  --lp-line: #A5B5C9;
+  --lp-soft-line: #c2d1e0;
   --lp-blue: #17649b;
   --lp-blue-strong: #1478b8;
   --lp-blue-wash: rgba(62, 163, 230, 0.1);
@@ -120,6 +120,9 @@
 .landing-page [data-ui] { backdrop-filter: blur(14px); }
 .landing-page section[id], .landing-page section { scroll-margin-top: 5.5rem; }
 .landing-page ::selection { background: #a8d9ff; color: #071321; }
+.landing-page [class*='border-white/'] { border-color: var(--lp-line); }
+.landing-page input,
+.landing-page select { border-color: var(--lp-line); }
 
 .landing-page[data-theme='light'] .text-white,
 .landing-page[data-theme='light'] .text-white\/90,

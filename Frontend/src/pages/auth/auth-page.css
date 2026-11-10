@@ -9,8 +9,8 @@
   --auth-control-hover: #141a26;
   --auth-text: #f4f7fb;
   --auth-muted: #a2adbd;
-  --auth-border: rgba(211, 226, 247, 0.12);
-  --auth-wash: rgba(211, 226, 247, 0.06);
+  --auth-border: rgba(211, 226, 247, 0.32);
+  --auth-wash: rgba(211, 226, 247, 0.08);
   --auth-focus: rgba(91, 183, 245, 0.45);
   color: var(--auth-text);
   background: var(--auth-bg) !important;
@@ -49,8 +49,8 @@
   --auth-control-hover: #e1eef8;
   --auth-text: #0b1d2d;
   --auth-muted: #536b82;
-  --auth-border: rgba(29, 78, 121, 0.18);
-  --auth-wash: rgba(22, 91, 143, 0.055);
+  --auth-border: #A5B5C9;
+  --auth-wash: rgba(22, 91, 143, 0.06);
   --auth-focus: rgba(23, 100, 155, 0.34);
   color-scheme: light;
   color: var(--auth-text);
@@ -58,15 +58,15 @@
 }
 
 .auth-page[data-theme='light'] button:not(.auth-password-toggle) {
-  border-color: rgba(29, 78, 121, 0.26) !important;
+  border-color: #A5B5C9 !important;
 }
 
 .auth-page[data-theme='light'] button:not(.auth-password-toggle):hover {
-  border-color: rgba(29, 78, 121, 0.34) !important;
+  border-color: #8ea1b8 !important;
 }
 
 .auth-page[data-theme='light'] a[class*='border'] {
-  border-color: rgba(29, 78, 121, 0.26) !important;
+  border-color: #A5B5C9 !important;
 }
 
 .auth-page[data-theme='light'] .auth-sidebar-bg {

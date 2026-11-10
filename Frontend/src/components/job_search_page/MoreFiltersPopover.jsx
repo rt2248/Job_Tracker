@@ -104,7 +104,7 @@ function MoreFiltersPopover({ filters, updateFilter, onClose }) {
                                     className={cn(
                                         "px-2.5 py-1 rounded-lg text-xs sm:text-sm font-medium font-sans transition-all cursor-pointer border",
                                         isSelected
-                                            ? "bg-cyan/15 text-cyan border-cyan/40 shadow-xs"
+                                            ? "bg-cyan/15 text-cyan border-cyan/60 shadow-xs"
                                             : "bg-surface-secondary/70 text-muted hover:text-ink border-border-subtle hover:border-border-primary"
                                     )}
                                 >

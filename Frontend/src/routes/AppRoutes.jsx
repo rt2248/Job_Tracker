@@ -10,6 +10,7 @@ import Applications from '../pages/dashboard/Applications'
 import Network from '../pages/dashboard/Network'
 import JobSearch from '../pages/dashboard/JobSearch'
 import Insights from '../pages/dashboard/Insights'
+import CareerStrategist from '../pages/dashboard/CareerStrategist'
 
 import ProtectedRoutes from './ProtectedRoutes'
 import DashboardLayout from '../components/layout/DashboardLayout'
@@ -32,6 +33,7 @@ const AppRoutes = () => {
         <Route path='/network' element={<Network />} />
         <Route path='/jobsearch' element={<JobSearch />} />
         <Route path='/insights' element={<Insights />} />
+        <Route path='/career-strategist' element={<CareerStrategist />} />
       </Route>
     </Routes>
   )

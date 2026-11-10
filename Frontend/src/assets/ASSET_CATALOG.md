@@ -106,6 +106,12 @@ Evolexa does not load bulky third-party icon libraries (e.g., `lucide-react` or 
 | `PipelineDistributionChart.jsx` | Funnel & Pipeline arcs | Inline SVG + Recharts | Real-time SVG rendering driven by user application telemetry |
 | `RadialProgress.jsx` | Circular Progress Gauge | Inline SVG `<circle>` | Dynamic `strokeDashoffset` calculated from percentage |
 | `SkillFitChart.jsx` | Radar & Bar Metrics | Inline SVG + Recharts | Reactive multi-dimensional skill gap visualization |
+| `ProfileIdentityCard.jsx` | Developer Identity Icons | Inline SVG (Pin, Mail, Stack, Date) | Theme-responsive vector glyphs for location, contact, and tech stack |
+| `ProfileCompletenessCard.jsx` | Verified & Checkmark Badges | Inline SVG (Shield, Check, Arrow) | Live profile completion milestone verification indicators |
+| `ResumeSection.jsx` | PDF & File Asset Controls | Inline SVG (PDF badge, Cloud, Trash, Eye) | State-reactive resume upload, replacement, and viewer actions |
+| `AccountSecurityTab.jsx` | Security Ledger Icons | Inline SVG (Shield, Key, Copy, Check) | Zero-emoji security credential indicators & copy-to-clipboard state |
+| `AvatarPreviewModal.jsx` | Lightbox Close Icon | Inline SVG (`X`) | Keyboard-accessible lightbox close control |
+| `AvatarCropModal.jsx` | Image Crop & Zoom Controls | Inline SVG (Close, Plus, Minus, Reset, Alert) | Disabled-state & theme-adaptive vector controls inside crop workspace |
 | `NavBar.jsx` / `SideBar.jsx` | Evolexa Monogram | Stylized HTML/CSS Badge | Text mark ("EX", "ET") with font-display styling |
 
 ---

@@ -5,7 +5,9 @@ import appsIcon from "../../assets/icons/applications/apps.svg"
 import networknodeIcon from "../../assets/icons/navigation/network-node.svg"
 import searchIcon from "../../assets/icons/actions/search.svg"
 import insightsIcon from "../../assets/icons/analytics/insights.svg"
+import careerStrategistIcon from "../../assets/icons/navigation/career-strategist.svg"
 import SidebarProfilePopover from "./SidebarProfilePopover"
+import UserAvatar from "../shared/UserAvatar"
 import { getApiUrl } from "../../utils/config"
 import { cn } from "../../utils/cn"
 
@@ -14,6 +16,7 @@ const navItems = [
     { title: "Search Jobs", icon: searchIcon, link: "/jobsearch" },
     { title: "Applications", icon: appsIcon, link: "/applications" },
     { title: "Insights", icon: insightsIcon, link: "/insights" },
+    { title: "Career Strategist", icon: careerStrategistIcon, link: "/career-strategist" },
     { title: "Network", icon: networknodeIcon, link: "/network" },
 ]
 
@@ -382,23 +385,14 @@ const SideBar = ({
                             isProfileMenuOpen && "bg-neutral-200/90 border-neutral-400 ring-1 ring-neutral-400/30"
                         )}
                     >
-                        <div className="w-8 h-8 rounded-full bg-neutral-900 text-white text-sm font-bold flex items-center justify-center shrink-0 shadow-sm overflow-hidden relative">
-                            {avatarSrc ? (
-                                <img
-                                    src={avatarSrc}
-                                    alt={fullName}
-                                    className="w-full h-full object-cover"
-                                    onError={(e) => {
-                                        e.currentTarget.style.display = "none"
-                                        const fb = e.currentTarget.parentElement?.querySelector(".sidebar-footer-avatar-fallback")
-                                        if (fb) fb.classList.remove("hidden")
-                                    }}
-                                />
-                            ) : null}
-                            <span className={`sidebar-footer-avatar-fallback ${avatarSrc ? "hidden" : "block"}`}>
-                                {getInitials(userData)}
-                            </span>
-                        </div>
+                        <UserAvatar
+                            src={avatarSrc}
+                            alt={fullName}
+                            initials={getInitials(userData)}
+                            sizeClass="w-8 h-8"
+                            textSizeClass="text-sm"
+                            fallbackClassName="bg-neutral-900 text-white"
+                        />
 
                         {isSidebarOpen && (
                             <>

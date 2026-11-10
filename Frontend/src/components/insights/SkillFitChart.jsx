@@ -115,7 +115,7 @@ export default function SkillFitChart({
       </div>
 
       {/* Coverage Bar & Transparency Caveat */}
-      <div className="mb-8 sm:mb-9 p-3 rounded-lg bg-surface-secondary/20 border border-border-subtle/80 flex flex-col gap-2.5">
+      <div className="mb-8 sm:mb-9 p-3 rounded-lg bg-surface-secondary/20 border border-border-subtle flex flex-col gap-2.5">
         <div className="flex items-center justify-between text-sm">
           <span className="text-ink font-medium">Evaluation Coverage</span>
           <span className="font-mono text-muted text-xs sm:text-sm">
@@ -200,12 +200,12 @@ export default function SkillFitChart({
                   }}
                   className={cn(
                     "p-4 rounded-xl border transition-all cursor-pointer select-none",
-                    "bg-surface-secondary/30 border-border-primary/80 hover:border-border-accent/40",
-                    isSelected && "border-border-accent/50 bg-surface-secondary/70 ring-1 ring-border-accent/30 shadow-sm"
+                    "bg-surface-secondary/30 border-border-primary hover:border-border-accent/60",
+                    isSelected && "border-border-accent bg-surface-secondary/70 ring-1 ring-border-accent/40 shadow-sm"
                   )}
                 >
                   {/* Job Row Header */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 mb-2.5 border-b border-border-subtle/80">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 mb-2.5 border-b border-border-subtle">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h4 className="font-display text-base sm:text-lg font-semibold text-ink truncate">
@@ -236,7 +236,7 @@ export default function SkillFitChart({
                   {/* Skills Breakdown Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4 pt-3.5 text-sm">
                     {/* 1. Matched Skills */}
-                    <div className="p-2.5 rounded-lg bg-surface/60 border border-border-subtle/80">
+                    <div className="p-2.5 rounded-lg bg-surface/60 border border-border-subtle">
                       <div className="flex items-center justify-between mb-1.5">
                         <span className="font-semibold text-ink flex items-center gap-1.5 text-xs sm:text-sm">
                           <svg viewBox="0 0 12 12" className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" fill="none">
@@ -263,7 +263,7 @@ export default function SkillFitChart({
                     </div>
 
                     {/* 2. Missing Identifiable Skills */}
-                    <div className="p-2.5 rounded-lg bg-surface/60 border border-border-subtle/80">
+                    <div className="p-2.5 rounded-lg bg-surface/60 border border-border-subtle">
                       <div className="flex items-center justify-between mb-1.5">
                         <span className="font-semibold text-ink flex items-center gap-1.5 text-xs sm:text-sm">
                           <svg viewBox="0 0 12 12" className="w-3.5 h-3.5 text-red shrink-0" fill="none">
@@ -278,7 +278,7 @@ export default function SkillFitChart({
                           {job.missingSkills.map((s) => (
                             <span
                               key={s}
-                              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-xs sm:text-sm font-sans font-medium bg-red/10 text-red border border-red/25"
+                              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-xs sm:text-sm font-sans font-medium bg-red/10 text-red border border-red/50"
                             >
                               − {s}
                             </span>
@@ -293,7 +293,7 @@ export default function SkillFitChart({
 
                     {/* 3. Qualitative Requirements */}
                     {job.qualitativeRequirements && job.qualitativeRequirements.length > 0 && (
-                      <div className="p-2.5 rounded-lg bg-surface/60 border border-border-subtle/80 md:col-span-2">
+                      <div className="p-2.5 rounded-lg bg-surface/60 border border-border-subtle md:col-span-2">
                         <span className="font-semibold text-ink-secondary text-xs sm:text-sm block mb-1.5 flex items-center gap-1">
                           <svg viewBox="0 0 12 12" className="w-3.5 h-3.5 text-muted shrink-0" fill="none">
                             <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.25" />
@@ -316,7 +316,7 @@ export default function SkillFitChart({
 
                     {/* 4. Unrecognized Technical Terms */}
                     {job.unrecognizedTerms && job.unrecognizedTerms.length > 0 && (
-                      <div className="p-2.5 rounded-lg bg-surface/60 border border-border-subtle/80 md:col-span-2">
+                      <div className="p-2.5 rounded-lg bg-surface/60 border border-border-subtle md:col-span-2">
                         <span className="font-semibold text-ink-secondary text-xs sm:text-sm block mb-1.5 flex items-center gap-1">
                           <svg viewBox="0 0 12 12" className="w-3.5 h-3.5 text-amber shrink-0" fill="none">
                             <polygon points="6,1 11,10 1,10" stroke="currentColor" strokeWidth="1.25" />
@@ -328,7 +328,7 @@ export default function SkillFitChart({
                           {job.unrecognizedTerms.map((term, idx) => (
                             <span
                               key={idx}
-                              className="inline-flex items-center px-2.5 py-0.5 rounded text-xs sm:text-sm font-sans bg-surface-secondary text-amber/90 border border-amber/30 border-dashed"
+                              className="inline-flex items-center px-2.5 py-0.5 rounded text-xs sm:text-sm font-sans bg-surface-secondary text-amber/90 border border-amber/50 border-dashed"
                               title="Term detected in listing requirements but not present in curated skill vocabulary"
                             >
                               {term}
@@ -346,7 +346,7 @@ export default function SkillFitChart({
       )}
 
       {/* Mandatory Suitability Disclaimer Banner */}
-      <div className="mt-5 pt-3 border-t border-border-subtle/70 flex items-start gap-2 text-xs sm:text-sm text-muted leading-relaxed">
+      <div className="mt-5 pt-3 border-t border-border-subtle flex items-start gap-2 text-xs sm:text-sm text-muted leading-relaxed">
         <svg viewBox="0 0 14 14" className="w-3.5 h-3.5 text-muted shrink-0 mt-0.5" fill="none">
           <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
           <path d="M7 6v4M7 4h.01" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />

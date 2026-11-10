@@ -20,6 +20,7 @@ const settingsRoutes = require("./routes/settings.routes");
 const resumeRoutes = require("./routes/resume.routes");
 const profileRoutes = require("./routes/profile.routes");
 const insightsRoutes = require("./routes/insights.routes");
+const careerStrategistRoutes = require("./routes/careerStrategist.routes");
 
 // Use routes
 app.use("/api/auth", authRoutes);
@@ -29,6 +30,7 @@ app.use("/api/settings", settingsRoutes);
 app.use("/api/resume", resumeRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/insights", insightsRoutes);
+app.use("/api/career-strategist", careerStrategistRoutes);
 
 app.listen(process.env.PORT || 5000, () => {
   console.log(`Server running on port:${process.env.PORT || 5000}`);

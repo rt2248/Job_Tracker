@@ -19,9 +19,12 @@ const chatStreamChunkDto = require("./contracts/dtos/ChatStreamChunk.dto");
 const { BaseAiProviderAdapter } = require("./providers/BaseAiProviderAdapter");
 const { GroqProviderAdapter, DEFAULT_GROQ_MODEL, DEFAULT_GROQ_ENDPOINT } = require("./providers/groq/GroqProviderAdapter");
 const groqRateLimitParser = require("./providers/groq/groqRateLimitParser");
+const groqPromptContract = require("./providers/groq/groqPromptContract");
 
 const telemetryMinimizer = require("./sanitizers/telemetryMinimizer");
 const careerAssessmentValidator = require("./validators/careerAssessmentValidator");
+
+const { CareerStrategistService, DEFAULT_EXECUTION_TIMEOUT_MS } = require("./CareerStrategistService");
 
 module.exports = {
   // Conformance
@@ -49,10 +52,15 @@ module.exports = {
   DEFAULT_GROQ_MODEL,
   DEFAULT_GROQ_ENDPOINT,
   ...groqRateLimitParser,
+  ...groqPromptContract,
 
   // Sanitizers & Privacy Perimeter
   ...telemetryMinimizer,
 
   // Independent Evidence Validators
   ...careerAssessmentValidator,
+
+  // Domain Orchestration Service (Stage 2B.4B)
+  CareerStrategistService,
+  DEFAULT_EXECUTION_TIMEOUT_MS,
 };

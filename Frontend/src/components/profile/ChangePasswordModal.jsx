@@ -59,7 +59,7 @@ const RequirementItem = ({ met, label }) => (
   <div className="flex items-center gap-2 text-xs sm:text-sm transition-colors">
     <span
       className={`w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-colors ${
-        met ? "bg-green/15 text-green border border-green/30" : "bg-surface-secondary text-muted border border-border-subtle"
+        met ? "bg-green/15 text-green border border-green/50" : "bg-surface-secondary text-muted border border-border-subtle"
       }`}
     >
       {met ? "✓" : "•"}
@@ -202,7 +202,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onPasswordChanged }) => {
 
         <ModalContent className="py-4 space-y-4">
           {generalError && (
-            <div className="p-3 rounded-xl bg-red/10 border border-red/30 text-xs sm:text-sm text-red font-sans animate-fadeIn">
+            <div className="p-3 rounded-xl bg-red/10 border border-red/50 text-xs sm:text-sm text-red font-sans animate-fadeIn">
               {generalError}
             </div>
           )}

@@ -135,7 +135,7 @@ const Applications = () => {
           {/* Error State */}
           {error && !isLoading && (
             <div className="flex flex-col items-center justify-center p-12 text-center">
-              <div className="p-3 rounded-xl bg-red/10 border border-red/30 text-red text-sm sm:text-base mb-3">
+              <div className="p-3 rounded-xl bg-red/10 border border-red/50 text-red text-sm sm:text-base mb-3">
                 ⚠️ {error}
               </div>
               <p className="text-muted text-sm font-sans">Please check your network connection.</p>

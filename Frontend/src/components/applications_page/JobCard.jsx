@@ -12,7 +12,7 @@ function JobCard({ job, onClick }) {
         <Card
             hoverable
             onClick={onClick}
-            className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer group bg-surface-secondary/80 hover:bg-surface-elevated border-border-primary hover:border-cyan/40"
+            className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer group bg-surface-secondary/80 hover:bg-surface-elevated border-border-primary hover:border-cyan/60"
         >
             <div className="min-w-0 w-full sm:w-auto">
                 <h3 className="font-display text-ink font-semibold truncate text-lg sm:text-xl group-hover:text-cyan transition-colors">

@@ -7,7 +7,11 @@ import Select from "../../components/shared/Select"
 import Button from "../../components/shared/Button"
 import ThemeToggleButton from "../../components/shared/ThemeToggleButton"
 import DashboardInsightsSection from "../../components/dashboard_page/DashboardInsightsSection"
+import NextBestActionCard from "../../components/dashboard_page/NextBestActionCard"
+import UpcomingDeadlinesCard from "../../components/dashboard_page/UpcomingDeadlinesCard"
+import PipelineJourneyBar from "../../components/dashboard_page/PipelineJourneyBar"
 import { useJobs } from "../../hooks/useJobs"
+import useInsights from "../../hooks/useInsights"
 import { useToast } from "../../hooks/useToast"
 import { getApiUrl } from "../../utils/config"
 import { STATUS_ORDER } from "../../constants/jobStatus"
@@ -16,7 +20,15 @@ const Dashboard = () => {
   const { jobs: initialJobs, isLoading, error } = useJobs()
   const [jobsList, setJobsList] = useState(initialJobs || [])
   const [selectedJob, setSelectedJob] = useState(null)
+  const [selectedStage, setSelectedStage] = useState(null)
   const toast = useToast()
+
+  // Fetch insights summary for Next Best Action & Radar
+  const { summary, isLoading: isInsightsLoading } = useInsights({
+    initialRange: "30d",
+    staleDays: 14,
+    summaryOnly: true,
+  })
   
   // Dashboard Search & Filtering State
   const [searchQuery, setSearchQuery] = useState("")
@@ -28,6 +40,18 @@ const Dashboard = () => {
       setJobsList(initialJobs)
     }
   }, [initialJobs])
+
+  const handleStageSelect = (stage) => {
+    setSelectedStage(stage)
+    if (stage) {
+      setTimeout(() => {
+        const el = document.getElementById(`kanban-col-${stage}`)
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" })
+        }
+      }, 100)
+    }
+  }
 
   // Filter jobs dynamically by search query & job type
   const filteredJobs = useMemo(() => {
@@ -140,9 +164,39 @@ const Dashboard = () => {
             <ThemeToggleButton />
           </div>
 
+          {/* Top Intelligent Workspace Tier: Next Best Action & Upcoming Deadlines */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6 shrink-0">
+            <div className="lg:col-span-7 flex flex-col">
+              <NextBestActionCard
+                jobsList={jobsList}
+                staleAlerts={summary?.staleAlerts}
+                ruleBasedInsights={summary?.ruleBasedInsights}
+                onSelectJob={setSelectedJob}
+                isLoading={isLoading || isInsightsLoading}
+                className="h-full"
+              />
+            </div>
+            <div className="lg:col-span-5 flex flex-col">
+              <UpcomingDeadlinesCard
+                jobsList={jobsList}
+                onSelectJob={setSelectedJob}
+                isLoading={isLoading}
+                className="h-full"
+              />
+            </div>
+          </div>
+
+          {/* Pipeline Journey Milestone Progression Bar */}
+          <PipelineJourneyBar
+            jobsList={jobsList}
+            selectedStage={selectedStage}
+            onSelectStage={handleStageSelect}
+            className="mb-6 shrink-0"
+          />
+
           {/* Metric Summary Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 shrink-0">
-            <Card className="p-3.5 sm:p-4 bg-surface/80 border-border-primary">
+            <Card className="p-3.5 sm:p-4 bg-surface/80 border-border-primary card-3d">
               <div className="flex items-center justify-between">
                 <span className="text-muted text-xs sm:text-sm font-sans font-semibold uppercase tracking-wider">Total Applications</span>
                 <span className="w-2 h-2 rounded-full bg-cyan" />
@@ -150,7 +204,7 @@ const Dashboard = () => {
               <p className="font-mono text-3xl sm:text-4xl font-bold text-ink mt-2">{metrics.total}</p>
             </Card>
 
-            <Card className="p-3.5 sm:p-4 bg-surface/80 border-border-primary">
+            <Card className="p-3.5 sm:p-4 bg-surface/80 border-border-primary card-3d">
               <div className="flex items-center justify-between">
                 <span className="text-muted text-xs sm:text-sm font-sans font-semibold uppercase tracking-wider">In Pipeline</span>
                 <span className="w-2 h-2 rounded-full bg-amber" />
@@ -158,7 +212,7 @@ const Dashboard = () => {
               <p className="font-mono text-3xl sm:text-4xl font-bold text-ink mt-2">{metrics.active}</p>
             </Card>
 
-            <Card className="p-3.5 sm:p-4 bg-surface/80 border-border-primary">
+            <Card className="p-3.5 sm:p-4 bg-surface/80 border-border-primary card-3d">
               <div className="flex items-center justify-between">
                 <span className="text-muted text-xs sm:text-sm font-sans font-semibold uppercase tracking-wider">Interviews</span>
                 <span className="w-2 h-2 rounded-full bg-red" />
@@ -166,7 +220,7 @@ const Dashboard = () => {
               <p className="font-mono text-3xl sm:text-4xl font-bold text-ink mt-2">{metrics.interviews}</p>
             </Card>
 
-            <Card className="p-3.5 sm:p-4 bg-surface/80 border-border-primary">
+            <Card className="p-3.5 sm:p-4 bg-surface/80 border-border-primary card-3d">
               <div className="flex items-center justify-between">
                 <span className="text-muted text-xs sm:text-sm font-sans font-semibold uppercase tracking-wider">Offers & Accepted</span>
                 <span className="w-2 h-2 rounded-full bg-green" />
@@ -175,8 +229,8 @@ const Dashboard = () => {
             </Card>
           </div>
 
-          {/* Compact Insights Section */}
-          <DashboardInsightsSection />
+          {/* Compact Insights & Pipeline Conversion Funnel Section */}
+          <DashboardInsightsSection jobsList={jobsList} />
 
           {/* Controls Bar: Search & Filter */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6 shrink-0 bg-surface/60 p-2.5 sm:p-3 rounded-xl border border-border-primary card-3d">
@@ -202,17 +256,33 @@ const Dashboard = () => {
                 <option value="contract">Contract</option>
               </Select>
             </div>
-            {(searchQuery || selectedType) && (
+            {selectedStage && (
+              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-secondary border border-cyan/40 text-xs sm:text-sm font-sans shrink-0">
+                <span className="text-muted">Focused stage:</span>
+                <span className="font-semibold text-cyan capitalize">{selectedStage}</span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedStage(null)}
+                  className="text-muted hover:text-ink ml-1 cursor-pointer font-bold"
+                  aria-label="Clear focused stage"
+                  title="Clear focused stage"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+            {(searchQuery || selectedType || selectedStage) && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => {
                   setSearchQuery("")
                   setSelectedType("")
+                  setSelectedStage(null)
                 }}
                 className="text-sm text-muted hover:text-ink shrink-0"
               >
-                Reset Filters
+                Reset All Filters
               </Button>
             )}
           </div>
@@ -228,7 +298,7 @@ const Dashboard = () => {
           {/* Error State */}
           {error && !isLoading && (
             <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-              <div className="p-3 rounded-xl bg-red/10 border border-red/30 text-red text-sm sm:text-base mb-3">
+              <div className="p-3 rounded-xl bg-red/10 border border-red/50 text-red text-sm sm:text-base mb-3">
                 ⚠️ {error}
               </div>
               <p className="text-muted text-sm font-sans">Please refresh the page or check your connection.</p>
@@ -245,6 +315,7 @@ const Dashboard = () => {
                     jobs={jobsByStatus[status] || []}
                     onCardClick={setSelectedJob}
                     onDropCard={handleDropCard}
+                    isHighlighted={selectedStage === status}
                   />
                 </div>
               ))}

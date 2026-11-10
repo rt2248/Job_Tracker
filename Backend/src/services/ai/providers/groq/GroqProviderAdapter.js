@@ -36,6 +36,12 @@ const {
   classifyGroq429Error,
 } = require("./groqRateLimitParser");
 
+const {
+  CANONICAL_PROMPT_CONTRACT,
+  buildCareerAssessmentSystemPrompt,
+  buildCareerAssessmentUserPrompt,
+} = require("./groqPromptContract");
+
 const DEFAULT_GROQ_MODEL = "openai/gpt-oss-120b";
 const DEFAULT_GROQ_ENDPOINT = "https://api.groq.com/openai/v1";
 
@@ -78,6 +84,43 @@ class GroqProviderAdapter extends BaseAiProviderAdapter {
 
   get endpoint() {
     return this._endpoint;
+  }
+
+  /**
+   * Returns the canonical prompt contract schema inventory.
+   * @returns {typeof CANONICAL_PROMPT_CONTRACT}
+   */
+  static getPromptContract() {
+    return CANONICAL_PROMPT_CONTRACT;
+  }
+
+  /**
+   * Returns the formulated canonical system prompt.
+   * @returns {string}
+   */
+  static buildAssessmentSystemPrompt() {
+    return buildCareerAssessmentSystemPrompt();
+  }
+
+  /**
+   * Returns the formulated user prompt payload.
+   * @param {import('../../contracts/dtos/CareerAssessmentRequest.dto').CareerAssessmentRequestDTO} request
+   * @returns {string}
+   */
+  static buildAssessmentUserPrompt(request) {
+    return buildCareerAssessmentUserPrompt(request);
+  }
+
+  getPromptContract() {
+    return GroqProviderAdapter.getPromptContract();
+  }
+
+  buildAssessmentSystemPrompt() {
+    return GroqProviderAdapter.buildAssessmentSystemPrompt();
+  }
+
+  buildAssessmentUserPrompt(request) {
+    return GroqProviderAdapter.buildAssessmentUserPrompt(request);
   }
 
   /**
@@ -185,32 +228,9 @@ class GroqProviderAdapter extends BaseAiProviderAdapter {
     const effectiveTimeoutMs = request.options?.timeoutMs || this.timeoutMs;
     const callerSignal = request.options?.signal || null;
 
-    // 3. Formulate payload with strictly allowlisted minimized candidate properties
-    const systemPrompt =
-      "You are the Evolexa Career Strategist engine. Analyze the candidate profile and job pipeline telemetry. " +
-      "Return ONLY a valid JSON object matching the requested schema. Do not include markdown codeblocks or preamble.";
-
-    const userPrompt = JSON.stringify({
-      candidateProfile: {
-        headline: request.candidateProfile.headline,
-        yearsOfExperience: request.candidateProfile.yearsOfExperience,
-        declaredSkills: request.candidateProfile.declaredSkills,
-        targetRoles: request.candidateProfile.targetRoles,
-        userNotes: request.candidateProfile.userNotes,
-      },
-      pipelineTelemetry: {
-        trackedOpportunities: request.pipelineTelemetry.trackedOpportunities,
-        submittedApplications: request.pipelineTelemetry.submittedApplications,
-        savedCount: request.pipelineTelemetry.savedCount,
-        activeInPipeline: request.pipelineTelemetry.activeInPipeline,
-        interviewsInProgress: request.pipelineTelemetry.interviewsInProgress,
-        pendingOffers: request.pipelineTelemetry.pendingOffers,
-        cumulativeOffers: request.pipelineTelemetry.cumulativeOffers,
-        cumulativeRejections: request.pipelineTelemetry.cumulativeRejections,
-        stageDistribution: request.pipelineTelemetry.stageDistribution,
-        staleAlerts: request.pipelineTelemetry.staleAlerts,
-      },
-    });
+    // 3. Formulate payload with strictly allowlisted minimized candidate properties and canonical prompt contract
+    const systemPrompt = buildCareerAssessmentSystemPrompt();
+    const userPrompt = buildCareerAssessmentUserPrompt(request);
 
     const bodyPayload = JSON.stringify({
       model: this.modelIdentifier,
@@ -627,4 +647,7 @@ module.exports = {
   GroqProviderAdapter,
   DEFAULT_GROQ_MODEL,
   DEFAULT_GROQ_ENDPOINT,
+  CANONICAL_PROMPT_CONTRACT,
+  buildCareerAssessmentSystemPrompt,
+  buildCareerAssessmentUserPrompt,
 };

@@ -1,5 +1,5 @@
 // Centralized API configuration utility
-const rawApiUrl = (import.meta.env.VITE_API_URL || '').trim();
+const rawApiUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL ? import.meta.env.VITE_API_URL : (typeof process !== 'undefined' && process.env?.VITE_API_URL) || '').trim();
 
 // Clean API Base URL by removing any trailing slashes
 export const API_BASE_URL = rawApiUrl.replace(/\/+$/, '');

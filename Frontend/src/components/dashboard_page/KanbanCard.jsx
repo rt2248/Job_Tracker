@@ -35,7 +35,7 @@ function KanbanCard({ job, onClick, onDragStart, isDragging }) {
             onDragEnd={handleDragEnd}
             onClick={handleClick}
             className={cn(
-                "group relative bg-surface-secondary/80 hover:bg-surface-elevated border border-border-primary hover:border-cyan/40",
+                "group relative bg-surface-secondary/80 hover:bg-surface-elevated border border-border-primary hover:border-cyan/60",
                 "rounded-xl p-3.5 transition-all duration-150 card-3d card-3d-hover hover:-translate-y-0.5 cursor-grab active:cursor-grabbing select-none",
                 isDragging && "opacity-40 scale-95 border-dashed border-cyan ring-2 ring-cyan/20"
             )}
@@ -50,7 +50,7 @@ function KanbanCard({ job, onClick, onDragStart, isDragging }) {
                 <JobTypeBadge jobType={job.jobType} />
             </p>
 
-            <div className="mt-3 pt-2.5 border-t border-border-subtle/60 flex flex-wrap items-center justify-between gap-1.5 text-xs sm:text-sm">
+            <div className="mt-3 pt-2.5 border-t border-border-subtle flex flex-wrap items-center justify-between gap-1.5 text-xs sm:text-sm">
                 {compensation ? (
                     <span className="text-cyan font-mono font-medium truncate">
                         {compensation}

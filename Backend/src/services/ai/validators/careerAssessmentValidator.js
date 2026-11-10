@@ -205,10 +205,160 @@ function validateAssessmentStructure(raw, discrepancies) {
 }
 
 /**
+ * Supported English number word dictionaries for Stage 2B.4A-R1 numeric grounding.
+ */
+const UNITS_1_TO_9 = Object.freeze({
+  one: 1,
+  two: 2,
+  three: 3,
+  four: 4,
+  five: 5,
+  six: 6,
+  seven: 7,
+  eight: 8,
+  nine: 9,
+});
+
+const TEENS_10_TO_19 = Object.freeze({
+  ten: 10,
+  eleven: 11,
+  twelve: 12,
+  thirteen: 13,
+  fourteen: 14,
+  fifteen: 15,
+  sixteen: 16,
+  seventeen: 17,
+  eighteen: 18,
+  nineteen: 19,
+});
+
+const TENS_20_TO_90 = Object.freeze({
+  twenty: 20,
+  thirty: 30,
+  forty: 40,
+  fifty: 50,
+  sixty: 60,
+  seventy: 70,
+  eighty: 80,
+  ninety: 90,
+});
+
+const SCALES = Object.freeze({
+  hundred: 100,
+  thousand: 1000,
+});
+
+const ALL_NUM_WORDS_SET = Object.freeze(
+  new Set([
+    "zero",
+    ...Object.keys(UNITS_1_TO_9),
+    ...Object.keys(TEENS_10_TO_19),
+    ...Object.keys(TENS_20_TO_90),
+    ...Object.keys(SCALES),
+  ])
+);
+
+/**
+ * Validates and converts a sequence of English number tokens (e.g. ["twenty", "five"])
+ * into its integer representation. Rejects ungrammatical compounds (e.g. ["two", "five"]).
+ *
+ * @param {string[]} tokens
+ * @returns {number|null}
+ */
+function parseEnglishNumberTokens(tokens) {
+  if (!tokens || tokens.length === 0) return null;
+
+  // Standalone zero
+  if (tokens.length === 1 && tokens[0].toLowerCase() === "zero") {
+    return 0;
+  }
+  // Zero cannot be part of compound numbers
+  if (tokens.some((t) => t.toLowerCase() === "zero")) {
+    return null;
+  }
+
+  let total = 0;
+  let current = 0;
+  let lastTokenType = null; // "UNIT", "TEEN", "TEN", "HUNDRED", "THOUSAND", "AND"
+
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i].toLowerCase();
+
+    if (token === "and") {
+      if (lastTokenType !== "HUNDRED" && lastTokenType !== "THOUSAND") {
+        return null;
+      }
+      lastTokenType = "AND";
+      continue;
+    }
+
+    if (UNITS_1_TO_9[token] !== undefined) {
+      if (lastTokenType === "UNIT" || lastTokenType === "TEEN") {
+        return null; // "two five" is invalid
+      }
+      current += UNITS_1_TO_9[token];
+      lastTokenType = "UNIT";
+    } else if (TEENS_10_TO_19[token] !== undefined) {
+      if (lastTokenType === "UNIT" || lastTokenType === "TEEN" || lastTokenType === "TEN") {
+        return null; // "twenty twelve" or "five ten" is invalid
+      }
+      current += TEENS_10_TO_19[token];
+      lastTokenType = "TEEN";
+    } else if (TENS_20_TO_90[token] !== undefined) {
+      if (lastTokenType === "UNIT" || lastTokenType === "TEEN" || lastTokenType === "TEN") {
+        return null; // "twenty thirty" or "five twenty" is invalid
+      }
+      current += TENS_20_TO_90[token];
+      lastTokenType = "TEN";
+    } else if (token === "hundred") {
+      if (current === 0 || lastTokenType === "HUNDRED") {
+        return null;
+      }
+      current = current * 100;
+      lastTokenType = "HUNDRED";
+    } else if (token === "thousand") {
+      if (current === 0 || lastTokenType === "THOUSAND") {
+        return null;
+      }
+      total += current * 1000;
+      current = 0;
+      lastTokenType = "THOUSAND";
+    } else {
+      return null;
+    }
+  }
+
+  return total + current;
+}
+
+const NUMBER_WORD_PHRASE_REGEX = new RegExp(
+  `\\b(?:(?:${Array.from(ALL_NUM_WORDS_SET).join("|")})(?:[- ](?:and[- ])?(?:${Array.from(ALL_NUM_WORDS_SET).join("|")}))*)\\b`,
+  "gi"
+);
+
+function normalizeEnglishNumberWordsInText(text) {
+  return text.replace(NUMBER_WORD_PHRASE_REGEX, (match) => {
+    const tokens = match.toLowerCase().split(/[- ]+/).filter((t) => t.length > 0);
+    const val = parseEnglishNumberTokens(tokens);
+    if (val !== null) {
+      return String(val);
+    }
+    return match;
+  });
+}
+
+function isNumericTokenOrWord(word) {
+  if (!word) return false;
+  const w = word.toLowerCase();
+  return /^\d+$/.test(w) || ALL_NUM_WORDS_SET.has(w);
+}
+
+/**
  * Independently audits a single pipeline metric citation string against telemetry evidence.
  * Enforces metric-to-field association, percentage derivation checks, and strict integer grounding.
  *
  * Stage 2B.4A — HIGH-01 Remediation.
+ * Stage 2B.4A-R1 — Numeric Claim Grounding Correction (English number words & independent clause grounding).
  *
  * @param {string} citationStr
  * @param {Object} pipelineTelemetry
@@ -219,18 +369,46 @@ function auditMetricCitation(citationStr, pipelineTelemetry) {
     return { isValid: false, reason: "Empty or invalid citation string" };
   }
 
-  const text = citationStr.trim().toLowerCase();
+  let text = citationStr.trim().toLowerCase();
 
-  // 1. Check for percentage citations (e.g. "11% offer rate", "99% conversion")
-  const pctMatch = text.match(/\b(\d+(?:\.\d+)?)%/);
-  if (pctMatch) {
-    const claimedPct = parseFloat(pctMatch[1]);
+  // 1. Check for negative numeric values
+  // e.g. "-1", "-5", "negative 2", "negative two"
+  if (/(?:^|\s)-(?:\d+)(?:\.\d+)?\b/.test(text) || /\bnegative\s+(?:\d+|[a-z]+)\b/i.test(text)) {
+    return { isValid: false, reason: `Negative numeric value in '${citationStr}' is invalid for discrete metric counts` };
+  }
+
+  // 2. Check for numeric ranges BEFORE any token conversion
+  // e.g. "2-5", "2 - 5", "2 to 5", "two to five", "between 2 and 5"
+  if (/\b\d+\s*-\s*\d+\b/.test(text)) {
+    return { isValid: false, reason: `Numeric range expression in '${citationStr}' is invalid for discrete metric counts` };
+  }
+  const toRangeMatch = text.match(/\b([a-z0-9]+)\s+to\s+([a-z0-9]+)\b/i);
+  if (toRangeMatch && isNumericTokenOrWord(toRangeMatch[1]) && isNumericTokenOrWord(toRangeMatch[2])) {
+    return { isValid: false, reason: `Numeric range expression in '${citationStr}' is invalid for discrete metric counts` };
+  }
+  const betweenMatch = text.match(/\bbetween\s+([a-z0-9]+)\s+and\s+([a-z0-9]+)\b/i);
+  if (betweenMatch && isNumericTokenOrWord(betweenMatch[1]) && isNumericTokenOrWord(betweenMatch[2])) {
+    return { isValid: false, reason: `Numeric range expression in '${citationStr}' is invalid for discrete metric counts` };
+  }
+
+  // 3. Check for decimal numbers that are NOT part of a percentage
+  // e.g. "2.5 interviews", "2.0", ".5"
+  // Negative lookahead (?!\s*%) ensures percentage decimals like "12.5%" are handled by the percentage check
+  if (/(?:^|[^\w.])(?:\d+\.\d+|\.\d+)(?!\s*%)|\b\d+\.\d+\b(?!\s*%)/.test(text)) {
+    return { isValid: false, reason: `Decimal value in '${citationStr}' is invalid for discrete metric counts` };
+  }
+
+  // 4. Normalize comma-separated thousands integers (e.g. "1,000" -> "1000")
+  text = text.replace(/\b(\d{1,3}),(\d{3})\b/g, "$1$2");
+
+  // 5. Check for percentage citations (e.g. "50% offer rate", "11% conversion")
+  const pctMatches = text.match(/\b(\d+(?:\.\d+)?)%/g);
+  if (pctMatches) {
     const submitted = pipelineTelemetry.submittedApplications || 0;
     const interviews = pipelineTelemetry.interviewsInProgress || 0;
     const offers = pipelineTelemetry.cumulativeOffers || 0;
     const rejections = pipelineTelemetry.cumulativeRejections || 0;
 
-    // Supported derivations
     const supportedRates = [];
     if (submitted > 0) {
       supportedRates.push(Math.round((offers / submitted) * 100)); // offer rate on submissions
@@ -244,29 +422,24 @@ function auditMetricCitation(citationStr, pipelineTelemetry) {
       supportedRates.push(Math.round((offers / (offers + rejections)) * 100)); // outcome win rate
     }
 
-    const matchesSupportedRate = supportedRates.some((rate) => Math.abs(rate - claimedPct) < 0.5);
-    if (!matchesSupportedRate) {
-      return { isValid: false, reason: `Unsupported derived percentage '${claimedPct}%'` };
+    for (const pm of pctMatches) {
+      const claimedPct = parseFloat(pm.replace("%", ""));
+      const matchesSupportedRate = supportedRates.some((rate) => Math.abs(rate - claimedPct) < 0.5);
+      if (!matchesSupportedRate) {
+        return { isValid: false, reason: `Unsupported derived percentage '${claimedPct}%'` };
+      }
     }
-    return { isValid: true };
   }
 
-  // 2. Extract all numbers
-  const numberMatches = text.match(/\b\d+\b/g);
-  if (!numberMatches || numberMatches.length === 0) {
-    // Qualitative citation check: must reference an established verified status
-    const isQualitativeInterview = text.includes("interview") && (pipelineTelemetry.interviewsInProgress || 0) > 0;
-    const isQualitativeStale = text.includes("stale") && (pipelineTelemetry.staleAlerts?.staleCount || 0) > 0;
-    const isQualitativeOffer = text.includes("offer") && ((pipelineTelemetry.pendingOffers || 0) > 0 || (pipelineTelemetry.cumulativeOffers || 0) > 0);
-    const isQualitativeApplied = (text.includes("applied") || text.includes("application")) && (pipelineTelemetry.submittedApplications || 0) > 0;
+  // 6. Normalize English number words to integer digits
+  // e.g. "two interviews" -> "2 interviews", "zero pending offers" -> "0 pending offers"
+  text = normalizeEnglishNumberWordsInText(text);
 
-    if (isQualitativeInterview || isQualitativeStale || isQualitativeOffer || isQualitativeApplied) {
-      return { isValid: true };
-    }
-    return { isValid: false, reason: `Qualitative citation '${citationStr}' has no verifiable telemetry evidence` };
-  }
+  // 7. Split citation into independent metric clauses
+  // Delimiters: semicolon, comma, and, with, from, out of, beyond, including, where, while, but
+  const CLAUSE_DELIMITERS = /\s*(?:;|,|\band\b|\bwith\b|\bfrom\b|\bout\s+of\b|\bbeyond\b|\bincluding\b|\bwhere\b|\bwhile\b|\bbut\b)\s*/i;
+  const rawClauses = text.split(CLAUSE_DELIMITERS).map((c) => c.trim()).filter((c) => c.length > 0);
 
-  // 3. Metric-to-telemetry field associations
   const telemetry = pipelineTelemetry;
   const stageMap = new Map();
   for (const s of telemetry.stageDistribution || []) {
@@ -282,7 +455,14 @@ function auditMetricCitation(citationStr, pipelineTelemetry) {
       name: "pendingOffers",
     },
     {
-      keywords: [/\bcumulative\s+offers?\b/, /\btotal\s+offers?\b/, /\boffers?\s+received\b/, /\boffers?\s+extended\b/, /\boffers?\s+accepted\b/],
+      keywords: [
+        /\bcumulative\s+offers?\b/,
+        /\btotal\s+offers?\b/,
+        /\boffers?\s+received\b/,
+        /\boffers?\s+extended\b/,
+        /\boffers?\s+accepted\b/,
+        /\boffers?\b/,
+      ],
       getValue: () => telemetry.cumulativeOffers,
       name: "cumulativeOffers",
     },
@@ -336,33 +516,59 @@ function auditMetricCitation(citationStr, pipelineTelemetry) {
     });
   }
 
-  const foundAssociations = [];
-  for (const check of metricChecks) {
-    for (const kw of check.keywords) {
-      if (kw.test(text)) {
-        foundAssociations.push({
-          name: check.name,
-          expectedValue: check.getValue(),
-        });
-        break;
+  // 8. Validate each clause independently
+  for (const clause of rawClauses) {
+    const hasClausePct = /\b\d+(?:\.\d+)?%/.test(clause);
+    const clauseWithoutPct = clause.replace(/\b\d+(?:\.\d+)?%/g, "").trim();
+    const clauseNumbers = clauseWithoutPct.match(/\b\d+\b/g);
+
+    if (!clauseNumbers || clauseNumbers.length === 0) {
+      if (hasClausePct) {
+        // Percentage was already validated in Step 5 and this clause has no other numbers
+        continue;
+      }
+
+      // Purely qualitative clause: must reference an established verified status
+      const isQualitativeInterview = clause.includes("interview") && (telemetry.interviewsInProgress || 0) > 0;
+      const isQualitativeStale = clause.includes("stale") && (telemetry.staleAlerts?.staleCount || 0) > 0;
+      const isQualitativeOffer = clause.includes("offer") && ((telemetry.pendingOffers || 0) > 0 || (telemetry.cumulativeOffers || 0) > 0);
+      const isQualitativeApplied = (clause.includes("applied") || clause.includes("application")) && (telemetry.submittedApplications || 0) > 0;
+      const isQualitativePipeline = clause.includes("pipeline") && (telemetry.activeInPipeline || 0) > 0;
+
+      if (isQualitativeInterview || isQualitativeStale || isQualitativeOffer || isQualitativeApplied || isQualitativePipeline) {
+        continue;
+      }
+      return { isValid: false, reason: `Qualitative citation '${clause}' has no verifiable telemetry evidence` };
+    }
+
+    // Numeric clause: find associations matching this specific clause
+    const clauseAssociations = [];
+    for (const check of metricChecks) {
+      for (const kw of check.keywords) {
+        if (kw.test(clause)) {
+          clauseAssociations.push({
+            name: check.name,
+            expectedValue: check.getValue(),
+          });
+          break;
+        }
       }
     }
-  }
 
-  if (foundAssociations.length === 0) {
-    return { isValid: false, reason: `Ambiguous metric terminology in '${citationStr}'` };
-  }
+    if (clauseAssociations.length === 0) {
+      return { isValid: false, reason: `Ambiguous metric terminology in '${clause}'` };
+    }
 
-  // Every extracted number must be grounded in an associated expected value
-  const extractedNumbers = numberMatches.map((n) => parseInt(n, 10));
-  const expectedValues = new Set(foundAssociations.map((a) => a.expectedValue));
+    const extractedNumbers = clauseNumbers.map((n) => parseInt(n, 10));
+    const expectedValues = new Set(clauseAssociations.map((a) => a.expectedValue));
 
-  for (const num of extractedNumbers) {
-    if (!expectedValues.has(num)) {
-      return {
-        isValid: false,
-        reason: `Value '${num}' in '${citationStr}' does not match associated metric value (${Array.from(expectedValues).join(", ")})`,
-      };
+    for (const num of extractedNumbers) {
+      if (!expectedValues.has(num)) {
+        return {
+          isValid: false,
+          reason: `Value '${num}' in '${clause}' does not match associated metric value (${Array.from(expectedValues).join(", ")})`,
+        };
+      }
     }
   }
 

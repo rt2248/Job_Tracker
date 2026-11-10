@@ -101,7 +101,7 @@ function ListingDetailModal({ listing, onClose }) {
                         variant="outline"
                         disabled={inFlight}
                         onClick={() => addToTracker(listing)}
-                        className="border-cyan/40 text-cyan hover:bg-cyan/10 flex items-center gap-1.5"
+                        className="border-cyan/60 text-cyan hover:bg-cyan/10 flex items-center gap-1.5"
                     >
                         {inFlight ? (
                             <>

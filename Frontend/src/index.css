@@ -1,6 +1,36 @@
 @import "@fontsource-variable/geist";
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
+/* Evolexa Local Repository Fonts */
+@font-face {
+  font-family: 'Evolexa Andika';
+  src: url('./assets/fonts/Andika/Andika-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Evolexa Andika';
+  src: url('./assets/fonts/Andika/Andika-Bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Evolexa Bricolage';
+  src: url('./assets/fonts/Bricolage_Grotesque/BricolageGrotesque-VariableFont_opsz,wdth,wght.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Evolexa Mono';
+  src: url('./assets/fonts/JetBrains_Mono/JetBrainsMono-VariableFont_wght.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+}
+
 /* Evolexa Design System Typography & Design Tokens */
 @tailwind base;
 @tailwind components;
@@ -24,9 +54,9 @@
     --text-muted: 218 12% 62%;      /* #94a3b8 - Technical labels, placeholders */
     --text-disabled: 218 10% 42%;   /* #5f6b7c - Inactive status indicators */
 
-    /* Border & Divider Tokens (Stronger Metallic Slate Card Borders) */
-    --border-primary: 220 22% 20%;  /* #273447 - Stronger, prominent metallic slate card borders */
-    --border-subtle: 220 18% 14%;   /* #1c2433 - Defined dividers & inner frames */
+    /* Border & Divider Tokens (Refined Ink-Slate Borders - Dark Theme) */
+    --border-primary: 218 22% 38%;  /* #4c5b76 - Prominent, ink-inspired metallic slate card borders */
+    --border-subtle: 218 18% 29%;   /* #3d4757 - Defined dividers, table rows & inner frames */
     --border-accent: 188 86% 53%;   /* #22d3ee - Cyan active focus rings & selected borders */
 
     /* Brand & Accent Tokens */
@@ -49,7 +79,8 @@
     --t-reveal: 600ms;
   }
 
-  [data-theme='light'] {
+  [data-theme='light'],
+  .light {
     /* Background & Canvas Tokens (Soft slate & neutral ground - Light Theme) */
     --canvas: 208 100% 98%;           /* #f5faff - Soft slate/blue ground */
     --canvas-subtle: 210 50% 95%;    /* #eaf4fc - Muted light backdrop */
@@ -66,9 +97,9 @@
     --text-muted: 214 20% 48%;       /* #627b92 - Placeholders, labels */
     --text-disabled: 214 15% 65%;    /* #96a9bb - Inactive indicators */
 
-    /* Border & Divider Tokens (Defined Slate-Blue Borders) */
-    --border-primary: 212 30% 68%;  /* #8eaec9 - Darker, well-defined slate-blue card borders */
-    --border-subtle: 210 24% 82%;   /* #c2d4e3 - Defined inner dividers */
+    /* Border & Divider Tokens (Clearly Defined Medium-Contrast Slate Borders) */
+    --border-primary: 214 26% 64%;  /* #89a2bc - Prominent, clean medium-contrast slate card borders */
+    --border-subtle: 214 24% 73%;   /* #a4b7ca - Defined inner dividers and sub-frames (#B0BECF to #A5B5C9 range) */
     --border-accent: 199 89% 42%;    /* Cyan/Blue focus indicator */
 
     /* Brand & Accent Tokens */
@@ -198,19 +229,19 @@
 
   .surface-metallic-panel {
     background: linear-gradient(180deg, rgba(22, 26, 36, 0.85) 0%, rgba(12, 15, 22, 0.96) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(211, 226, 247, 0.28);
     box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 20px 40px -15px rgba(0, 0, 0, 0.6);
   }
 
   .surface-metallic-card {
     background: linear-gradient(180deg, rgba(26, 31, 44, 0.65) 0%, rgba(14, 17, 24, 0.88) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(211, 226, 247, 0.25);
     box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06), 0 8px 24px -8px rgba(0, 0, 0, 0.45);
     transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
   }
 
   .surface-metallic-card:hover {
-    border-color: rgba(255, 255, 255, 0.18);
+    border-color: rgba(211, 226, 247, 0.40);
     box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 16px 36px -10px rgba(0, 0, 0, 0.65);
   }
 
@@ -233,7 +264,7 @@
 
   .metallic-btn-secondary {
     background: linear-gradient(180deg, rgba(31, 36, 50, 0.9) 0%, rgba(20, 24, 34, 0.95) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(211, 226, 247, 0.28);
     color: #f1f5f9;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
     transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
@@ -241,8 +272,26 @@
 
   .metallic-btn-secondary:hover {
     background: linear-gradient(180deg, rgba(43, 49, 66, 0.95) 0%, rgba(27, 32, 45, 0.98) 100%);
-    border-color: rgba(255, 255, 255, 0.22);
+    border-color: rgba(211, 226, 247, 0.42);
     transform: translateY(-1px);
+  }
+
+  /* Light Theme Overrides for Metallic Containers */
+  [data-theme='light'] .surface-metallic-panel,
+  [data-theme='light'] .surface-metallic-card,
+  .light .surface-metallic-panel,
+  .light .surface-metallic-card {
+    border-color: hsl(var(--border-primary)) !important;
+  }
+
+  [data-theme='light'] .surface-metallic-card:hover,
+  .light .surface-metallic-card:hover {
+    border-color: #7490ac !important;
+  }
+
+  [data-theme='light'] .metallic-btn-secondary,
+  .light .metallic-btn-secondary {
+    border-color: hsl(var(--border-primary)) !important;
   }
 }
 

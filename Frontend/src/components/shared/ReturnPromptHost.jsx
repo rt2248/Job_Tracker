@@ -190,7 +190,7 @@ export default function ReturnPromptHost() {
             aria-labelledby="return-prompt-title"
         >
             {/* Modal Card matching LogoutModal design tokens */}
-            <div className="relative w-full max-w-md p-6 overflow-hidden bg-[#0A0A0A] rounded-2xl border border-[#262626] shadow-2xl animate-modal-content">
+            <div className="relative w-full max-w-md p-6 overflow-hidden bg-[#0A0A0A] rounded-2xl border border-[#4a5a74] shadow-2xl animate-modal-content">
 
                 {/* Close Button */}
                 <button
@@ -206,7 +206,7 @@ export default function ReturnPromptHost() {
 
                 {/* Header Icon */}
                 <div className="flex flex-col items-center text-center">
-                    <div className="mb-4 flex items-center justify-center w-12 h-12 rounded-2xl bg-[#171717] border border-[#262626] text-[#F5F5F5]">
+                    <div className="mb-4 flex items-center justify-center w-12 h-12 rounded-2xl bg-[#171717] border border-[#4a5a74] text-[#F5F5F5]">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                         </svg>
@@ -218,7 +218,7 @@ export default function ReturnPromptHost() {
                     </h3>
 
                     {/* Opportunity Details */}
-                    <div className="mt-3 p-3.5 rounded-xl bg-[#111111] border border-[#262626] w-full text-center">
+                    <div className="mt-3 p-3.5 rounded-xl bg-[#111111] border border-[#4a5a74] w-full text-center">
                         <p className="font-display text-base font-semibold text-[#F5F5F5]">
                             {promptData.title}
                         </p>
@@ -238,13 +238,13 @@ export default function ReturnPromptHost() {
                 </div>
 
                 {/* Actions */}
-                <div className="mt-6 flex items-center justify-between gap-3 pt-4 border-t border-[#262626]">
+                <div className="mt-6 flex items-center justify-between gap-3 pt-4 border-t border-[#4a5a74]">
                     <Button
                         type="button"
                         variant="secondary"
                         onClick={() => handleDismiss(promptData.listingId)}
                         disabled={isSubmitting}
-                        className="bg-[#111111] hover:bg-[#171717] hover:border-[#404040] text-[#F5F5F5] border-[#262626] focus-visible:ring-white/20 text-xs sm:text-sm"
+                        className="bg-[#111111] hover:bg-[#171717] hover:border-[#677995] text-[#F5F5F5] border-[#4a5a74] focus-visible:ring-white/20 text-xs sm:text-sm"
                     >
                         Maybe Later
                     </Button>

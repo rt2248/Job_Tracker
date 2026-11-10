@@ -21,7 +21,7 @@ const STAGE_META = {
     barColor: "bg-cyan",
     color: "#06b6d4",
     textColor: "text-cyan",
-    accentBorder: "border-cyan/40",
+    accentBorder: "border-cyan/50",
     shape: "triangle",
     isClosed: false,
   },
@@ -30,7 +30,7 @@ const STAGE_META = {
     barColor: "bg-amber",
     color: "#f59e0b",
     textColor: "text-amber",
-    accentBorder: "border-amber/40",
+    accentBorder: "border-amber/50",
     shape: "square",
     isClosed: false,
   },
@@ -39,7 +39,7 @@ const STAGE_META = {
     barColor: "bg-amber-400 dark:bg-yellow-400",
     color: "#fbbf24",
     textColor: "text-amber-500 dark:text-yellow-400",
-    accentBorder: "border-amber-400/40 dark:border-yellow-400/40",
+    accentBorder: "border-amber-400/50 dark:border-yellow-400/50",
     shape: "diamond",
     isClosed: false,
   },
@@ -48,7 +48,7 @@ const STAGE_META = {
     barColor: "bg-emerald-500 dark:bg-emerald-400",
     color: "#10b981",
     textColor: "text-emerald-600 dark:text-emerald-400",
-    accentBorder: "border-emerald-500/40",
+    accentBorder: "border-emerald-500/50",
     shape: "star",
     isClosed: false,
   },
@@ -57,7 +57,7 @@ const STAGE_META = {
     barColor: "bg-emerald-600 dark:bg-emerald-400",
     color: "#059669",
     textColor: "text-emerald-600 dark:text-emerald-400",
-    accentBorder: "border-emerald-600/40",
+    accentBorder: "border-emerald-600/50",
     shape: "check",
     isClosed: true,
   },
@@ -66,7 +66,7 @@ const STAGE_META = {
     barColor: "bg-red",
     color: "#ef4444",
     textColor: "text-red",
-    accentBorder: "border-red/40",
+    accentBorder: "border-red/50",
     shape: "cross",
     isClosed: true,
   },
@@ -148,7 +148,7 @@ function CustomPieTooltip({ active, payload, snapshotTotal }) {
           className={cn(
             "text-xs font-medium px-2 py-0.5 rounded-full border",
             !isClosed
-              ? "bg-cyan/10 text-cyan border-cyan/25"
+              ? "bg-cyan/10 text-cyan border-cyan/50"
               : "bg-surface-secondary text-ink-secondary border-border-subtle"
           )}
         >
@@ -424,7 +424,7 @@ export function PipelineDistributionDetails({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6 lg:gap-8">
         {/* 1. Active Stages Column */}
         <div className="flex flex-col gap-2.5 p-3.5 sm:p-4 rounded-xl bg-surface-secondary/40 border border-border-subtle">
-          <div className="flex items-center justify-between pb-3 mb-2 border-b border-border-subtle/80">
+          <div className="flex items-center justify-between pb-3 mb-2 border-b border-border-subtle">
             <span className="font-display font-semibold text-sm sm:text-base text-ink flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-cyan shrink-0" aria-hidden="true" />
               Active Opportunities
@@ -471,7 +471,7 @@ export function PipelineDistributionDetails({
 
                   <div className="flex items-center gap-2 shrink-0">
                     {/* Mini SVG proportional track */}
-                    <div className="w-16 sm:w-20 h-1.5 rounded-full bg-surface overflow-hidden border border-border-subtle/50 hidden sm:block">
+                    <div className="w-16 sm:w-20 h-1.5 rounded-full bg-surface overflow-hidden border border-border-subtle hidden sm:block">
                       <div
                         className={cn("h-full rounded-full transition-all duration-300", meta.barColor)}
                         style={{ width: `${Math.min(100, stage.percentage)}%` }}
@@ -494,7 +494,7 @@ export function PipelineDistributionDetails({
 
         {/* 2. Closed Outcomes Column */}
         <div className="flex flex-col gap-2.5 p-3.5 sm:p-4 rounded-xl bg-surface-secondary/40 border border-border-subtle">
-          <div className="flex items-center justify-between pb-3 mb-2 border-b border-border-subtle/80">
+          <div className="flex items-center justify-between pb-3 mb-2 border-b border-border-subtle">
             <span className="font-display font-semibold text-sm sm:text-base text-ink flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-slate-400 shrink-0" aria-hidden="true" />
               Closed Outcomes
@@ -541,7 +541,7 @@ export function PipelineDistributionDetails({
 
                   <div className="flex items-center gap-2 shrink-0">
                     {/* Mini SVG proportional track */}
-                    <div className="w-16 sm:w-20 h-1.5 rounded-full bg-surface overflow-hidden border border-border-subtle/50 hidden sm:block">
+                    <div className="w-16 sm:w-20 h-1.5 rounded-full bg-surface overflow-hidden border border-border-subtle hidden sm:block">
                       <div
                         className={cn("h-full rounded-full transition-all duration-300", meta.barColor)}
                         style={{ width: `${Math.min(100, stage.percentage)}%` }}
@@ -564,7 +564,7 @@ export function PipelineDistributionDetails({
       </div>
 
       {/* Mandatory Snapshot Disclaimer Banner */}
-      <div className="mt-8 sm:mt-9 pt-4 border-t border-border-subtle/70 flex items-start gap-2 text-xs sm:text-sm text-muted leading-relaxed">
+      <div className="mt-8 sm:mt-9 pt-4 border-t border-border-subtle flex items-start gap-2 text-xs sm:text-sm text-muted leading-relaxed">
         <svg viewBox="0 0 14 14" className="w-3.5 h-3.5 text-muted shrink-0 mt-0.5" fill="none">
           <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
           <path d="M7 6v4M7 4h.01" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />

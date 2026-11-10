@@ -64,17 +64,17 @@ export function ToastProvider({ children }) {
                     >
                         <div className="flex items-center gap-3 min-w-0">
                             {t.variant === "success" && (
-                                <span className="w-6 h-6 rounded-lg bg-green/15 text-green flex items-center justify-center text-xs shrink-0 font-bold border border-green/30">
+                                <span className="w-6 h-6 rounded-lg bg-green/15 text-green flex items-center justify-center text-xs shrink-0 font-bold border border-green/50">
                                     ✓
                                 </span>
                             )}
                             {t.variant === "info" && (
-                                <span className="w-6 h-6 rounded-lg bg-cyan/15 text-cyan flex items-center justify-center text-xs shrink-0 font-bold border border-cyan/30">
+                                <span className="w-6 h-6 rounded-lg bg-cyan/15 text-cyan flex items-center justify-center text-xs shrink-0 font-bold border border-cyan/50">
                                     ℹ
                                 </span>
                             )}
                             {t.variant === "error" && (
-                                <span className="w-6 h-6 rounded-lg bg-red/15 text-red flex items-center justify-center text-xs shrink-0 font-bold border border-red/30">
+                                <span className="w-6 h-6 rounded-lg bg-red/15 text-red flex items-center justify-center text-xs shrink-0 font-bold border border-red/50">
                                     ✕
                                 </span>
                             )}

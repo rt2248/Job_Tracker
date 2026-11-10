@@ -11,6 +11,7 @@ const assert = require("node:assert/strict");
 const {
   validateCareerAssessmentEvidence,
   minimizeCareerAssessmentTelemetry,
+  auditMetricCitation,
   AiConfigurationError,
   AiSchemaValidationError,
 } = require("../../src/services/ai");
@@ -621,6 +622,270 @@ describe("Stage 2B.3B Deterministic Evidence Validator", () => {
       assert.deepEqual(run1.claimsAnalysis, run2.claimsAnalysis);
       assert.equal(run1.isValid, run2.isValid);
       assert.equal(run1.status, run2.status);
+    });
+  });
+
+  // ==========================================================================
+  // 8. STAGE 2B.4A-R1: NUMERIC CLAIM GROUNDING CORRECTION & ADVERSARIAL MATRIX
+  // ==========================================================================
+  describe("8. Stage 2B.4A-R1: Numeric Claim Grounding Correction", () => {
+    const testTelemetry = {
+      trackedOpportunities: 1000,
+      submittedApplications: 8,
+      savedCount: 2,
+      activeInPipeline: 5,
+      interviewsInProgress: 2,
+      pendingOffers: 1,
+      cumulativeOffers: 1,
+      cumulativeRejections: 3,
+      stageDistribution: [
+        { status: "Applied", count: 3 },
+        { status: "Interview", count: 2 },
+        { status: "Offer", count: 1 },
+      ],
+      staleAlerts: {
+        thresholdDays: 14,
+        staleCount: 2,
+      },
+    };
+
+    // 1. Correct English number words
+    it("accepts correct English number words matching exact telemetry", () => {
+      const resInterviews = auditMetricCitation("two active interviews", testTelemetry);
+      assert.equal(resInterviews.isValid, true);
+
+      const resApps = auditMetricCitation("eight submitted applications", testTelemetry);
+      assert.equal(resApps.isValid, true);
+
+      const resOffers = auditMetricCitation("one pending offer", testTelemetry);
+      assert.equal(resOffers.isValid, true);
+    });
+
+    // 2. Incorrect English number words despite non-zero telemetry
+    it("rejects incorrect English number words even when telemetry is non-zero ('five interviews' when telemetry is 2)", () => {
+      const res = auditMetricCitation("five interviews", testTelemetry);
+      assert.equal(res.isValid, false);
+      assert.match(res.reason, /Value '5'/);
+      assert.match(res.reason, /does not match associated metric value/);
+    });
+
+    it("rejects 'twenty applications' when telemetry is 8", () => {
+      const res = auditMetricCitation("twenty applications", testTelemetry);
+      assert.equal(res.isValid, false);
+      assert.match(res.reason, /Value '20'/);
+    });
+
+    // 3. Compound number words
+    it("validates compound number words accurately (hyphenated and space-separated)", () => {
+      const resThreshold = auditMetricCitation("fourteen threshold days", testTelemetry);
+      assert.equal(resThreshold.isValid, true);
+
+      const resMismatch = auditMetricCitation("twenty-five submitted applications", testTelemetry);
+      assert.equal(resMismatch.isValid, false);
+      assert.match(resMismatch.reason, /Value '25'/);
+    });
+
+    // 4. Zero-valued metrics
+    it("accepts 'zero pending offers' when telemetry count is 0", () => {
+      const zeroTelemetry = { ...testTelemetry, pendingOffers: 0 };
+      const res = auditMetricCitation("zero pending offers", zeroTelemetry);
+      assert.equal(res.isValid, true);
+    });
+
+    it("rejects 'zero interviews' when telemetry count is 2", () => {
+      const res = auditMetricCitation("zero interviews", testTelemetry);
+      assert.equal(res.isValid, false);
+      assert.match(res.reason, /Value '0'/);
+    });
+
+    // 5. Matching decimal values where decimals are invalid for count metrics
+    it("rejects '2.0 interviews' because decimals are invalid for discrete count metrics", () => {
+      const res = auditMetricCitation("2.0 interviews", testTelemetry);
+      assert.equal(res.isValid, false);
+      assert.match(res.reason, /Decimal value/);
+      assert.match(res.reason, /invalid for discrete metric counts/);
+    });
+
+    it("rejects '2.5 interviews' even though 5 matches activeInPipeline", () => {
+      // Regression: extracted '5' must NOT match activeInPipeline = 5
+      const res = auditMetricCitation("2.5 interviews", testTelemetry);
+      assert.equal(res.isValid, false);
+      assert.match(res.reason, /Decimal value/);
+    });
+
+    // 6. Mismatching decimal values
+    it("rejects mismatching decimal values ('3.5 interviews')", () => {
+      const res = auditMetricCitation("3.5 interviews", testTelemetry);
+      assert.equal(res.isValid, false);
+      assert.match(res.reason, /Decimal value/);
+    });
+
+    // 7. Negative integers
+    it("rejects negative numbers ('-1 applications' and 'negative two interviews')", () => {
+      const resDigit = auditMetricCitation("-1 applications", testTelemetry);
+      assert.equal(resDigit.isValid, false);
+      assert.match(resDigit.reason, /Negative numeric value/);
+
+      const resWord = auditMetricCitation("negative two interviews", testTelemetry);
+      assert.equal(resWord.isValid, false);
+      assert.match(resWord.reason, /Negative numeric value/);
+    });
+
+    // 8. Numeric ranges
+    it("rejects numeric ranges ('2-5 applications') even though 2 and 5 exist in telemetry", () => {
+      const resDash = auditMetricCitation("2-5 applications", testTelemetry);
+      assert.equal(resDash.isValid, false);
+      assert.match(resDash.reason, /Numeric range expression/);
+
+      const resWord = auditMetricCitation("two to five interviews", testTelemetry);
+      assert.equal(resWord.isValid, false);
+      assert.match(resWord.reason, /Numeric range expression/);
+
+      const resBetween = auditMetricCitation("between 2 and 5 interviews", testTelemetry);
+      assert.equal(resBetween.isValid, false);
+      assert.match(resBetween.reason, /Numeric range expression/);
+    });
+
+    // 9. Comma-separated integers
+    it("accepts valid comma-separated thousands integer ('1,000 tracked opportunities')", () => {
+      const res = auditMetricCitation("1,000 tracked opportunities", testTelemetry);
+      assert.equal(res.isValid, true);
+    });
+
+    it("rejects mismatching comma-separated thousands integer ('2,000 tracked opportunities')", () => {
+      const res = auditMetricCitation("2,000 tracked opportunities", testTelemetry);
+      assert.equal(res.isValid, false);
+      assert.match(res.reason, /Value '2000'/);
+    });
+
+    // 10. Multiple metrics in one citation (independent clause grounding)
+    it("accepts multi-clause citation when all clauses match independently ('two interviews and one pending offer')", () => {
+      const res = auditMetricCitation("two interviews and one pending offer", testTelemetry);
+      assert.equal(res.isValid, true);
+    });
+
+    it("rejects multi-clause citation when clause 1 fails ('five interviews and one pending offer')", () => {
+      const res = auditMetricCitation("five interviews and one pending offer", testTelemetry);
+      assert.equal(res.isValid, false);
+      assert.match(res.reason, /Value '5'/);
+    });
+
+    it("rejects multi-clause citation when clause 2 fails ('two interviews and three pending offers')", () => {
+      const res = auditMetricCitation("two interviews and three pending offers", testTelemetry);
+      assert.equal(res.isValid, false);
+      assert.match(res.reason, /Value '3'/);
+    });
+
+    it("rejects swapped metric values across clauses ('one interview and two pending offers')", () => {
+      // 1 interview (actual: 2) and 2 offers (actual: 1)
+      const res = auditMetricCitation("one interview and two pending offers", testTelemetry);
+      assert.equal(res.isValid, false);
+      assert.match(res.reason, /Value '1'/);
+    });
+
+    // 11. Mixed numeric and qualitative claims
+    it("accepts mixed qualitative and numeric claims when both are grounded", () => {
+      const res = auditMetricCitation("many submitted applications and two active interviews", testTelemetry);
+      assert.equal(res.isValid, true);
+    });
+
+    it("rejects mixed qualitative and numeric claims when numeric part fails", () => {
+      const res = auditMetricCitation("many submitted applications and five active interviews", testTelemetry);
+      assert.equal(res.isValid, false);
+      assert.match(res.reason, /Value '5'/);
+    });
+
+    // 12. Numbers embedded in dates and years
+    it("rejects calendar year citations under count metrics ('applied in 2024')", () => {
+      const res = auditMetricCitation("applied in 2024", testTelemetry);
+      assert.equal(res.isValid, false);
+      assert.match(res.reason, /Value '2024'/);
+    });
+
+    // 13. Unsupported percentages
+    it("rejects unsupported percentage citations ('85% offer rate')", () => {
+      const res = auditMetricCitation("85% offer rate", testTelemetry);
+      assert.equal(res.isValid, false);
+      assert.match(res.reason, /Unsupported derived percentage/);
+    });
+
+    // 14. Valid supported derived percentages
+    it("accepts mathematically verified derived percentages (1 offer / 2 interviews = 50%)", () => {
+      const res = auditMetricCitation("50% interview to offer conversion", testTelemetry);
+      assert.equal(res.isValid, true);
+    });
+
+    // 15. Ambiguous metric terminology
+    it("rejects ambiguous metric terminology without clear telemetry mapping", () => {
+      const res = auditMetricCitation("as shown in metric 1", testTelemetry);
+      assert.equal(res.isValid, false);
+      assert.match(res.reason, /Ambiguous metric terminology/);
+    });
+
+    // 16. Empty and N/A citations
+    it("rejects empty or token-only citations", () => {
+      const resEmpty = auditMetricCitation("", testTelemetry);
+      assert.equal(resEmpty.isValid, false);
+
+      const resNA = auditMetricCitation("N/A", testTelemetry);
+      assert.equal(resNA.isValid, false);
+    });
+
+    // 17. End-to-end evidence validation with full payload
+    it("end-to-end: rejects full assessment when citedMetrics contains 'five interviews' for candidate with 2", () => {
+      const minReq = createValidMinimizedRequest({
+        pipelineTelemetry: testTelemetry,
+      });
+
+      const payload = createValidAssessmentPayload({
+        evidenceGrounding: {
+          citedMetrics: ["five interviews", "8 submitted applications"],
+          dataLimitationsNoted: "None",
+        },
+      });
+
+      const result = validateCareerAssessmentEvidence(minReq, payload);
+      assert.equal(result.isValid, false);
+      assert.equal(result.status, "UNSUPPORTED_CLAIMS");
+      assert.equal(result.sanitizedAssessment, null);
+      assert.ok(result.validationAudit.discrepancies.some((d) => d.includes("five interviews")));
+    });
+
+    it("end-to-end: accepts full assessment when citedMetrics uses supported English words ('two interviews')", () => {
+      const minReq = createValidMinimizedRequest({
+        pipelineTelemetry: testTelemetry,
+      });
+
+      const payload = createValidAssessmentPayload({
+        evidenceGrounding: {
+          citedMetrics: ["two active interviews", "8 submitted applications", "1 pending offer"],
+          dataLimitationsNoted: "None",
+        },
+      });
+
+      const result = validateCareerAssessmentEvidence(minReq, payload);
+      assert.equal(result.isValid, true);
+      assert.equal(result.status, "VALID");
+      assert.notEqual(result.sanitizedAssessment, null);
+      assert.equal(result.validationAudit.discrepancies.length, 0);
+    });
+
+    it("end-to-end: accepts genuinely qualitative claims supported by telemetry", () => {
+      const minReq = createValidMinimizedRequest({
+        pipelineTelemetry: testTelemetry,
+      });
+
+      const payload = createValidAssessmentPayload({
+        evidenceGrounding: {
+          citedMetrics: ["many submitted applications", "strong interview progress"],
+          dataLimitationsNoted: "None",
+        },
+      });
+
+      const result = validateCareerAssessmentEvidence(minReq, payload);
+      assert.equal(result.isValid, true);
+      assert.equal(result.status, "VALID");
+      assert.notEqual(result.sanitizedAssessment, null);
     });
   });
 });

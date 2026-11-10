@@ -57,7 +57,7 @@ export default function SegmentedBar({
   return (
     <div className={cn("relative w-full", className)}>
       <div
-        className="w-full flex items-center rounded-full overflow-hidden p-0.5 bg-surface-secondary/80 border border-border-primary/80 gap-0.5"
+        className="w-full flex items-center rounded-full overflow-hidden p-0.5 bg-surface-secondary/80 border border-border-primary gap-0.5"
         style={{ height }}
         role="group"
         aria-label="Proportional stage distribution bar"

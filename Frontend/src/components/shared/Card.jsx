@@ -6,7 +6,7 @@ const Card = forwardRef(({ className, hoverable = false, ...props }, ref) => (
     ref={ref}
     className={cn(
       'bg-surface border border-border-primary rounded-xl p-4 sm:p-6 card-3d transition-all duration-200',
-      hoverable && 'hover:border-border-accent/40 card-3d-hover hover:-translate-y-0.5',
+      hoverable && 'hover:border-border-accent/60 card-3d-hover hover:-translate-y-0.5',
       className
     )}
     {...props}

@@ -1,4 +1,5 @@
 import React from "react"
+import UserAvatar from "../shared/UserAvatar"
 import { cn } from "../../utils/cn"
 import { getApiUrl } from "../../utils/config"
 
@@ -74,23 +75,14 @@ const SidebarProfilePopover = ({
     >
       {/* A. Profile Identity Section */}
       <div className="flex items-center gap-2.5 p-1.5 min-w-0">
-        <div className="w-9 h-9 rounded-full bg-neutral-900 text-white text-sm font-bold flex items-center justify-center shrink-0 shadow-xs overflow-hidden relative ring-2 ring-neutral-900/10">
-          {avatarSrc ? (
-            <img
-              src={avatarSrc}
-              alt={fullName}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                e.currentTarget.style.display = "none"
-                const fallback = e.currentTarget.parentElement?.querySelector(".sidebar-popover-avatar-fallback")
-                if (fallback) fallback.classList.remove("hidden")
-              }}
-            />
-          ) : null}
-          <span className={`sidebar-popover-avatar-fallback ${avatarSrc ? "hidden" : "block"}`}>
-            {getInitials(userData)}
-          </span>
-        </div>
+        <UserAvatar
+          src={avatarSrc}
+          alt={fullName}
+          initials={getInitials(userData)}
+          sizeClass="w-9 h-9"
+          textSizeClass="text-sm"
+          fallbackClassName="bg-neutral-900 text-white"
+        />
 
         <div className="flex flex-col min-w-0 flex-1">
           {isLoadingUser ? (

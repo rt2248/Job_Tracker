@@ -11,7 +11,7 @@ const buttonVariants = cva(
         secondary: 'bg-surface-secondary hover:bg-surface-overlay text-ink border border-border-primary',
         ghost: 'bg-transparent hover:bg-surface-secondary text-ink border border-transparent',
         outline: 'bg-transparent hover:bg-surface-secondary text-ink border border-border-primary',
-        destructive: 'bg-red/15 hover:bg-red/25 text-red border border-red/30',
+        destructive: 'bg-red/15 hover:bg-red/25 text-red border border-red/50',
       },
       size: {
         sm: 'h-8 px-3 text-xs gap-1.5',

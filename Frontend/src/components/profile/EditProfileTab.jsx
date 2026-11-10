@@ -1,12 +1,14 @@
-import React, { useState, useRef, useEffect, useCallback } from "react"
-import Card, { CardHeader, CardTitle, CardContent } from "../shared/Card"
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react"
 import Input from "../shared/Input"
 import Button from "../shared/Button"
+import UserAvatar from "../shared/UserAvatar"
+import AvatarPreviewModal from "./AvatarPreviewModal"
+import AvatarCropModal from "./AvatarCropModal"
 import { cn } from "../../utils/cn"
 import { useToast } from "../../hooks/useToast"
 import { getApiUrl } from "../../utils/config"
-
-const MAX_AVATAR_SIZE = 2 * 1024 * 1024 // 2 MB
+import { calculateProfileCompleteness } from "../../utils/profileCompleteness"
+import { validateAvatarFile } from "../../utils/imageCrop"
 
 const getInitials = (first, last, username) => {
   const f = first?.[0] || ""
@@ -59,9 +61,9 @@ const EditProfileTab = ({
   // Skill input state
   const [skillInput, setSkillInput] = useState("")
 
-  // Avatar upload & remove state
-  const [avatarFile, setAvatarFile] = useState(null)
-  const [avatarPreview, setAvatarPreview] = useState(null)
+  // Avatar preview, crop & remove state
+  const [cropSession, setCropSession] = useState(null)
+  const [showAvatarPreview, setShowAvatarPreview] = useState(false)
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
   const [isRemovingAvatar, setIsRemovingAvatar] = useState(false)
   const avatarInputRef = useRef(null)
@@ -158,60 +160,44 @@ const EditProfileTab = ({
     setIsDirty(isDifferent)
   }, [setIsDirty])
 
-  // Clean up avatar preview URL on unmount
+  // Clean up crop session object URL on change or unmount
   useEffect(() => {
+    const activeUrl = cropSession?.url
     return () => {
-      if (avatarPreview) {
-        URL.revokeObjectURL(avatarPreview)
+      if (activeUrl) {
+        URL.revokeObjectURL(activeUrl)
       }
     }
-  }, [avatarPreview])
+  }, [cropSession])
 
-  // Handle avatar file selection
+  // Handle avatar file selection: validate upfront and open Instagram/Discord-style crop workspace
   const handleAvatarSelect = (e) => {
     const file = e.target.files?.[0]
+    if (avatarInputRef.current) avatarInputRef.current.value = ""
     if (!file) return
 
-    const ext = file.name.slice(file.name.lastIndexOf(".")).toLowerCase()
-    if (![".png", ".jpg", ".jpeg", ".webp"].includes(ext)) {
-      toast.error("Only PNG, JPEG, and WebP images are permitted for avatars. SVG and GIF are not allowed.")
-      if (avatarInputRef.current) avatarInputRef.current.value = ""
+    const validation = validateAvatarFile(file)
+    if (!validation.valid) {
+      toast.error(validation.error)
       return
-    }
-
-    if (file.size > MAX_AVATAR_SIZE) {
-      toast.error("Avatar image exceeds the 2MB size limit.")
-      if (avatarInputRef.current) avatarInputRef.current.value = ""
-      return
-    }
-
-    if (file.size === 0) {
-      toast.error("Selected file is empty.")
-      if (avatarInputRef.current) avatarInputRef.current.value = ""
-      return
-    }
-
-    if (avatarPreview) {
-      URL.revokeObjectURL(avatarPreview)
     }
 
     const previewUrl = URL.createObjectURL(file)
-    setAvatarFile(file)
-    setAvatarPreview(previewUrl)
+    setCropSession({
+      url: previewUrl,
+      fileName: file.name,
+      preferredMimeType: file.type,
+    })
   }
 
-  const handleCancelAvatarPreview = () => {
-    if (avatarPreview) {
-      URL.revokeObjectURL(avatarPreview)
-    }
-    setAvatarFile(null)
-    setAvatarPreview(null)
-    if (avatarInputRef.current) avatarInputRef.current.value = ""
-  }
+  const handleCancelCrop = useCallback(() => {
+    if (isUploadingAvatar) return
+    setCropSession(null)
+  }, [isUploadingAvatar])
 
-  // Upload avatar to backend
-  const handleUploadAvatar = async () => {
-    if (!avatarFile) return
+  // Upload cropped avatar file to existing backend endpoint
+  const handleConfirmCropUpload = async (croppedFile) => {
+    if (!croppedFile || isUploadingAvatar) return
     const token = localStorage.getItem("token")
     if (!token) {
       toast.error("Authentication required. Please sign in again.")
@@ -221,7 +207,7 @@ const EditProfileTab = ({
     try {
       setIsUploadingAvatar(true)
       const formDataUpload = new FormData()
-      formDataUpload.append("avatar", avatarFile)
+      formDataUpload.append("avatar", croppedFile)
 
       const res = await fetch(getApiUrl("/api/profile/avatar"), {
         method: "POST",
@@ -235,7 +221,7 @@ const EditProfileTab = ({
         toast.success(data.message || "Avatar uploaded successfully!")
         setFormData((prev) => ({ ...prev, avatarUrl: data.avatarUrl }))
         onAvatarUploaded?.(data.avatarUrl)
-        handleCancelAvatarPreview()
+        setCropSession(null)
       } else {
         toast.error(data.message || "Failed to upload avatar.")
       }
@@ -398,13 +384,28 @@ const EditProfileTab = ({
     onSaveProfile(payload)
   }
 
-  const currentDisplayAvatar = avatarPreview || (formData.avatarUrl ? (formData.avatarUrl.startsWith("http") ? formData.avatarUrl : getApiUrl(formData.avatarUrl)) : null)
+  const currentDisplayAvatar = formData.avatarUrl
+    ? (formData.avatarUrl.startsWith("http") ? formData.avatarUrl : getApiUrl(formData.avatarUrl))
+    : null
+  const displayFullName = [formData.firstName, formData.lastName].filter(Boolean).join(" ") || "Your Profile"
+  const avatarInitials = getInitials(formData.firstName, formData.lastName, initialData?.username)
+
+  const completeness = useMemo(() => {
+    return calculateProfileCompleteness(
+      {
+        ...initialData,
+        ...formData,
+      },
+      initialData?.resume
+    )
+  }, [initialData, formData])
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto flex flex-col gap-6">
+    <>
+      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto flex flex-col gap-6">
       {/* Unsaved Changes Banner */}
       {isDirty && (
-        <div className="p-3.5 rounded-xl bg-amber/10 border border-amber/30 flex items-center justify-between gap-3 text-xs sm:text-sm text-amber animate-fadeIn">
+        <div className="p-3.5 rounded-xl bg-amber/10 border border-amber/50 flex items-center justify-between gap-3 text-xs sm:text-sm text-amber animate-fadeIn">
           <div className="flex items-center gap-2 font-medium">
             <span className="w-2 h-2 rounded-full bg-amber animate-pulse" />
             <span>You have unsaved changes in your profile.</span>
@@ -416,7 +417,7 @@ const EditProfileTab = ({
               size="sm"
               onClick={onCancelEdits}
               disabled={isSaving}
-              className="text-amber border-amber/40 hover:bg-amber/15 text-xs sm:text-sm h-8 px-3"
+              className="text-amber border-amber/50 hover:bg-amber/15 text-xs sm:text-sm h-8 px-3"
             >
               Cancel
             </Button>
@@ -433,27 +434,107 @@ const EditProfileTab = ({
         </div>
       )}
 
-      {/* 1. Avatar Section */}
-      <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
-        <CardHeader className="mb-4">
-          <CardTitle className="text-lg sm:text-xl font-display font-semibold">Profile Picture</CardTitle>
-          <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
-            Supported formats: PNG, JPEG, WebP (Max 2MB). SVG and GIF formats are not allowed.
-          </p>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col sm:flex-row items-center gap-6">
-            <div className="w-24 h-24 rounded-full bg-surface-secondary border border-border-primary flex items-center justify-center text-ink text-3xl font-display font-semibold select-none shadow-sm overflow-hidden shrink-0 relative">
-              {currentDisplayAvatar ? (
-                <img
-                  src={currentDisplayAvatar}
-                  alt="Avatar"
-                  className="w-full h-full object-cover rounded-full"
-                />
-              ) : (
-                <span>{getInitials(formData.firstName, formData.lastName, initialData?.username)}</span>
+      {/* Top Professional Identity Summary Panel */}
+      <section className="bg-surface border border-border-primary p-6 sm:p-7 rounded-xl shadow-sm">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 text-center sm:text-left">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 min-w-0">
+            <UserAvatar
+              src={currentDisplayAvatar}
+              alt={displayFullName}
+              initials={avatarInitials}
+              sizeClass="w-16 h-16 sm:w-20 sm:h-20"
+              textSizeClass="text-2xl sm:text-3xl"
+              onClick={() => setShowAvatarPreview(true)}
+              ariaLabel="View profile picture"
+              title="Click to view profile picture"
+            />
+            <div className="min-w-0">
+              <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
+                <h2 className="text-xl sm:text-2xl font-bold font-display text-ink tracking-tight truncate">
+                  {[formData.firstName, formData.lastName].filter(Boolean).join(" ") || "Your Profile"}
+                </h2>
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-cyan/15 text-cyan border border-cyan/40">
+                  {completeness.score}% Complete
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm font-medium text-ink-secondary mt-1 truncate max-w-lg">
+                {formData.headline || "Add a professional headline below to highlight your specialty"}
+              </p>
+              {formData.location && (
+                <p className="text-xs text-muted mt-1 flex items-center justify-center sm:justify-start gap-1.5">
+                  <svg className="w-3.5 h-3.5 text-muted shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span>{formData.location}</span>
+                </p>
               )}
             </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              type="submit"
+              variant="primary"
+              size="sm"
+              isLoading={isSaving}
+              className="text-xs sm:text-sm h-9 px-4 font-semibold"
+            >
+              Save Changes
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onCancelEdits}
+              disabled={isSaving}
+              className="text-xs sm:text-sm h-9 px-3.5"
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+
+        {/* Live Completion Bar */}
+        <div className="mt-4 pt-3.5 border-t border-border-subtle flex flex-col gap-1.5">
+          <div className="flex items-center justify-between text-xs font-sans">
+            <span className="text-muted font-medium flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan" />
+              Live Profile Completion
+            </span>
+            <span className="font-mono font-bold text-ink">
+              {completeness.completedCount} of {completeness.totalCount} items complete
+            </span>
+          </div>
+          <div className="w-full bg-surface-secondary rounded-full h-1.5 overflow-hidden border border-border-subtle">
+            <div
+              className="bg-cyan h-full rounded-full transition-all duration-300"
+              style={{ width: `${Math.max(4, completeness.score)}%` }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* 1. Avatar Section */}
+      <section id="edit-section-avatar" className="bg-surface border border-border-primary p-6 sm:p-8 rounded-xl shadow-sm flex flex-col gap-5 scroll-mt-20">
+        <div className="pb-3 border-b border-border-subtle">
+          <h3 className="text-xl sm:text-2xl font-bold font-display text-ink tracking-tight">Profile Photo</h3>
+          <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
+            Supported formats: PNG, JPEG, WebP (Max 2MB).
+          </p>
+        </div>
+        <div>
+          <div className="flex flex-col sm:flex-row items-center gap-6">
+            <UserAvatar
+              src={currentDisplayAvatar}
+              alt={displayFullName}
+              initials={avatarInitials}
+              sizeClass="w-24 h-24"
+              textSizeClass="text-3xl"
+              onClick={() => setShowAvatarPreview(true)}
+              ariaLabel="View profile picture"
+              title="Click to view profile picture"
+            />
 
             <div className="flex flex-col gap-3 w-full sm:w-auto">
               <input
@@ -466,40 +547,18 @@ const EditProfileTab = ({
               />
 
               <div className="flex flex-wrap items-center gap-2">
-                {!avatarFile ? (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => avatarInputRef.current?.click()}
-                    disabled={isUploadingAvatar}
-                  >
-                    Change Avatar
-                  </Button>
-                ) : (
-                  <>
-                    <Button
-                      type="button"
-                      variant="primary"
-                      size="sm"
-                      isLoading={isUploadingAvatar}
-                      onClick={handleUploadAvatar}
-                    >
-                      Save Picture
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      size="sm"
-                      disabled={isUploadingAvatar}
-                      onClick={handleCancelAvatarPreview}
-                    >
-                      Cancel
-                    </Button>
-                  </>
-                )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => avatarInputRef.current?.click()}
+                  disabled={isUploadingAvatar || isRemovingAvatar}
+                  className="h-9 text-xs sm:text-sm px-3.5"
+                >
+                  Change Avatar
+                </Button>
 
-                {formData.avatarUrl && !avatarFile && (
+                {formData.avatarUrl && (
                   <Button
                     type="button"
                     variant="ghost"
@@ -507,66 +566,58 @@ const EditProfileTab = ({
                     onClick={handleRemoveAvatar}
                     disabled={isRemovingAvatar || isUploadingAvatar}
                     isLoading={isRemovingAvatar}
-                    className="text-xs sm:text-sm text-red hover:text-red hover:bg-red/10"
+                    className="text-xs sm:text-sm text-red hover:text-red hover:bg-red/10 h-9 px-3"
                   >
                     Remove Photo
                   </Button>
                 )}
               </div>
-
-              {avatarFile && (
-                <p className="text-xs text-muted font-mono">
-                  Selected: {avatarFile.name} ({(avatarFile.size / 1024).toFixed(1)} KB) &ndash; Click &quot;Save Picture&quot; to apply.
-                </p>
-              )}
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
       {/* 2. Identity Information */}
-      <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
-        <CardHeader className="mb-4">
-          <CardTitle className="text-lg sm:text-xl font-display font-semibold">Personal Information</CardTitle>
+      <section id="edit-section-personal" className="bg-surface border border-border-primary p-6 sm:p-8 rounded-xl shadow-sm flex flex-col gap-5 scroll-mt-20">
+        <div className="pb-3 border-b border-border-subtle">
+          <h3 className="text-xl sm:text-2xl font-bold font-display text-ink tracking-tight">Personal Information</h3>
           <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
-            Your legal or display name associated with your Job Tracker developer account.
+            Your legal or display name associated with your developer profile.
           </p>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Input
-              label="First Name *"
-              value={formData.firstName}
-              onChange={(e) => handleFieldChange("firstName", e.target.value)}
-              placeholder="e.g. Jane"
-              required
-            />
-            <Input
-              label="Middle Name"
-              value={formData.middleName}
-              onChange={(e) => handleFieldChange("middleName", e.target.value)}
-              placeholder="Optional"
-            />
-            <Input
-              label="Last Name *"
-              value={formData.lastName}
-              onChange={(e) => handleFieldChange("lastName", e.target.value)}
-              placeholder="e.g. Doe"
-              required
-            />
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <Input
+            label="First Name *"
+            value={formData.firstName}
+            onChange={(e) => handleFieldChange("firstName", e.target.value)}
+            placeholder="e.g. Jane"
+            required
+          />
+          <Input
+            label="Middle Name"
+            value={formData.middleName}
+            onChange={(e) => handleFieldChange("middleName", e.target.value)}
+            placeholder="Optional"
+          />
+          <Input
+            label="Last Name *"
+            value={formData.lastName}
+            onChange={(e) => handleFieldChange("lastName", e.target.value)}
+            placeholder="e.g. Doe"
+            required
+          />
+        </div>
+      </section>
 
-      {/* 3. Professional Headline & Bio */}
-      <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
-        <CardHeader className="mb-4">
-          <CardTitle className="text-lg sm:text-xl font-display font-semibold">Professional Profile</CardTitle>
+      {/* 3. Professional Profile */}
+      <section id="edit-section-profile" className="bg-surface border border-border-primary p-6 sm:p-8 rounded-xl shadow-sm flex flex-col gap-5 scroll-mt-20">
+        <div className="pb-3 border-b border-border-subtle">
+          <h3 className="text-xl sm:text-2xl font-bold font-display text-ink tracking-tight">Professional Profile</h3>
           <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
-            Summarize your role, specialization, and engineering journey.
+            Headline, specialization, and developer background.
           </p>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        </div>
+        <div className="space-y-4">
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label htmlFor="headline-input" className="text-xs sm:text-sm font-medium text-ink-secondary">Headline</label>
@@ -596,7 +647,7 @@ const EditProfileTab = ({
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label htmlFor="bio-textarea" className="text-xs sm:text-sm font-medium text-ink-secondary">Bio</label>
+              <label htmlFor="bio-textarea" className="text-xs sm:text-sm font-medium text-ink-secondary">Bio Summary</label>
               <span className="text-xs font-mono text-muted">
                 {formData.bio.length}/2000
               </span>
@@ -611,18 +662,18 @@ const EditProfileTab = ({
               className="w-full px-3 py-2 text-sm bg-surface-secondary text-ink placeholder:text-muted rounded-lg border border-border-primary focus:border-cyan focus:ring-2 focus:ring-cyan/30 transition-all outline-none resize-y"
             />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
       {/* 4. Technical Skills */}
-      <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
-        <CardHeader className="mb-4">
-          <CardTitle className="text-lg sm:text-xl font-display font-semibold">Technical Skills</CardTitle>
+      <section id="edit-section-skills" className="bg-surface border border-border-primary p-6 sm:p-8 rounded-xl shadow-sm flex flex-col gap-5 scroll-mt-20">
+        <div className="pb-3 border-b border-border-subtle">
+          <h3 className="text-xl sm:text-2xl font-bold font-display text-ink tracking-tight">Technical Skills</h3>
           <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
             Add key technologies, languages, and frameworks in your toolbelt.
           </p>
-        </CardHeader>
-        <CardContent>
+        </div>
+        <div>
           <div className="flex items-center gap-2 mb-4">
             <Input
               value={skillInput}
@@ -640,14 +691,14 @@ const EditProfileTab = ({
               type="button"
               variant="secondary"
               onClick={handleAddSkill}
-              className="shrink-0 text-sm"
+              className="shrink-0 text-xs sm:text-sm h-9 px-3.5"
             >
               Add Skill
             </Button>
           </div>
 
           {formData.skills.length > 0 ? (
-            <div className="flex flex-wrap gap-2 pt-2">
+            <div className="flex flex-wrap gap-2 pt-1">
               {formData.skills.map((skill) => (
                 <span
                   key={skill}
@@ -657,7 +708,7 @@ const EditProfileTab = ({
                   <button
                     type="button"
                     onClick={() => handleRemoveSkill(skill)}
-                    className="text-muted hover:text-ink cursor-pointer transition-colors"
+                    className="text-muted hover:text-ink cursor-pointer transition-colors p-0.5"
                     title={`Remove ${skill}`}
                     aria-label={`Remove ${skill}`}
                   >
@@ -667,17 +718,17 @@ const EditProfileTab = ({
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted italic">No skills added yet.</p>
+            <p className="text-sm text-muted italic font-sans">No skills added yet.</p>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
       {/* 5. Experience Entries */}
-      <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
-        <CardHeader className="flex flex-row items-center justify-between gap-3 mb-4">
+      <section id="edit-section-experience" className="bg-surface border border-border-subtle p-6 sm:p-7 rounded-xl shadow-xs scroll-mt-20">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-border-subtle">
           <div>
-            <CardTitle className="text-lg sm:text-xl font-display font-semibold">Professional Experience</CardTitle>
-            <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
+            <h3 className="text-lg sm:text-xl font-display font-bold text-ink">Professional Experience</h3>
+            <p className="text-sm text-muted font-sans mt-0.5">
               Add your relevant work history and technical achievements.
             </p>
           </div>
@@ -686,36 +737,37 @@ const EditProfileTab = ({
             variant="outline"
             size="sm"
             onClick={handleAddExperience}
-            className="shrink-0 text-xs sm:text-sm"
+            className="shrink-0 text-xs sm:text-sm self-start sm:self-auto"
           >
             + Add Position
           </Button>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        </div>
+
+        <div className="space-y-4">
           {formData.experience.length === 0 ? (
-            <p className="text-sm text-muted italic">
+            <p className="text-sm text-muted italic font-sans py-4 text-center">
               No experience items yet. Click &quot;+ Add Position&quot; to list your experience.
             </p>
           ) : (
             formData.experience.map((exp, idx) => (
               <div
                 key={`exp-card-${idx}`}
-                className="p-4 rounded-xl bg-surface-secondary/40 border border-border-subtle relative space-y-3"
+                className="p-5 rounded-lg bg-surface-secondary/40 border border-border-subtle relative space-y-4"
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs sm:text-sm font-mono font-semibold text-muted">
+                <div className="flex items-center justify-between pb-2 border-b border-border-subtle/60">
+                  <span className="text-xs sm:text-sm font-mono font-semibold text-ink">
                     Position #{idx + 1}
                   </span>
                   <button
                     type="button"
                     onClick={() => handleRemoveExperience(idx)}
-                    className="text-xs sm:text-sm text-red hover:underline cursor-pointer"
+                    className="text-xs sm:text-sm text-red hover:text-red/80 font-medium cursor-pointer transition-colors"
                   >
                     Remove
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Input
                     label="Company Name *"
                     value={exp.company}
@@ -732,7 +784,7 @@ const EditProfileTab = ({
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <Input
                     label="Location"
                     value={exp.location || ""}
@@ -762,40 +814,40 @@ const EditProfileTab = ({
                     onChange={(e) => handleUpdateExperience(idx, "current", e.target.checked)}
                     className="rounded border-border-primary text-cyan focus:ring-cyan/30 cursor-pointer"
                   />
-                  <label htmlFor={`current-role-${idx}`} className="text-xs sm:text-sm text-ink-secondary cursor-pointer">
+                  <label htmlFor={`current-role-${idx}`} className="text-xs sm:text-sm text-ink-secondary cursor-pointer select-none">
                     I currently work in this role
                   </label>
                 </div>
 
                 <div>
-                  <label htmlFor={`exp-desc-${idx}`} className="text-xs sm:text-sm font-medium text-ink-secondary block mb-1">
+                  <label htmlFor={`exp-desc-${idx}`} className="text-xs sm:text-sm font-medium text-ink-secondary block mb-1.5 font-sans">
                     Role Description & Accomplishments
                   </label>
                   <textarea
                     id={`exp-desc-${idx}`}
                     value={exp.description || ""}
                     onChange={(e) => handleUpdateExperience(idx, "description", e.target.value)}
-                    rows={2}
+                    rows={3}
                     maxLength={2000}
                     placeholder="Summary of responsibilities, technologies utilized, and impact..."
-                    className="w-full px-3 py-2 text-sm bg-surface-secondary text-ink placeholder:text-muted rounded-lg border border-border-primary focus:border-cyan focus:ring-2 focus:ring-cyan/30 transition-all outline-none"
+                    className="w-full px-3 py-2 text-sm bg-surface-secondary text-ink placeholder:text-muted rounded-lg border border-border-primary focus:border-cyan focus:ring-2 focus:ring-cyan/30 transition-all outline-none font-sans"
                   />
                 </div>
               </div>
             ))
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
       {/* 6. Portfolio & Social Links */}
-      <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
-        <CardHeader className="mb-4">
-          <CardTitle className="text-lg sm:text-xl font-display font-semibold">Portfolio & Social Links</CardTitle>
-          <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
+      <section id="edit-section-links" className="bg-surface border border-border-subtle p-6 sm:p-7 rounded-xl shadow-xs scroll-mt-20">
+        <div className="mb-6 pb-4 border-b border-border-subtle">
+          <h3 className="text-lg sm:text-xl font-display font-bold text-ink">Portfolio & Social Links</h3>
+          <p className="text-sm text-muted font-sans mt-0.5">
             Connect your personal portfolio, GitHub, LinkedIn, and social profiles.
           </p>
-        </CardHeader>
-        <CardContent>
+        </div>
+        <div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="Portfolio URL"
@@ -822,23 +874,23 @@ const EditProfileTab = ({
               placeholder="https://twitter.com/yourhandle"
             />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
       {/* 7. Public Profile & Granular Visibility Settings */}
-      <Card className="bg-surface border-border-primary p-6 rounded-2xl shadow-sm">
-        <CardHeader className="mb-4">
-          <CardTitle className="text-lg sm:text-xl font-display font-semibold">Public Profile & Privacy Controls</CardTitle>
-          <p className="text-xs sm:text-sm text-muted font-sans mt-0.5">
+      <section id="edit-section-privacy" className="bg-surface border border-border-subtle p-6 sm:p-7 rounded-xl shadow-xs scroll-mt-20">
+        <div className="mb-6 pb-4 border-b border-border-subtle">
+          <h3 className="text-lg sm:text-xl font-display font-bold text-ink">Public Profile & Privacy Controls</h3>
+          <p className="text-sm text-muted font-sans mt-0.5">
             Configure how your profile appears to public visitors and potential employers.
           </p>
-        </CardHeader>
-        <CardContent className="space-y-6">
+        </div>
+        <div className="space-y-6">
           {/* Master Public Toggle */}
-          <div className="p-4 rounded-xl bg-surface-secondary/50 border border-border-subtle flex items-center justify-between gap-4">
+          <div className="p-4 sm:p-5 rounded-lg bg-surface-secondary/40 border border-border-subtle flex items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-base text-ink font-display">Public Profile Mode</span>
+                <span className="font-bold text-base text-ink font-display">Public Profile Mode</span>
                 <span className="text-border-primary/80">·</span>
                 <span className={cn(
                   "text-xs sm:text-sm font-sans font-medium flex items-center gap-1.5",
@@ -855,7 +907,7 @@ const EditProfileTab = ({
             <button
               type="button"
               onClick={() => handleFieldChange("isPublicProfile", !formData.isPublicProfile)}
-              className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
+              className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
                 formData.isPublicProfile ? "bg-cyan" : "bg-surface-secondary border border-border-primary"
               }`}
               role="switch"
@@ -863,8 +915,8 @@ const EditProfileTab = ({
               aria-label="Toggle Public Profile Mode"
             >
               <span
-                className={`w-4 h-4 rounded-full bg-white shadow-sm block transition-transform absolute top-1 ${
-                  formData.isPublicProfile ? "left-7" : "left-1"
+                className={`w-4 h-4 rounded-full bg-white shadow-xs block transition-transform absolute top-1 ${
+                  formData.isPublicProfile ? "left-6" : "left-1"
                 }`}
               />
             </button>
@@ -872,7 +924,7 @@ const EditProfileTab = ({
 
           {/* Granular Visibility Settings (active when public) */}
           <div className="space-y-3">
-            <h4 className="text-xs sm:text-sm font-semibold text-ink-secondary tracking-wide uppercase font-mono">
+            <h4 className="text-xs font-semibold text-muted tracking-wider uppercase font-mono">
               Granular Field Visibility {formData.isPublicProfile ? "(Active)" : "(Applied when public)"}
             </h4>
 
@@ -894,11 +946,11 @@ const EditProfileTab = ({
                   <div
                     key={key}
                     onClick={() => handleVisibilityToggle(key)}
-                    className="p-3 rounded-xl bg-surface-secondary/30 border border-border-subtle flex items-center justify-between gap-3 cursor-pointer hover:bg-surface-secondary/60 transition-colors"
+                    className="p-3.5 rounded-lg bg-surface-secondary/30 border border-border-subtle flex items-center justify-between gap-3 cursor-pointer hover:bg-surface-secondary/60 transition-colors"
                   >
                     <div>
-                      <span className="font-medium text-sm text-ink block">{label}</span>
-                      <span className="text-xs text-muted block mt-0.5">{desc}</span>
+                      <span className="font-semibold text-sm text-ink block font-sans">{label}</span>
+                      <span className="text-xs text-muted block mt-0.5 font-sans">{desc}</span>
                     </div>
                     <button
                       type="button"
@@ -910,7 +962,7 @@ const EditProfileTab = ({
                       aria-label={`Toggle ${label} visibility`}
                     >
                       <span
-                        className={`w-3.5 h-3.5 rounded-full bg-white shadow-sm block transition-transform absolute top-0.5 ${
+                        className={`w-3.5 h-3.5 rounded-full bg-white shadow-xs block transition-transform absolute top-0.5 ${
                           isChecked ? "left-5" : "left-0.5"
                         }`}
                       />
@@ -920,14 +972,14 @@ const EditProfileTab = ({
               })}
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
       {/* Action Bar */}
-      <div className="sticky bottom-4 z-20 p-4 rounded-2xl bg-surface/95 backdrop-blur-md border border-border-primary shadow-xl flex items-center justify-between gap-4">
-        <div className="text-xs sm:text-sm text-muted font-sans">
+      <div className="sticky bottom-4 z-20 p-4 rounded-xl bg-surface/95 backdrop-blur-md border border-border-primary shadow-lg flex items-center justify-between gap-4">
+        <div className="text-xs sm:text-sm font-sans">
           {isDirty ? (
-            <span className="text-amber font-medium flex items-center gap-1.5">
+            <span className="text-amber font-medium flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-amber animate-pulse" />
               Unsaved changes pending
             </span>
@@ -943,7 +995,7 @@ const EditProfileTab = ({
             size="md"
             onClick={onCancelEdits}
             disabled={isSaving}
-            className="text-sm sm:text-base px-4 py-2"
+            className="text-sm font-medium px-4 py-2"
           >
             Cancel
           </Button>
@@ -952,13 +1004,34 @@ const EditProfileTab = ({
             variant="primary"
             size="md"
             isLoading={isSaving}
-            className="text-sm sm:text-base px-5 py-2"
+            className="text-sm font-semibold px-5 py-2"
           >
             Save Changes
           </Button>
         </div>
       </div>
     </form>
+
+    <AvatarPreviewModal
+      isOpen={showAvatarPreview}
+      onClose={() => setShowAvatarPreview(false)}
+      src={currentDisplayAvatar}
+      alt={displayFullName}
+      initials={avatarInitials}
+      displayName={displayFullName}
+      username={initialData?.username}
+    />
+
+    <AvatarCropModal
+      isOpen={Boolean(cropSession)}
+      imageUrl={cropSession?.url}
+      fileName={cropSession?.fileName}
+      preferredMimeType={cropSession?.preferredMimeType}
+      isUploading={isUploadingAvatar}
+      onCancel={handleCancelCrop}
+      onConfirm={handleConfirmCropUpload}
+    />
+  </>
   )
 }
 

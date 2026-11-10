@@ -250,6 +250,7 @@ const Profile = () => {
       if (res.ok) {
         toast.success(data.message || "Profile updated successfully!")
         setUserData(data.profile)
+        window.dispatchEvent(new CustomEvent("profile:updated", { detail: data.profile }))
         if (data.profile?.resume) {
           setResume(data.profile.resume)
         }
@@ -435,15 +436,31 @@ const Profile = () => {
     navigate("/login")
   }
 
+  const isOverviewTab = activeTab === "overview"
+
   return (
     <>
-      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar">
-        <div className="max-w-5xl mx-auto flex flex-col gap-4 sm:gap-6">
-          <ProfileHeader />
+      <main
+        className={cn(
+          "flex-1 min-h-0 flex flex-col px-4 pt-4 sm:px-6 sm:pt-6 lg:px-8 lg:pt-8 custom-scrollbar",
+          isOverviewTab
+            ? "overflow-y-auto lg:overflow-hidden pb-4 sm:pb-6 lg:pb-4"
+            : "overflow-y-auto pb-4 sm:pb-6 lg:pb-8"
+        )}
+      >
+        <div
+          className={cn(
+            "w-full mx-auto flex flex-col gap-5 sm:gap-6",
+            isOverviewTab ? "max-w-6xl lg:flex-1 lg:min-h-0" : "max-w-5xl"
+          )}
+        >
+          <div className="shrink-0">
+            <ProfileHeader />
+          </div>
 
           {/* Profile Navigation Menu */}
           <div
-            className="flex items-center gap-1 sm:gap-1.5 w-full border-b border-border-subtle/80 pb-3 overflow-x-auto custom-scrollbar flex-nowrap"
+            className="shrink-0 flex items-center gap-1 sm:gap-1.5 w-full border-b border-border-subtle pb-3 overflow-x-auto custom-scrollbar flex-nowrap"
             role="tablist"
             aria-label="Profile navigation sections"
           >
@@ -491,7 +508,7 @@ const Profile = () => {
           </div>
 
           {/* Tab Content with Directional Sliding Transition (Persistent panels to prevent unmounting/stutter) */}
-          <div className="w-full profile-tab-viewport">
+          <div className={cn("w-full profile-tab-viewport", isOverviewTab ? "lg:flex-1 lg:min-h-0" : "")}>
             {/* 1. Overview Tab */}
             <div
               id="profile-panel-overview"
@@ -499,7 +516,7 @@ const Profile = () => {
               aria-labelledby="profile-tab-overview"
               aria-hidden={activeTab !== "overview"}
               className={cn(
-                "w-full profile-tab-panel",
+                "w-full profile-tab-panel lg:h-full",
                 activeTab === "overview"
                   ? (hasNavigated
                       ? (slideDirection === "forward"
@@ -527,7 +544,17 @@ const Profile = () => {
                 returnPromptsEnabled={returnPromptsEnabled}
                 onToggleReturnPrompts={() => setReturnPromptsEnabled(!returnPromptsEnabled)}
                 onRequestSignOut={() => setShowLogoutModal(true)}
-                onNavigateToEdit={() => handleTabChange("edit")}
+                onNavigateToEdit={(anchorId) => {
+                  handleTabChange("edit")
+                  if (anchorId) {
+                    setTimeout(() => {
+                      const el = document.getElementById(anchorId)
+                      if (el) {
+                        el.scrollIntoView({ behavior: "smooth", block: "start" })
+                      }
+                    }, 250)
+                  }
+                }}
               />
             </div>
 
@@ -558,6 +585,7 @@ const Profile = () => {
                 setIsDirty={setIsDirty}
                 onAvatarUploaded={(newUrl) => {
                   setUserData((prev) => ({ ...prev, avatarUrl: newUrl }))
+                  window.dispatchEvent(new CustomEvent("profile:updated", { detail: { avatarUrl: newUrl } }))
                 }}
               />
             </div>

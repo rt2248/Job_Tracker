@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import useInsights from "../../hooks/useInsights";
 import Button from "../../components/shared/Button";
 import ThemeToggleButton from "../../components/shared/ThemeToggleButton";
@@ -37,6 +38,7 @@ function formatEnteredDate(isoString) {
  * stale application alerts, and rule-based recommendations.
  */
 export default function Insights() {
+  const navigate = useNavigate();
   const {
     summary,
     pipeline,
@@ -137,7 +139,7 @@ export default function Insights() {
       {/* Error Alert */}
       {!isLoading && error && (
         <div
-          className="p-4 sm:p-5 rounded-xl bg-red/10 border border-red/30 mb-6 text-sm sm:text-base text-red flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+          className="p-4 sm:p-5 rounded-xl bg-red/10 border border-red/50 mb-6 text-sm sm:text-base text-red flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
           role="alert"
         >
           <div className="flex items-center gap-2.5">
@@ -161,6 +163,36 @@ export default function Insights() {
       {/* Main Dashboard Analytics Content */}
       {!isLoading && !error && (
         <div className="space-y-10 sm:space-y-12">
+          {/* Career Strategist AI Callout */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-cyan/10 via-surface to-surface-secondary border border-cyan/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
+            <div className="flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-cyan/15 border border-cyan/40 text-cyan flex items-center justify-center text-lg shrink-0 mt-0.5">
+                🧭
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-display font-semibold text-base sm:text-lg text-ink">
+                    Evolexa Career Strategist
+                  </h3>
+                  <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-cyan/20 text-cyan border border-cyan/40">
+                    AI Diagnosis
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed max-w-2xl">
+                  Generate an evidence-grounded strategic assessment combining your active pipeline metrics with profile skills to uncover bottlenecks and prioritized next actions.
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => navigate("/career-strategist")}
+              className="shrink-0 text-xs font-semibold px-4 py-2"
+            >
+              Launch Career Strategist →
+            </Button>
+          </div>
+
           {/* 2. Overview Metrics (Volume & Snapshot KPI Cards) */}
           <section aria-labelledby="kpi-metrics-heading">
             <h2 id="kpi-metrics-heading" className="sr-only">
@@ -358,8 +390,8 @@ export default function Insights() {
                     className={cn(
                       "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs sm:text-sm font-mono font-bold",
                       staleAlerts.staleCount > 0
-                        ? "bg-amber/15 text-amber border border-amber/30"
-                        : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
+                        ? "bg-amber/15 text-amber border border-amber/50"
+                        : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/50"
                     )}
                   >
                     {staleAlerts.staleCount} flagged
@@ -379,7 +411,7 @@ export default function Insights() {
                     <div
                       key={app.id}
                       role="listitem"
-                      className="p-3 rounded-lg bg-surface-secondary/40 border border-border-subtle hover:border-amber/40 transition-all flex items-center justify-between gap-3 text-sm"
+                      className="p-3 rounded-lg bg-surface-secondary/40 border border-border-subtle hover:border-amber/60 transition-all flex items-center justify-between gap-3 text-sm"
                     >
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
@@ -411,7 +443,7 @@ export default function Insights() {
                   ))}
                 </div>
               ) : (
-                <div className="p-6 rounded-lg bg-surface-secondary/30 border border-border-subtle/70 text-center my-auto">
+                <div className="p-6 rounded-lg bg-surface-secondary/30 border border-border-subtle text-center my-auto">
                   <div className="w-7 h-7 rounded-full bg-emerald-500/10 text-emerald-500 mx-auto mb-2 flex items-center justify-center">
                     ✓
                   </div>

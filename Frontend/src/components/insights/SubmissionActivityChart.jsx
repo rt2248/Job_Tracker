@@ -258,7 +258,7 @@ export default function SubmissionActivityChart({
                   "px-3 py-1.5 text-xs sm:text-sm font-sans font-medium rounded-md transition-all select-none",
                   "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan/70",
                   isSelected
-                    ? "bg-surface text-cyan font-semibold shadow-sm border border-border-primary/50"
+                    ? "bg-surface text-cyan font-semibold shadow-sm border border-border-primary"
                     : "text-muted hover:text-ink hover:bg-surface-overlay/50"
                 )}
               >
@@ -474,7 +474,7 @@ export default function SubmissionActivityChart({
           </svg>
 
           {/* Footer note explaining zero days */}
-          <div className="flex items-center justify-between text-xs sm:text-sm text-muted mt-4 pt-3 border-t border-border-subtle/60">
+          <div className="flex items-center justify-between text-xs sm:text-sm text-muted mt-4 pt-3 border-t border-border-subtle">
             <span>
               Dates with no marks indicate 0 applications submitted on that day
             </span>

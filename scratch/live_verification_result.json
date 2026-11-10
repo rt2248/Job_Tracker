@@ -1,0 +1,146 @@
+{
+  "timestamp": "2026-11-09T09:58:35.108Z",
+  "endpoint": "http://localhost:5173/api/career-strategist/assessment",
+  "durationMs": 5075,
+  "httpStatus": 200,
+  "httpStatusText": "OK",
+  "headers": {
+    "access-control-allow-origin": "*",
+    "connection": "close",
+    "content-length": "4781",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Mon, 09 Nov 2026 09:58:35 GMT",
+    "etag": "W/\"12ad-u4RFvl9aZsV7fYnxD3rh27WomnA\"",
+    "ratelimit": "limit=10, remaining=9, reset=900",
+    "ratelimit-policy": "10;w=900",
+    "vary": "Origin",
+    "x-powered-by": "Express"
+  },
+  "error": null,
+  "responseBody": {
+    "success": true,
+    "correlationId": "d0690c50-153e-426b-8e08-26b297951d44",
+    "fallbackActive": false,
+    "fallbackMetadata": null,
+    "assessment": {
+      "candidateSummary": {
+        "careerStage": "entry_level",
+        "pipelineHealth": "needs_focus",
+        "primaryBottleneck": "Stale application risk combined with limited interview conversion rate"
+      },
+      "pipelineDiagnostics": {
+        "volumeAssessment": "The candidate is tracking 12 opportunities and has submitted 8 applications, a moderate volume for a 2‑year professional and appropriate for an entry‑level backend focus.",
+        "stageProgressionVelocity": "Stage distribution shows 2 applications moved to interview and 1 assessment (OA), indicating reasonable conversion but a backlog of 3 rejections and no offers yet, suggesting a need to improve interview success.",
+        "staleApplicationRisk": "One application has exceeded the 14‑day inactivity threshold, highlighting a risk of missed opportunities if follow‑up is not performed promptly."
+      },
+      "skillGapAnalysis": {
+        "verifiedCandidateSkills": [
+          "JavaScript",
+          "Node.js",
+          "Express.js",
+          "PostgreSQL",
+          "REST APIs",
+          "Git"
+        ],
+        "criticalMissingSkills": [
+          "TypeScript",
+          "Docker",
+          "AWS",
+          "CI/CD pipelines",
+          "Jest (testing framework)"
+        ],
+        "skillBridgingAdvice": "Prioritize learning TypeScript and Docker through hands‑on projects, complete an introductory AWS course, practice CI/CD setup with GitHub Actions, and add Jest tests to existing codebases to demonstrate testing competence."
+      },
+      "strategicRecommendations": [
+        {
+          "id": "REC-01",
+          "category": "pipeline_velocity",
+          "priority": "high",
+          "title": "Eliminate stale applications with timely follow‑up",
+          "rationale": "One application has been inactive for more than 14 days (staleCount=1), which can cause lost opportunities and lower pipeline efficiency.",
+          "actionSteps": [
+            "Identify the stale application in the tracker",
+            "Send a concise follow‑up email to the recruiter or hiring manager",
+            "Set a calendar reminder to check for a response within 5 business days",
+            "If no response, consider withdrawing and reallocating effort to fresh opportunities"
+          ],
+          "expectedImpact": "Reduces the risk of missed offers and improves overall pipeline velocity."
+        },
+        {
+          "id": "REC-02",
+          "category": "skill_acquisition",
+          "priority": "high",
+          "title": "Add TypeScript, Docker, and AWS to the backend skill set",
+          "rationale": "Target roles (Backend Developer, Node.js Developer) commonly require TypeScript, containerization, and cloud deployment skills, none of which are declared by the candidate.",
+          "actionSteps": [
+            "Enroll in a short TypeScript course (e.g., Udemy or freeCodeCamp)",
+            "Complete a Docker tutorial and containerize an existing Node.js project",
+            "Finish an introductory AWS Cloud Practitioner module",
+            "Deploy the containerized app to AWS Elastic Beanstalk or ECS",
+            "Update resume and LinkedIn with new competencies"
+          ],
+          "expectedImpact": "Expands eligibility for a broader set of backend positions and increases interview callbacks."
+        },
+        {
+          "id": "REC-03",
+          "category": "interview_preparation",
+          "priority": "medium",
+          "title": "Structured interview practice for backend system design",
+          "rationale": "The candidate currently has 2 interviews in progress but no offers; focused preparation can improve conversion.",
+          "actionSteps": [
+            "Gather common backend design interview questions (e.g., scaling APIs, database indexing)",
+            "Conduct mock interviews with peers or a coach using the STAR method",
+            "Create concise stories for past projects highlighting problem‑solving and performance improvements",
+            "Review and rehearse explanations of REST API design, security, and performance tuning"
+          ],
+          "expectedImpact": "Higher interview success rate, moving from interview stage to offers."
+        },
+        {
+          "id": "REC-04",
+          "category": "data_hygiene",
+          "priority": "low",
+          "title": "Maintain accurate pipeline metrics and stage tagging",
+          "rationale": "Current stage distribution is fragmented; consistent tagging will enable clearer tracking of conversion rates.",
+          "actionSteps": [
+            "Audit the current stage counts against actual application statuses",
+            "Standardize stage names (e.g., Saved, Applied, Assessment, Interview, Offer)",
+            "Update the pipeline weekly to reflect real‑time progress",
+            "Generate a simple dashboard to visualize conversion metrics"
+          ],
+          "expectedImpact": "Improved visibility into pipeline health, enabling data‑driven adjustments."
+        }
+      ],
+      "evidenceGrounding": {
+        "citedMetrics": [
+          "12 tracked opportunities",
+          "8 submitted applications",
+          "5 active in pipeline",
+          "2 interviews in progress",
+          "1 stale application"
+        ],
+        "dataLimitationsNoted": ""
+      }
+    },
+    "validationAudit": {
+      "schemaValid": true,
+      "evidenceGrounded": true,
+      "discrepancies": []
+    },
+    "telemetry": {
+      "providerId": "groq",
+      "modelIdentifier": "openai/gpt-oss-120b",
+      "latencyMs": 4702,
+      "inputTokens": 1203,
+      "outputTokens": 1850,
+      "totalTokens": 3053,
+      "rateLimit": {
+        "limitRequests": 1000,
+        "remainingRequests": 999,
+        "resetRequestsMs": 86400,
+        "limitTokens": 8000,
+        "remainingTokens": 6390,
+        "resetTokensMs": 12075
+      }
+    }
+  }
+}

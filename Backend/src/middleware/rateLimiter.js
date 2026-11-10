@@ -44,8 +44,23 @@ const changePasswordLimiter = rateLimit({
     message: { message: "Too many password change attempts. Please try again after 15 minutes." },
 });
 
+// 4. Career Assessment Limiter: Max 10 assessment generations per 15 minutes
+// Keyed by authenticated user ID (req.user.userId) to protect AI provider budget & prevent abuse.
+const careerAssessmentLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10,
+    standardHeaders: "draft-7",
+    legacyHeaders: false,
+    keyGenerator: (req) => {
+        return req.user?.userId ? `user_${req.user.userId}` : req.ip;
+    },
+    validate: { keyGeneratorIpFallback: false },
+    message: { message: "Too many career assessment requests. Please try again after 15 minutes." },
+});
+
 module.exports = {
     loginLimiter,
     signupLimiter,
     changePasswordLimiter,
+    careerAssessmentLimiter,
 };
