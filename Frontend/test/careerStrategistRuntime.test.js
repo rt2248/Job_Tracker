@@ -527,7 +527,11 @@ describe("Career Strategist Frontend Runtime & Contract Verification", () => {
       assert.ok(html.includes("25 tracked opportunities"));
       assert.ok(html.includes("5 active interviews"));
       assert.ok(html.includes("Historical stage transition dates prior to Q3 unavailable."));
-      assert.ok(html.includes("100% Grounded"));
+      assert.ok(
+        html.includes("Schema &amp; Evidence Verified") || html.includes("Schema & Evidence Verified"),
+        "Must render Schema & Evidence Verified without pseudo-confidence percentages"
+      );
+      assert.ok(!html.includes("100% Grounded"));
     });
 
     it("2.8 Error banner renders error code, message, and correlationId", async () => {
@@ -562,6 +566,630 @@ describe("Career Strategist Frontend Runtime & Contract Verification", () => {
       assert.ok(html.includes("Rate limit exceeded"));
       assert.ok(html.includes("Correlation ID: cs-err-rate-limit-123"));
       assert.ok(html.includes("Retry"));
+    });
+  });
+
+  describe("3. Stage 2B.9 UX Refinement & Live DTO Contracts", () => {
+    const decodeEntities = (str) =>
+      str
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&#x27;/g, "'")
+        .replace(/&quot;/g, '"');
+
+    const PROHIBITED_SYMBOLS = ["⚡", "🧭", "📈", "📊", "🎯", "🛡️", "✓", "⚠", "✕", "▲", "▼"];
+
+    it("3.1 SkillGapCard: fallbackActive=true with empty gaps shows unavailable notice and never claims no gaps", async () => {
+      const SkillGapCard = await loadJsxComponent("src/components/career_strategist/SkillGapCard.jsx");
+
+      const html = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(SkillGapCard, {
+            skillGapAnalysis: {
+              verifiedCandidateSkills: ["JavaScript", "Node.js"],
+              criticalMissingSkills: [],
+              skillBridgingAdvice: "Maintain declared skills.",
+            },
+            fallbackActive: true,
+            pipelineHealth: "needs_focus",
+          })
+        )
+      );
+
+      assert.ok(html.includes("Skill-gap comparison unavailable in deterministic fallback"));
+      assert.ok(html.includes("Comparison Unavailable"));
+      assert.ok(!html.includes("0 Gaps"));
+      assert.ok(!html.includes("No critical skill gaps identified"));
+      assert.ok(!html.includes("✓"));
+    });
+
+    it("3.2 SkillGapCard: empty verified skills and empty gaps without fallback explains incomplete profile", async () => {
+      const SkillGapCard = await loadJsxComponent("src/components/career_strategist/SkillGapCard.jsx");
+
+      const html = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(SkillGapCard, {
+            skillGapAnalysis: {
+              verifiedCandidateSkills: [],
+              criticalMissingSkills: [],
+              skillBridgingAdvice: "Add declared skills.",
+            },
+            fallbackActive: false,
+          })
+        )
+      );
+
+      assert.ok(html.includes("Insufficient skill profile data for gap comparison"));
+      assert.ok(html.includes("Profile Incomplete"));
+      assert.ok(!html.includes("0 Gaps"));
+      assert.ok(!html.includes("No critical skill gaps identified"));
+    });
+
+    it("3.3 SkillGapCard: verified skills with empty gaps (live run) shows scoped wording without checkmark", async () => {
+      const SkillGapCard = await loadJsxComponent("src/components/career_strategist/SkillGapCard.jsx");
+
+      const html = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(SkillGapCard, {
+            skillGapAnalysis: {
+              verifiedCandidateSkills: ["TypeScript", "PostgreSQL"],
+              criticalMissingSkills: [],
+              skillBridgingAdvice: "Continue building production scale examples.",
+            },
+            fallbackActive: false,
+            pipelineHealth: "healthy",
+          })
+        )
+      );
+
+      assert.ok(
+        html.includes("No specific missing skills were flagged based on the declared profile skills")
+      );
+      assert.ok(!html.includes("✓"));
+    });
+
+    it("3.4 SkillGapCard: renders specific missing skills when present", async () => {
+      const SkillGapCard = await loadJsxComponent("src/components/career_strategist/SkillGapCard.jsx");
+
+      const html = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(SkillGapCard, {
+            skillGapAnalysis: {
+              verifiedCandidateSkills: ["Node.js"],
+              criticalMissingSkills: ["Kubernetes", "Terraform"],
+              skillBridgingAdvice: "Practice infrastructure as code.",
+            },
+            fallbackActive: false,
+          })
+        )
+      );
+
+      assert.ok(html.includes("Kubernetes"));
+      assert.ok(html.includes("Terraform"));
+    });
+
+    it("3.5 PipelineDiagnosticsCard: insufficient_data shows explanation, unavailable items, limitations, and guidance", async () => {
+      const PipelineDiagnosticsCard = await loadJsxComponent(
+        "src/components/career_strategist/PipelineDiagnosticsCard.jsx"
+      );
+
+      const html = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(PipelineDiagnosticsCard, {
+            pipelineDiagnostics: {
+              volumeAssessment: "0 tracked opportunities and 0 submitted applications recorded.",
+              stageProgressionVelocity: "Insufficient volume.",
+              staleApplicationRisk: "0 stale applications.",
+            },
+            pipelineHealth: "insufficient_data",
+            dataLimitationsNoted: "No submitted applications recorded in database.",
+          })
+        )
+      );
+
+      assert.ok(html.includes("Insufficient Pipeline Activity for Performance Conclusions"));
+      assert.ok(html.includes("stage progression speed, bottleneck causality, or meaningful staleness patterns"));
+      assert.ok(html.includes("No submitted applications recorded in database."));
+      assert.ok(html.includes("track target roles, log submitted applications, and update stage transitions"));
+    });
+
+    it("3.6 PipelineDiagnosticsCard: healthy pipeline hides insufficient/inconsistent callouts", async () => {
+      const PipelineDiagnosticsCard = await loadJsxComponent(
+        "src/components/career_strategist/PipelineDiagnosticsCard.jsx"
+      );
+
+      const html = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(PipelineDiagnosticsCard, {
+            pipelineDiagnostics: {
+              volumeAssessment: "12 tracked opportunities.",
+              stageProgressionVelocity: "2 active interviews.",
+              staleApplicationRisk: "1 stale alert.",
+            },
+            pipelineHealth: "healthy",
+          })
+        )
+      );
+
+      assert.ok(!html.includes("Insufficient Pipeline Activity"));
+      assert.ok(!html.includes("Pipeline Telemetry Review Recommended"));
+    });
+
+    it("3.7 PipelineDiagnosticsCard: inconsistent_data displays review caution", async () => {
+      const PipelineDiagnosticsCard = await loadJsxComponent(
+        "src/components/career_strategist/PipelineDiagnosticsCard.jsx"
+      );
+
+      const html = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(PipelineDiagnosticsCard, {
+            pipelineDiagnostics: {
+              volumeAssessment: "Stage totals mismatch submitted count.",
+              stageProgressionVelocity: "Uncertain due to stage gap.",
+              staleApplicationRisk: "Review needed.",
+            },
+            pipelineHealth: "inconsistent_data",
+          })
+        )
+      );
+
+      assert.ok(html.includes("Pipeline Telemetry Review Recommended"));
+      assert.ok(html.includes("Review tracked application statuses and dates"));
+    });
+
+    it("3.8 StrategicRecommendationsList: renders labeled hierarchy, no emojis, and accurate attribution", async () => {
+      const StrategicRecommendationsList = await loadJsxComponent(
+        "src/components/career_strategist/StrategicRecommendationsList.jsx"
+      );
+
+      const htmlFallback = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(StrategicRecommendationsList, {
+            recommendations: [
+              {
+                id: "REC-01",
+                priority: "high",
+                category: "pipeline_velocity",
+                title: "Follow Up on Stale Submissions",
+                rationale: "1 submission exceeded the 14-day inactivity threshold.",
+                actionSteps: ["Send follow-up inquiry", "Update status"],
+                expectedImpact: "Clarifies interview status",
+              },
+            ],
+            fallbackActive: true,
+            pipelineHealth: "needs_focus",
+          })
+        )
+      );
+
+      assert.ok(htmlFallback.includes("Why It Matters"));
+      assert.ok(htmlFallback.includes("Recommended Actions"));
+      assert.ok(htmlFallback.includes("Expected Benefit"));
+      assert.ok(htmlFallback.includes("Generated by local deterministic heuristic rules"));
+      assert.ok(!htmlFallback.includes("📈"));
+
+      const htmlAi = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(StrategicRecommendationsList, {
+            recommendations: [
+              {
+                id: "REC-01",
+                priority: "medium",
+                category: "targeting_alignment",
+                title: "Align Portfolio APIs",
+                rationale: "Strengthens backend evidence.",
+                actionSteps: ["Publish README benchmarks"],
+                expectedImpact: "Stronger technical screening",
+              },
+            ],
+            fallbackActive: false,
+            pipelineHealth: "healthy",
+          })
+        )
+      );
+
+      assert.ok(htmlAi.includes("AI-synthesized guidance"));
+      assert.ok(htmlAi.includes("Evidence & Verification Audit"));
+    });
+
+    it("3.9 EvidenceGroundingCard: live backend audit DTO without isValid renders Schema & Evidence Verified and real telemetry", async () => {
+      const EvidenceGroundingCard = await loadJsxComponent(
+        "src/components/career_strategist/EvidenceGroundingCard.jsx"
+      );
+
+      const html = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(EvidenceGroundingCard, {
+            evidenceGrounding: {
+              citedMetrics: ["12 tracked opportunities", "8 submitted applications"],
+              dataLimitationsNoted: "No historical interviewer feedback stored.",
+            },
+            validationAudit: {
+              schemaValid: true,
+              evidenceGrounded: true,
+              discrepancies: [],
+            },
+            telemetry: {
+              providerId: "groq",
+              modelIdentifier: "openai/gpt-oss-120b",
+              latencyMs: 4702,
+              totalTokens: 3053,
+              durationMs: 99999, // Must ignore durationMs when latencyMs is present
+            },
+            verifiedCandidateSkills: ["JavaScript", "Node.js", "PostgreSQL"],
+            correlationId: "corr-live-dto-1",
+            fallbackActive: false,
+            pipelineHealth: "healthy",
+            defaultShowTechnicalDetails: true,
+          })
+        )
+      );
+
+      assert.ok(html.includes("Schema & Evidence Verified"));
+      assert.ok(!html.includes("Audit Discrepancies Found"));
+      assert.ok(!html.includes("100% Grounded"));
+      assert.ok(html.includes("JavaScript"));
+      assert.ok(html.includes("PostgreSQL"));
+      assert.ok(html.includes("12 tracked opportunities"));
+      assert.ok(html.includes("No historical interviewer feedback stored."));
+      assert.ok(html.includes("AI-generated strategic interpretations, not independently verified facts"));
+      assert.ok(html.includes("openai/gpt-oss-120b"));
+      assert.ok(html.includes("4702 ms"));
+      assert.ok(!html.includes("99999 ms"));
+      assert.ok(html.includes("3053 tokens"));
+    });
+
+    it("3.10 EvidenceGroundingCard: new-format audit failures cannot be overridden by legacy isValid: true", async () => {
+      const EvidenceGroundingCard = await loadJsxComponent(
+        "src/components/career_strategist/EvidenceGroundingCard.jsx"
+      );
+
+      const htmlEvidenceFail = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(EvidenceGroundingCard, {
+            evidenceGrounding: { citedMetrics: [], dataLimitationsNoted: "" },
+            validationAudit: {
+              schemaValid: true,
+              evidenceGrounded: false,
+              discrepancies: [],
+              isValid: true, // legacy claim must NOT override evidenceGrounded: false
+            },
+          })
+        )
+      );
+      assert.ok(htmlEvidenceFail.includes("Audit Discrepancies Found"));
+      assert.ok(!htmlEvidenceFail.includes("Schema & Evidence Verified"));
+
+      const htmlSchemaFail = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(EvidenceGroundingCard, {
+            evidenceGrounding: { citedMetrics: [], dataLimitationsNoted: "" },
+            validationAudit: {
+              schemaValid: false,
+              evidenceGrounded: true,
+              discrepancies: [],
+              isValid: true, // legacy claim must NOT override schemaValid: false
+            },
+          })
+        )
+      );
+      assert.ok(htmlSchemaFail.includes("Audit Discrepancies Found"));
+      assert.ok(!htmlSchemaFail.includes("Schema & Evidence Verified"));
+
+      const htmlNonEmptyDiscrepancies = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(EvidenceGroundingCard, {
+            evidenceGrounding: { citedMetrics: [], dataLimitationsNoted: "" },
+            validationAudit: {
+              schemaValid: true,
+              evidenceGrounded: true,
+              discrepancies: ["Unsupported skill claim: Kubernetes"],
+              isValid: true,
+            },
+            defaultShowTechnicalDetails: true,
+          })
+        )
+      );
+      assert.ok(htmlNonEmptyDiscrepancies.includes("Audit Discrepancies Found"));
+      assert.ok(htmlNonEmptyDiscrepancies.includes("Unsupported skill claim: Kubernetes"));
+      assert.ok(!htmlNonEmptyDiscrepancies.includes("Schema & Evidence Verified"));
+    });
+
+    it("3.11 EvidenceGroundingCard: missing, incomplete, or empty-discrepancies-only audit fails closed as unverified", async () => {
+      const EvidenceGroundingCard = await loadJsxComponent(
+        "src/components/career_strategist/EvidenceGroundingCard.jsx"
+      );
+
+      for (const badAudit of [
+        null,
+        undefined,
+        [],
+        "INVALID",
+        { discrepancies: [] },
+        { schemaValid: true },
+        { schemaValid: true, evidenceGrounded: true }, // missing discrepancies array
+      ]) {
+        const html = decodeEntities(
+          renderToStaticMarkup(
+            React.createElement(EvidenceGroundingCard, {
+              evidenceGrounding: { citedMetrics: [], dataLimitationsNoted: "" },
+              validationAudit: badAudit,
+            })
+          )
+        );
+        assert.ok(
+          !html.includes("Schema & Evidence Verified"),
+          `Must not present audit as verified for: ${JSON.stringify(badAudit)}`
+        );
+        assert.ok(
+          html.includes("Audit Status Unavailable") || html.includes("Audit Incomplete"),
+          "Must display explicit unavailable/incomplete audit state"
+        );
+      }
+    });
+
+    it("3.12 EvidenceGroundingCard: uses durationMs only as legacy fallback when latencyMs is absent, and scopes empty limitations", async () => {
+      const EvidenceGroundingCard = await loadJsxComponent(
+        "src/components/career_strategist/EvidenceGroundingCard.jsx"
+      );
+
+      const htmlLegacyTelemetryAndFallback = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(EvidenceGroundingCard, {
+            evidenceGrounding: { citedMetrics: [], dataLimitationsNoted: "" },
+            validationAudit: { schemaValid: true, evidenceGrounded: true, discrepancies: [] },
+            telemetry: { durationMs: 1234 },
+            fallbackActive: true,
+            pipelineHealth: "insufficient_data",
+            defaultShowTechnicalDetails: true,
+          })
+        )
+      );
+
+      assert.ok(htmlLegacyTelemetryAndFallback.includes("1234 ms"));
+      assert.ok(
+        htmlLegacyTelemetryAndFallback.includes("offline deterministic heuristics rather than AI synthesis")
+      );
+      assert.ok(!htmlLegacyTelemetryAndFallback.includes("No missing-data limitations were flagged"));
+    });
+
+    it("3.13 CandidateSummaryCard: uses Unclassified for unspecified stage and Experience-Bounded for classified stages", async () => {
+      const CandidateSummaryCard = await loadJsxComponent(
+        "src/components/career_strategist/CandidateSummaryCard.jsx"
+      );
+
+      const htmlUnspecified = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(CandidateSummaryCard, {
+            candidateSummary: {
+              careerStage: "unspecified",
+              pipelineHealth: "insufficient_data",
+              primaryBottleneck: "Limited context",
+            },
+          })
+        )
+      );
+      assert.ok(htmlUnspecified.includes("Unspecified Stage"));
+      assert.ok(htmlUnspecified.includes("Unclassified"));
+      assert.ok(!htmlUnspecified.includes("Verified"));
+      assert.ok(!htmlUnspecified.includes("Experience-Bounded"));
+
+      const htmlEntry = decodeEntities(
+        renderToStaticMarkup(
+          React.createElement(CandidateSummaryCard, {
+            candidateSummary: {
+              careerStage: "entry_level",
+              pipelineHealth: "needs_focus",
+              primaryBottleneck: "Low interview conversion",
+            },
+          })
+        )
+      );
+      assert.ok(htmlEntry.includes("Entry Level"));
+      assert.ok(htmlEntry.includes("Experience-Bounded"));
+      assert.ok(!htmlEntry.includes("Verified"));
+    });
+
+    it("3.14 Global HARD_RULES Check: zero emojis or decorative Unicode symbols across all Career Strategist components", async () => {
+      const SkillGapCard = await loadJsxComponent("src/components/career_strategist/SkillGapCard.jsx");
+      const PipelineDiagnosticsCard = await loadJsxComponent(
+        "src/components/career_strategist/PipelineDiagnosticsCard.jsx"
+      );
+      const StrategicRecommendationsList = await loadJsxComponent(
+        "src/components/career_strategist/StrategicRecommendationsList.jsx"
+      );
+      const EvidenceGroundingCard = await loadJsxComponent(
+        "src/components/career_strategist/EvidenceGroundingCard.jsx"
+      );
+      const CandidateSummaryCard = await loadJsxComponent(
+        "src/components/career_strategist/CandidateSummaryCard.jsx"
+      );
+      const FallbackNoticeBanner = await loadJsxComponent(
+        "src/components/career_strategist/FallbackNoticeBanner.jsx"
+      );
+      const CareerStrategistEmptyState = await loadJsxComponent(
+        "src/components/career_strategist/CareerStrategistEmptyState.jsx"
+      );
+
+      const renderedAll = [
+        renderToStaticMarkup(
+          React.createElement(SkillGapCard, {
+            skillGapAnalysis: { verifiedCandidateSkills: ["Go"], criticalMissingSkills: [] },
+            fallbackActive: false,
+          })
+        ),
+        renderToStaticMarkup(
+          React.createElement(PipelineDiagnosticsCard, {
+            pipelineDiagnostics: {
+              volumeAssessment: "0",
+              stageProgressionVelocity: "N/A",
+              staleApplicationRisk: "0",
+            },
+            pipelineHealth: "insufficient_data",
+          })
+        ),
+        renderToStaticMarkup(
+          React.createElement(StrategicRecommendationsList, {
+            recommendations: [
+              {
+                priority: "high",
+                category: "pipeline_velocity",
+                title: "Test Rec",
+                rationale: "Reason",
+                actionSteps: ["Step 1"],
+                expectedImpact: "Benefit",
+              },
+            ],
+          })
+        ),
+        renderToStaticMarkup(
+          React.createElement(EvidenceGroundingCard, {
+            evidenceGrounding: { citedMetrics: ["0 tracked"], dataLimitationsNoted: "Limited" },
+            validationAudit: { schemaValid: true, evidenceGrounded: true, discrepancies: [] },
+            defaultShowTechnicalDetails: true,
+          })
+        ),
+        renderToStaticMarkup(
+          React.createElement(CandidateSummaryCard, {
+            candidateSummary: {
+              careerStage: "entry_level",
+              pipelineHealth: "healthy",
+              primaryBottleneck: "None",
+            },
+          })
+        ),
+        renderToStaticMarkup(
+          React.createElement(FallbackNoticeBanner, {
+            fallbackActive: true,
+            fallbackMetadata: { reason: "429" },
+          })
+        ),
+        renderToStaticMarkup(
+          React.createElement(CareerStrategistEmptyState, {
+            onGenerate: () => {},
+            isLoading: false,
+          })
+        ),
+      ].join("\n");
+
+      for (const sym of PROHIBITED_SYMBOLS) {
+        assert.ok(!renderedAll.includes(sym), `Rendered HTML must not contain prohibited symbol '${sym}'`);
+      }
+    });
+
+    it("3.15 Stage 2B.9-R1 Telemetry Latency: zero values, legacy durationMs fallback, and malformed latencyMs unavailable state", async () => {
+      const EvidenceGroundingCard = await loadJsxComponent(
+        "src/components/career_strategist/EvidenceGroundingCard.jsx"
+      );
+
+      const renderWithTelemetry = (telemetry) =>
+        decodeEntities(
+          renderToStaticMarkup(
+            React.createElement(EvidenceGroundingCard, {
+              evidenceGrounding: { citedMetrics: [], dataLimitationsNoted: "" },
+              validationAudit: { schemaValid: true, evidenceGrounded: true, discrepancies: [] },
+              telemetry,
+              defaultShowTechnicalDetails: true,
+            })
+          )
+        );
+
+      // 1. Valid latencyMs overrides differing durationMs
+      const htmlPrecedence = renderWithTelemetry({ latencyMs: 410, durationMs: 999 });
+      assert.ok(htmlPrecedence.includes("Inference Latency:"));
+      assert.ok(htmlPrecedence.includes("410 ms"));
+      assert.ok(!htmlPrecedence.includes("999 ms"));
+
+      // 2. latencyMs: 0 is valid and supersedes non-zero durationMs
+      const htmlZeroLatency = renderWithTelemetry({ latencyMs: 0, durationMs: 850 });
+      assert.ok(htmlZeroLatency.includes("0 ms"));
+      assert.ok(!htmlZeroLatency.includes("850 ms"));
+      assert.ok(!htmlZeroLatency.includes("Unavailable"));
+
+      // 3. Absent latencyMs with valid durationMs: 0 renders 0 ms
+      const htmlZeroLegacy = renderWithTelemetry({ durationMs: 0 });
+      assert.ok(htmlZeroLegacy.includes("0 ms"));
+      assert.ok(!htmlZeroLegacy.includes("Unavailable"));
+
+      // 4. Absent latencyMs with positive durationMs renders legacy value
+      const htmlPosLegacy = renderWithTelemetry({ durationMs: 1234 });
+      assert.ok(htmlPosLegacy.includes("1234 ms"));
+
+      // 5–9. Malformed-but-present latencyMs NEVER falls back to valid durationMs and renders Unavailable
+      const malformedLatencyCases = ["4702", null, NaN, Infinity, -Infinity, -5, undefined];
+      for (const badLatency of malformedLatencyCases) {
+        const htmlBadLatency = renderWithTelemetry({ latencyMs: badLatency, durationMs: 1234 });
+        assert.ok(
+          htmlBadLatency.includes("Inference Latency:") && htmlBadLatency.includes("Unavailable"),
+          `Malformed present latencyMs (${String(badLatency)}) must render Unavailable state`
+        );
+        assert.ok(
+          !htmlBadLatency.includes("1234 ms"),
+          `Malformed present latencyMs (${String(badLatency)}) must never fall back to durationMs`
+        );
+        assert.ok(!htmlBadLatency.includes("4702 ms"));
+        assert.ok(!htmlBadLatency.includes("NaN ms"));
+        assert.ok(!htmlBadLatency.includes("Infinity ms"));
+        assert.ok(!htmlBadLatency.includes("-5 ms"));
+      }
+
+      // 10. Absent latencyMs with invalid legacy durationMs renders Unavailable (never NaN/Infinity/negative)
+      for (const badDuration of ["bad", null, NaN, Infinity, -10]) {
+        const htmlBadDuration = renderWithTelemetry({ durationMs: badDuration });
+        assert.ok(
+          htmlBadDuration.includes("Inference Latency:") && htmlBadDuration.includes("Unavailable"),
+          `Invalid legacy durationMs (${String(badDuration)}) must render Unavailable`
+        );
+        assert.ok(!htmlBadDuration.includes("NaN ms"));
+        assert.ok(!htmlBadDuration.includes("Infinity ms"));
+        assert.ok(!htmlBadDuration.includes("-10 ms"));
+      }
+    });
+
+    it("3.16 Stage 2B.9-R1 Audit State: legacy compatibility strictly when absent, malformed new-format fails closed", async () => {
+      const EvidenceGroundingCard = await loadJsxComponent(
+        "src/components/career_strategist/EvidenceGroundingCard.jsx"
+      );
+
+      const renderAudit = (validationAudit) =>
+        decodeEntities(
+          renderToStaticMarkup(
+            React.createElement(EvidenceGroundingCard, {
+              evidenceGrounding: { citedMetrics: [], dataLimitationsNoted: "" },
+              validationAudit,
+            })
+          )
+        );
+
+      // 1. Both new-format booleans absent + isValid: true -> Legacy compatibility applies
+      const htmlLegacyValid = renderAudit({ isValid: true });
+      assert.ok(htmlLegacyValid.includes("Schema & Evidence Verified"));
+
+      // 2. Both new-format booleans absent + isValid: false -> Legacy invalid state preserved
+      const htmlLegacyInvalid = renderAudit({ isValid: false });
+      assert.ok(htmlLegacyInvalid.includes("Audit Discrepancies Found"));
+      assert.ok(!htmlLegacyInvalid.includes("Schema & Evidence Verified"));
+
+      // 3–6. Malformed or partial new-format properties present MUST NOT consult legacy isValid: true
+      const nonVerifiedNewFormatCases = [
+        { schemaValid: null, evidenceGrounded: true, discrepancies: [], isValid: true },
+        { schemaValid: true, evidenceGrounded: "yes", discrepancies: [], isValid: true },
+        { schemaValid: null, evidenceGrounded: "yes", isValid: true },
+        { schemaValid: "true", evidenceGrounded: 1, discrepancies: [], isValid: true },
+        { schemaValid: true, discrepancies: [], isValid: true },
+        { evidenceGrounded: true, discrepancies: [], isValid: true },
+        { schemaValid: undefined, evidenceGrounded: undefined, isValid: true },
+      ];
+
+      for (const auditCase of nonVerifiedNewFormatCases) {
+        const html = renderAudit(auditCase);
+        assert.ok(
+          html.includes("Audit Incomplete"),
+          `Payload ${JSON.stringify(auditCase)} must report Audit Incomplete and never consult isValid`
+        );
+        assert.ok(!html.includes("Schema & Evidence Verified"));
+      }
     });
   });
 });

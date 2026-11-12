@@ -24,8 +24,7 @@ export default function EmptyStateVisual({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center text-center p-6 sm:p-8 rounded-xl",
-        "bg-surface-secondary/40 border border-border-subtle",
+        "dashboard-well flex flex-col items-center justify-center text-center p-6 sm:p-8 rounded-xl",
         className
       )}
       role="region"

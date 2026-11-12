@@ -14,11 +14,11 @@ This document establishes the non-negotiable UI/UX design principles for **Evole
 These rules are permanent project conventions, **not** temporary suggestions or optional guidelines. They exist to prevent generic "AI slop", over-templated dashboard layouts, and visual monotony, ensuring Evolexa delivers an intentional, spacious, readable, and premium product experience.
 
 > **MANDATORY DIRECTIVE:**  
-> Before implementing **ANY** frontend UI/UX change, page redesign, visual refinement, or new component, developers and AI coding agents **MUST** consult this document and verify compliance against all 13 Hard Rules and the Interpretation Rules.
+> Before implementing **ANY** frontend UI/UX change, page redesign, visual refinement, or new component, developers and AI coding agents **MUST** consult this document and verify compliance against all 14 Hard Rules and the Interpretation Rules.
 
 ---
 
-## 2. THE 13 HARD RULES
+## 2. THE 14 HARD RULES
 
 ### HARD RULE 1 — TYPOGRAPHY MUST HAVE PRESENCE
 - **Avoid tiny text** throughout the application. Supporting text must not shrink into illegibility.
@@ -222,9 +222,25 @@ During every future UI/UX audit:
 
 ---
 
+### HARD RULE 14 — VISUAL DEPTH, SURFACE IDENTITY & COMPONENT PRESENCE
+
+**Never create visually flat, lifeless containers.** Every major UI block must have a deliberate visual identity and sufficient depth to feel like a distinct, tangible part of the interface.
+
+- **Surface Definition:** Containers must have a clearly defined visual surface, distinguishable from the page background. Use intentional background treatments, surface contrast, and appropriate edge definition.
+- **Visual Depth:** Use contextual elevation, subtle shadows, layered surfaces, tonal contrast, and other appropriate techniques to give components visual weight and presence.
+- **Component Identity:** Major sections and components should not all look like identical rectangles. Give them distinct visual characteristics appropriate to their purpose and content.
+- **Surface Hierarchy:** Establish meaningful differences between the application background, primary containers, secondary surfaces, interactive elements, and nested content.
+- **Intentional Treatment:** Choose visual treatments based on component importance and function. Not every container needs a shadow, raised surface, or colored background.
+- **Avoid Artificial Decoration:** Do not compensate for flatness with excessive gradients, glowing effects, ornamental borders, or unnecessary visual effects.
+- **Theme Consistency:** Apply intentional depth and surface differentiation in both Light and Dark themes. Do not assume that simply changing background colors creates sufficient visual identity.
+
+**Core Principle:** Every major UI block should feel designed, defined, and visually present—not like content trapped inside a flat box. Use depth and surface identity to create a visually rich, cohesive application without sacrificing readability or usability.
+
+---
+
 ## 3. SCOPE OF APPLICATION
 
-These 13 Hard Rules apply across all frontend surfaces:
+These 14 Hard Rules apply across all frontend surfaces:
 
 1. **Dashboard** (`Dashboard.jsx`, Kanban board, metric sections, upcoming actions)
 2. **Search Jobs** (`JobSearch.jsx`, search bars, filter popovers, job listings, detail modals)
@@ -259,7 +275,7 @@ When applying these rules, every engineer and AI agent must adhere to these inte
 7. **Respect Explicit Visual References:**  
    When a task specifies an existing page, component, or mockup as a visual reference, respect that reference.
 8. **Precedence in Conflict:**  
-   When instructions conflict, follow the user's explicit task-specific directions while preserving these 13 Hard Rules wherever possible.
+   When instructions conflict, follow the user's explicit task-specific directions while preserving these 14 Hard Rules wherever possible.
 
 ---
 
@@ -277,3 +293,4 @@ Before submitting or committing frontend changes, verify:
 - [ ] **Fonts & Tokens:** Did we use existing fonts and theme tokens without downloading third-party bloat?
 - [ ] **Themes:** Does the layout look crisp, legible, and high-contrast in both Dark and Light modes?
 - [ ] **Iconography & Emojis (Hard Rule 13):** Are emojis 100% absent from the UI? Are professional, theme-compatible SVGs used where icons are needed, without decorative icon clutter?
+- [ ] **Visual Depth & Surface Identity (Hard Rule 14):** Do major containers exhibit clear surface differentiation, contextual elevation, and tangible component presence without artificial gradients or flat boxy uniformity in both Dark and Light modes?

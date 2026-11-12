@@ -55,45 +55,48 @@ function KanbanColumn({ status, jobs = [], onCardClick, onDropCard, draggingCard
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             className={cn(
-                "bg-surface/90 border border-border-primary border-t-2 rounded-2xl w-[280px] sm:w-80 shrink-0 flex flex-col max-h-full transition-all duration-200 card-3d",
+                "dashboard-well border-t-[3px] rounded-xl w-[280px] sm:w-80 shrink-0 flex flex-col max-h-full transition-all duration-200",
                 accentClass,
-                isDragOver && "bg-surface-elevated border-cyan/60 ring-2 ring-cyan/30 scale-[1.01]",
+                isDragOver && "bg-surface-elevated border-cyan/70 ring-2 ring-cyan/30 scale-[1.01]",
                 isHighlighted && "ring-2 ring-cyan border-cyan shadow-md"
             )}
         >
             {/* Column Header */}
-            <div className="flex items-center justify-between px-4 py-3.5 border-b border-border-subtle bg-surface-secondary/40 rounded-t-2xl">
+            <div className="flex items-center justify-between px-4 py-3.5 border-b border-border-subtle/80 bg-surface/65 rounded-t-lg">
                 <div className="flex items-center gap-2">
-                    <span className={cn(
-                        "w-2 h-2 rounded-full",
-                        status === "saved" && "bg-slate-400",
-                        status === "applied" && "bg-cyan",
-                        status === "oa" && "bg-amber",
-                        status === "interview" && "bg-red",
-                        status === "offer" && "bg-yellow",
-                        status === "accepted" && "bg-green",
-                        status === "rejected" && "bg-red"
-                    )} />
-                    <h3 className="font-display text-ink text-base font-semibold tracking-tight flex items-center gap-1.5">
+                    <span
+                        aria-hidden="true"
+                        className={cn(
+                            "w-2 h-2 rounded-full shrink-0",
+                            status === "saved" && "bg-slate-400",
+                            status === "applied" && "bg-cyan",
+                            status === "oa" && "bg-amber",
+                            status === "interview" && "bg-red",
+                            status === "offer" && "bg-yellow-500",
+                            status === "accepted" && "bg-emerald-500",
+                            status === "rejected" && "bg-red"
+                        )}
+                    />
+                    <h3 className="font-display text-ink text-sm sm:text-base font-bold tracking-tight">
                         {meta.label}
-                        <span className="font-mono text-sm font-normal text-muted">
-                            ({jobs.length})
-                        </span>
                     </h3>
                 </div>
+                <span className="font-mono text-[13px] font-bold text-muted tabular-nums">
+                    {jobs.length}
+                </span>
             </div>
 
             {/* Column Cards Container */}
-            <div className="flex flex-col gap-2.5 p-3 overflow-y-auto custom-scrollbar flex-1 min-h-[150px]">
+            <div className="flex flex-col gap-3 px-3 py-3.5 overflow-y-auto custom-scrollbar flex-1 min-h-[150px]">
                 {jobs.length === 0 ? (
                     <div className={cn(
-                        "flex flex-col items-center justify-center py-8 px-4 rounded-xl border border-dashed text-center transition-all my-auto",
-                        isDragOver ? "border-cyan/60 bg-cyan/10 text-cyan" : "border-border-subtle text-muted/60"
+                        "flex flex-col items-center justify-center py-8 px-4 rounded-lg border border-dashed text-center transition-all my-auto",
+                        isDragOver ? "border-cyan/60 bg-cyan/10 text-cyan" : "border-border-subtle text-muted/70"
                     )}>
                         <p className="text-sm font-sans font-medium">
                             {isDragOver ? "Drop application here" : "No applications"}
                         </p>
-                        <p className="text-xs sm:text-sm text-muted/60 mt-1 font-sans">
+                        <p className="text-[13px] sm:text-sm text-muted/60 mt-1.5 font-sans">
                             {isDragOver ? "Release mouse to move" : "Drag cards to change status"}
                         </p>
                     </div>

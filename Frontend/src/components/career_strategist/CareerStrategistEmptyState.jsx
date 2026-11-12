@@ -3,8 +3,8 @@ import Button from "../shared/Button";
 import { cn } from "../../utils/cn";
 
 /**
- * CareerStrategistEmptyState - Welcome screen allowing candidate to configure
- * optional assessment parameters or run an instant assessment using their existing profile.
+ * CareerStrategistEmptyState - Entry view allowing candidate to configure
+ * optional assessment parameters or run an assessment using their existing profile.
  *
  * @param {Object} props
  * @param {Function} props.onGenerate - Callback when candidate triggers generation
@@ -48,111 +48,139 @@ export default function CareerStrategistEmptyState({
   return (
     <div
       className={cn(
-        "rounded-2xl bg-surface border border-border-primary p-6 sm:p-10 text-center max-w-3xl mx-auto space-y-6 shadow-sm",
+        "rounded-xl bg-surface border border-border-primary p-6 sm:p-10 text-center max-w-3xl mx-auto space-y-6",
         className
       )}
     >
-      {/* Icon / Emblem */}
-      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan/20 to-indigo/20 border border-cyan/40 text-cyan flex items-center justify-center mx-auto text-2xl shadow-inner">
-        🧭
+      {/* Compass Vector Emblem (Zero Emoji) */}
+      <div className="w-12 h-12 rounded-lg bg-surface-secondary border border-border-subtle text-cyan flex items-center justify-center mx-auto">
+        <svg
+          className="w-6 h-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+        </svg>
       </div>
 
-      {/* Heading & Value Proposition */}
+      {/* Direct Functional Heading */}
       <div className="space-y-2 max-w-xl mx-auto">
         <h2 className="font-display font-bold text-ink text-xl sm:text-2xl tracking-tight">
-          AI Career Strategy & Pipeline Diagnostics
+          Career Pipeline &amp; Skill Assessment
         </h2>
         <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed">
-          Evolexa Career Strategist analyzes your active job search pipeline telemetry and
-          cross-references verified profile competencies against target roles to deliver
-          strictly grounded, prioritized strategic recommendations.
+          Evaluates tracked application telemetry alongside declared profile skills and target roles to produce grounded, prioritized recommendations.
         </p>
       </div>
 
-      {/* Feature Highlights Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left pt-2">
-        <div className="p-3.5 rounded-xl bg-surface-secondary/70 border border-border-subtle">
-          <div className="text-cyan text-base mb-1">📊</div>
-          <h4 className="text-xs font-semibold text-ink mb-1">Pipeline Velocity</h4>
-          <p className="text-[11px] text-muted leading-relaxed">
-            Identifies application bottlenecks, conversion drop-offs, and stale submissions.
+      {/* Clean Divided Feature Summary Row (No nested bordered sub-cards or emojis) */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border-subtle text-left border-t border-border-subtle pt-5">
+        <div className="pb-3 sm:pb-0 sm:pr-4 space-y-1">
+          <h4 className="text-xs font-semibold text-cyan uppercase tracking-wider">
+            Pipeline Velocity
+          </h4>
+          <p className="text-xs text-muted leading-relaxed">
+            Reviews application bottlenecks, stage conversion, and stale submissions.
           </p>
         </div>
 
-        <div className="p-3.5 rounded-xl bg-surface-secondary/70 border border-border-subtle">
-          <div className="text-indigo text-base mb-1">🎯</div>
-          <h4 className="text-xs font-semibold text-ink mb-1">Skill Gap Analysis</h4>
-          <p className="text-[11px] text-muted leading-relaxed">
-            Audits declared skills against market demands for your target job categories.
+        <div className="py-3 sm:py-0 sm:px-4 space-y-1">
+          <h4 className="text-xs font-semibold text-indigo uppercase tracking-wider">
+            Skill Alignment
+          </h4>
+          <p className="text-xs text-muted leading-relaxed">
+            Compares declared skills against requirements for your target job roles.
           </p>
         </div>
 
-        <div className="p-3.5 rounded-xl bg-surface-secondary/70 border border-border-subtle">
-          <div className="text-green text-base mb-1">🛡️</div>
-          <h4 className="text-xs font-semibold text-ink mb-1">Zero Hallucinations</h4>
-          <p className="text-[11px] text-muted leading-relaxed">
-            Every metric claim is strictly bounded by deterministic evidence validators.
+        <div className="pt-3 sm:pt-0 sm:pl-4 space-y-1">
+          <h4 className="text-xs font-semibold text-green uppercase tracking-wider">
+            Evidence Audit
+          </h4>
+          <p className="text-xs text-muted leading-relaxed">
+            Checks cited metrics and skill claims against deterministic validators.
           </p>
         </div>
       </div>
 
       {/* Optional Parameters Accordion */}
-      <div className="pt-2 border-t border-border-subtle text-left">
+      <div className="pt-4 border-t border-border-subtle text-left">
         <button
           type="button"
           onClick={() => setShowOptions((prev) => !prev)}
           className="text-xs text-muted hover:text-ink font-medium flex items-center gap-1.5 mx-auto"
+          aria-expanded={showOptions}
         >
           <span>{showOptions ? "Hide" : "Customize"} Assessment Parameters (Optional)</span>
-          <span className="text-[10px]">{showOptions ? "▲" : "▼"}</span>
+          <svg
+            className={cn("w-3.5 h-3.5 transition-transform duration-200", showOptions && "rotate-180")}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
         </button>
 
         {showOptions && (
-          <div className="mt-4 p-4 rounded-xl bg-surface-secondary/50 border border-border-subtle space-y-4 text-left">
+          <div className="mt-4 p-4 rounded-md bg-surface-secondary border border-border-subtle space-y-4 text-left">
             <div>
-              <label className="block text-xs font-semibold text-ink mb-1">
-                Target Roles (comma-separated):
+              <label htmlFor="cs-target-roles" className="block text-xs font-semibold text-ink mb-1.5">
+                Target Roles (comma-separated)
               </label>
               <input
+                id="cs-target-roles"
                 type="text"
                 placeholder="e.g. Senior Backend Engineer, Full-Stack Lead"
                 value={targetRolesInput}
                 onChange={(e) => setTargetRolesInput(e.target.value)}
-                className="w-full text-xs px-3 py-2 rounded-lg bg-surface border border-border-primary text-ink placeholder:text-muted focus:outline-none focus:border-cyan"
+                className="w-full text-xs sm:text-sm px-3 py-2 rounded-md bg-surface border border-border-primary text-ink placeholder:text-muted focus:outline-none focus:border-cyan"
               />
-              <span className="text-[11px] text-muted mt-0.5 block">
-                Leave blank to automatically derive from your profile headline and bio.
+              <span className="text-xs text-muted mt-1 block">
+                Leave blank to derive from your profile headline and bio.
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-ink mb-1">
-                Years of Professional Experience:
+              <label htmlFor="cs-yoe" className="block text-xs font-semibold text-ink mb-1.5">
+                Years of Professional Experience
               </label>
               <input
+                id="cs-yoe"
                 type="number"
                 min="0"
                 max="70"
                 placeholder="e.g. 5"
                 value={yearsOfExperienceInput}
                 onChange={(e) => setYearsOfExperienceInput(e.target.value)}
-                className="w-full text-xs px-3 py-2 rounded-lg bg-surface border border-border-primary text-ink placeholder:text-muted focus:outline-none focus:border-cyan max-w-[120px]"
+                className="w-full text-xs sm:text-sm px-3 py-2 rounded-md bg-surface border border-border-primary text-ink placeholder:text-muted focus:outline-none focus:border-cyan max-w-[140px]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-ink mb-1">
-                Specific Strategic Focus / Questions (Max 1,000 characters):
+              <label htmlFor="cs-notes" className="block text-xs font-semibold text-ink mb-1.5">
+                Strategic Focus / Notes (Max 1,000 characters)
               </label>
               <textarea
+                id="cs-notes"
                 rows="3"
                 maxLength={1000}
-                placeholder="e.g. I am transitioning from monolithic architectures to cloud-native microservices; what should I prioritize?"
+                placeholder="e.g. Transitioning from monolithic backend services to cloud-native architecture; what should I prioritize?"
                 value={userNotesInput}
                 onChange={(e) => setUserNotesInput(e.target.value)}
-                className="w-full text-xs px-3 py-2 rounded-lg bg-surface border border-border-primary text-ink placeholder:text-muted focus:outline-none focus:border-cyan resize-none"
+                className="w-full text-xs sm:text-sm px-3 py-2 rounded-md bg-surface border border-border-primary text-ink placeholder:text-muted focus:outline-none focus:border-cyan resize-none"
               />
-              <span className="text-[11px] text-muted mt-0.5 block text-right">
+              <span className="text-xs font-mono text-muted mt-1 block text-right">
                 {userNotesInput.length}/1000
               </span>
             </div>
@@ -167,12 +195,12 @@ export default function CareerStrategistEmptyState({
           size="lg"
           onClick={handleGenerate}
           isLoading={isLoading}
-          className="w-full sm:w-auto px-8 font-semibold shadow-md"
+          className="w-full sm:w-auto px-8 font-semibold"
         >
           {isLoading ? "Analyzing Profile & Pipeline..." : "Generate Career Assessment"}
         </Button>
-        <p className="text-[11px] text-muted mt-2">
-          Assessment takes ~3–6 seconds. Uses privacy-minimized telemetry only.
+        <p className="text-xs text-muted mt-2.5">
+          Uses privacy-minimized profile attributes and pipeline telemetry only.
         </p>
       </div>
     </div>

@@ -12,11 +12,159 @@ export const CAREER_STRATEGIST_ERROR_CODES = {
   RATE_LIMITED: "RATE_LIMITED",
   ABORTED: "ABORTED",
   SCHEMA_VALIDATION_ERROR: "SCHEMA_VALIDATION_ERROR",
+  MODEL_FAILURE: "MODEL_FAILURE",
+  CONTEXT_WINDOW_EXCEEDED: "CONTEXT_WINDOW_EXCEEDED",
   UPSTREAM_UNAVAILABLE: "UPSTREAM_UNAVAILABLE",
   TIMEOUT: "TIMEOUT",
   INTERNAL_SERVER_ERROR: "INTERNAL_SERVER_ERROR",
   NETWORK_ERROR: "NETWORK_ERROR",
+  UNKNOWN_ERROR: "UNKNOWN_ERROR",
 };
+
+const RECOGNIZED_SERVER_ERROR_CODES = Object.freeze({
+  [CAREER_STRATEGIST_ERROR_CODES.INVALID_REQUEST]: CAREER_STRATEGIST_ERROR_CODES.INVALID_REQUEST,
+  [CAREER_STRATEGIST_ERROR_CODES.AUTHENTICATION_REQUIRED]:
+    CAREER_STRATEGIST_ERROR_CODES.AUTHENTICATION_REQUIRED,
+  [CAREER_STRATEGIST_ERROR_CODES.FORBIDDEN]: CAREER_STRATEGIST_ERROR_CODES.FORBIDDEN,
+  [CAREER_STRATEGIST_ERROR_CODES.RATE_LIMITED]: CAREER_STRATEGIST_ERROR_CODES.RATE_LIMITED,
+  [CAREER_STRATEGIST_ERROR_CODES.ABORTED]: CAREER_STRATEGIST_ERROR_CODES.ABORTED,
+  [CAREER_STRATEGIST_ERROR_CODES.SCHEMA_VALIDATION_ERROR]:
+    CAREER_STRATEGIST_ERROR_CODES.SCHEMA_VALIDATION_ERROR,
+  [CAREER_STRATEGIST_ERROR_CODES.MODEL_FAILURE]: CAREER_STRATEGIST_ERROR_CODES.MODEL_FAILURE,
+  [CAREER_STRATEGIST_ERROR_CODES.CONTEXT_WINDOW_EXCEEDED]:
+    CAREER_STRATEGIST_ERROR_CODES.CONTEXT_WINDOW_EXCEEDED,
+  [CAREER_STRATEGIST_ERROR_CODES.UPSTREAM_UNAVAILABLE]:
+    CAREER_STRATEGIST_ERROR_CODES.UPSTREAM_UNAVAILABLE,
+  [CAREER_STRATEGIST_ERROR_CODES.TIMEOUT]: CAREER_STRATEGIST_ERROR_CODES.TIMEOUT,
+  [CAREER_STRATEGIST_ERROR_CODES.INTERNAL_SERVER_ERROR]:
+    CAREER_STRATEGIST_ERROR_CODES.INTERNAL_SERVER_ERROR,
+  [CAREER_STRATEGIST_ERROR_CODES.NETWORK_ERROR]: CAREER_STRATEGIST_ERROR_CODES.NETWORK_ERROR,
+  AI_SCHEMA_VALIDATION_ERROR: CAREER_STRATEGIST_ERROR_CODES.SCHEMA_VALIDATION_ERROR,
+  AI_MODEL_FAILURE: CAREER_STRATEGIST_ERROR_CODES.MODEL_FAILURE,
+  AI_CONTEXT_WINDOW_EXCEEDED: CAREER_STRATEGIST_ERROR_CODES.CONTEXT_WINDOW_EXCEEDED,
+  AI_RATE_LIMITED: CAREER_STRATEGIST_ERROR_CODES.RATE_LIMITED,
+  AI_QUOTA_EXHAUSTED: CAREER_STRATEGIST_ERROR_CODES.RATE_LIMITED,
+  AI_TIMEOUT: CAREER_STRATEGIST_ERROR_CODES.TIMEOUT,
+  AI_GATEWAY_TIMEOUT: CAREER_STRATEGIST_ERROR_CODES.TIMEOUT,
+  AI_CANCELLATION: CAREER_STRATEGIST_ERROR_CODES.ABORTED,
+  AI_CAPACITY_UNAVAILABLE: CAREER_STRATEGIST_ERROR_CODES.UPSTREAM_UNAVAILABLE,
+  AI_BAD_GATEWAY: CAREER_STRATEGIST_ERROR_CODES.UPSTREAM_UNAVAILABLE,
+  AI_NETWORK_ERROR: CAREER_STRATEGIST_ERROR_CODES.NETWORK_ERROR,
+});
+
+const DEFAULT_MESSAGES_BY_CODE = Object.freeze({
+  [CAREER_STRATEGIST_ERROR_CODES.INVALID_REQUEST]: "Invalid assessment request parameters.",
+  [CAREER_STRATEGIST_ERROR_CODES.AUTHENTICATION_REQUIRED]:
+    "Authentication required. Please sign in again.",
+  [CAREER_STRATEGIST_ERROR_CODES.FORBIDDEN]:
+    "Access forbidden. Explicit user identification is not permitted.",
+  [CAREER_STRATEGIST_ERROR_CODES.RATE_LIMITED]:
+    "Rate limit exceeded. Career assessments are limited to 10 requests per 15-minute window. Please wait a moment before trying again.",
+  [CAREER_STRATEGIST_ERROR_CODES.ABORTED]: "The assessment request was cancelled.",
+  [CAREER_STRATEGIST_ERROR_CODES.SCHEMA_VALIDATION_ERROR]:
+    "The AI provider returned an ungrounded or structurally invalid assessment. Please retry.",
+  [CAREER_STRATEGIST_ERROR_CODES.MODEL_FAILURE]:
+    "The AI provider returned a malformed or unparseable response. Please retry.",
+  [CAREER_STRATEGIST_ERROR_CODES.CONTEXT_WINDOW_EXCEEDED]:
+    "Assessment prompt exceeds the AI model context window.",
+  [CAREER_STRATEGIST_ERROR_CODES.UPSTREAM_UNAVAILABLE]:
+    "The AI service is temporarily unavailable. Please try again shortly.",
+  [CAREER_STRATEGIST_ERROR_CODES.TIMEOUT]: "The assessment request timed out. Please try again.",
+  [CAREER_STRATEGIST_ERROR_CODES.INTERNAL_SERVER_ERROR]:
+    "An unexpected error occurred while generating your career assessment.",
+  [CAREER_STRATEGIST_ERROR_CODES.UNKNOWN_ERROR]:
+    "An unexpected error occurred while processing your career assessment.",
+});
+
+/**
+ * Normalizes a potentially unstructured JSON payload into a plain object.
+ *
+ * @param {any} value
+ * @returns {Object}
+ */
+function normalizePlainObject(value) {
+  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+}
+
+/**
+ * Extracts a safe correlationId string from structured or legacy error envelopes.
+ *
+ * @param {Object} safeData
+ * @param {Object|null} serverError
+ * @returns {string|null}
+ */
+function extractCorrelationId(safeData, serverError) {
+  const candidates = [safeData.correlationId, serverError?.correlationId];
+  for (const candidate of candidates) {
+    if (typeof candidate === "string") {
+      const trimmed = candidate.trim();
+      if (trimmed.length > 0) {
+        return trimmed;
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * Extracts optional validation/error details safely from `error.details` or legacy `details`.
+ *
+ * @param {Object} safeData
+ * @param {Object|null} serverError
+ * @returns {Object|Array|string|null}
+ */
+function extractErrorDetails(safeData, serverError) {
+  const candidate =
+    serverError && serverError.details !== undefined ? serverError.details : safeData.details;
+
+  if (candidate === undefined || candidate === null) {
+    return null;
+  }
+
+  if (typeof candidate === "string") {
+    const trimmed = candidate.trim();
+    return trimmed.length > 0 ? trimmed : null;
+  }
+
+  if (Array.isArray(candidate)) {
+    return candidate.length > 0 ? [...candidate] : null;
+  }
+
+  if (typeof candidate === "object") {
+    return Object.keys(candidate).length > 0 ? { ...candidate } : null;
+  }
+
+  return null;
+}
+
+/**
+ * Status-based fallback classification strictly for legacy or unstructured responses.
+ *
+ * @param {number} status
+ * @returns {string}
+ */
+function mapStatusToFallbackCode(status) {
+  switch (status) {
+    case 400:
+      return CAREER_STRATEGIST_ERROR_CODES.INVALID_REQUEST;
+    case 401:
+      return CAREER_STRATEGIST_ERROR_CODES.AUTHENTICATION_REQUIRED;
+    case 403:
+      return CAREER_STRATEGIST_ERROR_CODES.FORBIDDEN;
+    case 429:
+      return CAREER_STRATEGIST_ERROR_CODES.RATE_LIMITED;
+    case 499:
+      return CAREER_STRATEGIST_ERROR_CODES.ABORTED;
+    case 502:
+      return CAREER_STRATEGIST_ERROR_CODES.SCHEMA_VALIDATION_ERROR;
+    case 503:
+      return CAREER_STRATEGIST_ERROR_CODES.UPSTREAM_UNAVAILABLE;
+    case 504:
+      return CAREER_STRATEGIST_ERROR_CODES.TIMEOUT;
+    default:
+      return CAREER_STRATEGIST_ERROR_CODES.INTERNAL_SERVER_ERROR;
+  }
+}
 
 /**
  * Custom Error class for Career Strategist API failures.
@@ -33,72 +181,74 @@ export class CareerStrategistError extends Error {
 }
 
 /**
- * Maps HTTP status codes to user-friendly messages and canonical error codes.
+ * Maps structured or legacy backend error responses to canonical client error codes,
+ * safe messages, correlation IDs, and validation details.
+ *
+ * Precedence:
+ * 1. When backend provides a non-empty `error.code`:
+ *    - If recognized (or canonical AI_* alias), map to canonical code directly.
+ *    - Never drop recognized `error.code` (e.g. 502 `MODEL_FAILURE`) into status fallback
+ *      even when `error.message` is absent.
+ *    - If unrecognized, classify as `UNKNOWN_ERROR` rather than silently mislabeling.
+ * 2. When `error.code` is absent or malformed (legacy `{ message }` or raw proxy body),
+ *    preserve HTTP status fallback mapping.
  *
  * @param {number} status
- * @param {Object} [responseData]
- * @returns {{ code: string, message: string }}
+ * @param {any} [responseData]
+ * @returns {{ code: string, message: string, correlationId: string|null, details: any }}
  */
 function mapStatusToError(status, responseData = {}) {
-  const serverError = responseData?.error;
-  const serverCode = serverError?.code;
-  const serverMessage = serverError?.message || responseData?.message;
+  const safeData = normalizePlainObject(responseData);
+  const serverError =
+    safeData.error && typeof safeData.error === "object" && !Array.isArray(safeData.error)
+      ? safeData.error
+      : null;
 
-  if (serverMessage && serverCode) {
-    return { code: serverCode, message: serverMessage };
+  const rawServerMessage =
+    typeof serverError?.message === "string" && serverError.message.trim().length > 0
+      ? serverError.message.trim()
+      : typeof safeData.message === "string" && safeData.message.trim().length > 0
+      ? safeData.message.trim()
+      : null;
+
+  const rawServerCode = typeof serverError?.code === "string" ? serverError.code.trim() : "";
+
+  const correlationId = extractCorrelationId(safeData, serverError);
+  const details = extractErrorDetails(safeData, serverError);
+
+  if (rawServerCode.length > 0) {
+    const recognizedCode = RECOGNIZED_SERVER_ERROR_CODES[rawServerCode.toUpperCase()] || null;
+    if (recognizedCode) {
+      return {
+        code: recognizedCode,
+        message:
+          rawServerMessage ||
+          DEFAULT_MESSAGES_BY_CODE[recognizedCode] ||
+          DEFAULT_MESSAGES_BY_CODE[CAREER_STRATEGIST_ERROR_CODES.INTERNAL_SERVER_ERROR],
+        correlationId,
+        details,
+      };
+    }
+
+    return {
+      code: CAREER_STRATEGIST_ERROR_CODES.UNKNOWN_ERROR,
+      message:
+        rawServerMessage || DEFAULT_MESSAGES_BY_CODE[CAREER_STRATEGIST_ERROR_CODES.UNKNOWN_ERROR],
+      correlationId,
+      details,
+    };
   }
 
-  switch (status) {
-    case 400:
-      return {
-        code: CAREER_STRATEGIST_ERROR_CODES.INVALID_REQUEST,
-        message: serverMessage || "Invalid assessment request parameters.",
-      };
-    case 401:
-      return {
-        code: CAREER_STRATEGIST_ERROR_CODES.AUTHENTICATION_REQUIRED,
-        message: serverMessage || "Authentication required. Please sign in again.",
-      };
-    case 403:
-      return {
-        code: CAREER_STRATEGIST_ERROR_CODES.FORBIDDEN,
-        message: serverMessage || "Access forbidden. Explicit user identification is not permitted.",
-      };
-    case 429:
-      return {
-        code: CAREER_STRATEGIST_ERROR_CODES.RATE_LIMITED,
-        message:
-          serverMessage ||
-          "Rate limit exceeded. Career assessments are limited to 10 requests per 15-minute window. Please wait a moment before trying again.",
-      };
-    case 499:
-      return {
-        code: CAREER_STRATEGIST_ERROR_CODES.ABORTED,
-        message: serverMessage || "The assessment request was cancelled.",
-      };
-    case 502:
-      return {
-        code: CAREER_STRATEGIST_ERROR_CODES.SCHEMA_VALIDATION_ERROR,
-        message:
-          serverMessage ||
-          "The AI provider returned an ungrounded or structurally invalid assessment. Please retry.",
-      };
-    case 504:
-      return {
-        code: CAREER_STRATEGIST_ERROR_CODES.TIMEOUT,
-        message: serverMessage || "The assessment request timed out. Please try again.",
-      };
-    case 503:
-      return {
-        code: CAREER_STRATEGIST_ERROR_CODES.UPSTREAM_UNAVAILABLE,
-        message: serverMessage || "The AI service is temporarily unavailable. Please try again shortly.",
-      };
-    default:
-      return {
-        code: CAREER_STRATEGIST_ERROR_CODES.INTERNAL_SERVER_ERROR,
-        message: serverMessage || "An unexpected error occurred while generating your career assessment.",
-      };
-  }
+  const fallbackCode = mapStatusToFallbackCode(status);
+  return {
+    code: fallbackCode,
+    message:
+      rawServerMessage ||
+      DEFAULT_MESSAGES_BY_CODE[fallbackCode] ||
+      DEFAULT_MESSAGES_BY_CODE[CAREER_STRATEGIST_ERROR_CODES.INTERNAL_SERVER_ERROR],
+    correlationId,
+    details,
+  };
 }
 
 /**
@@ -171,27 +321,41 @@ export async function generateCareerAssessment({
 
     let data;
     try {
-      data = await response.json();
+      data = typeof response?.json === "function" ? await response.json() : null;
     } catch {
       data = null;
     }
 
     if (!response.ok) {
-      const { code, message } = mapStatusToError(response.status, data);
-      throw new CareerStrategistError(message, {
-        code,
+      const mapped = mapStatusToError(response.status, data);
+      throw new CareerStrategistError(mapped.message, {
+        code: mapped.code,
         status: response.status,
-        correlationId: data?.correlationId || null,
-        details: data?.error?.details || null,
+        correlationId: mapped.correlationId,
+        details: mapped.details,
       });
     }
 
-    if (!data || !data.success) {
-      throw new CareerStrategistError(data?.error?.message || "Assessment response indicated failure.", {
-        code: data?.error?.code || CAREER_STRATEGIST_ERROR_CODES.INTERNAL_SERVER_ERROR,
-        status: response.status,
-        correlationId: data?.correlationId || null,
-      });
+    const safeSuccessData = normalizePlainObject(data);
+    if (!safeSuccessData.success) {
+      const mapped = mapStatusToError(response.status, safeSuccessData);
+      const serverError =
+        safeSuccessData.error && typeof safeSuccessData.error === "object"
+          ? safeSuccessData.error
+          : null;
+      const hasExplicitMessage =
+        (typeof serverError?.message === "string" && serverError.message.trim().length > 0) ||
+        (typeof safeSuccessData.message === "string" && safeSuccessData.message.trim().length > 0);
+
+      throw new CareerStrategistError(
+        hasExplicitMessage ? mapped.message : "Assessment response indicated failure.",
+        {
+          code: mapped.code,
+          status: response.status,
+          correlationId: mapped.correlationId,
+          details: mapped.details,
+        }
+      );
     }
 
     return data;

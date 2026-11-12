@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Badge from "../shared/Badge";
 import { cn } from "../../utils/cn";
 
 /**
@@ -19,26 +20,23 @@ const CATEGORY_LABELS = {
 };
 
 /**
- * Priority configuration for badges and accent borders.
+ * Priority configuration using restrained dot/text variants and accent border.
  */
 const PRIORITY_CONFIG = {
   high: {
     label: "High Priority",
     badgeVariant: "rose",
     borderClass: "border-l-4 border-l-red",
-    bgBadge: "bg-red/15 text-red border-red/40",
   },
   medium: {
     label: "Medium Priority",
     badgeVariant: "amber",
     borderClass: "border-l-4 border-l-amber",
-    bgBadge: "bg-amber/15 text-amber border-amber/40",
   },
   low: {
     label: "Strategic Guidance",
     badgeVariant: "cyan",
     borderClass: "border-l-4 border-l-cyan",
-    bgBadge: "bg-cyan/15 text-cyan border-cyan/40",
   },
 };
 
@@ -57,23 +55,19 @@ function RecommendationCard({ recommendation, index }) {
   return (
     <div
       className={cn(
-        "rounded-xl bg-surface border border-border-primary p-4 sm:p-5 transition-all duration-200",
+        "rounded-lg bg-surface border border-border-primary p-5 sm:p-6 transition-colors duration-200",
         prio.borderClass
       )}
     >
-      {/* Header with Title, Category, and Priority Badge */}
-      <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
-        <div className="space-y-1 flex-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className={cn(
-                "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border",
-                prio.bgBadge
-              )}
-            >
+      {/* Header with Priority Dot, Plain Category Label, and Numbered Title */}
+      <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+        <div className="space-y-1.5 flex-1 min-w-0">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <Badge dot variant={prio.badgeVariant} size="sm" className="font-semibold">
               {prio.label}
-            </span>
-            <span className="text-xs font-medium text-muted px-2 py-0.5 rounded bg-surface-secondary border border-border-subtle">
+            </Badge>
+            <span className="hidden sm:inline text-muted text-xs" aria-hidden="true">·</span>
+            <span className="text-xs font-mono uppercase tracking-wider text-muted">
               {categoryLabel}
             </span>
           </div>
@@ -85,49 +79,55 @@ function RecommendationCard({ recommendation, index }) {
         <button
           type="button"
           onClick={() => setIsExpanded((prev) => !prev)}
-          className="text-xs text-muted hover:text-ink font-medium px-2 py-1 rounded hover:bg-surface-secondary transition-colors"
+          className="text-xs text-muted hover:text-ink font-medium px-2.5 py-1 rounded hover:bg-surface-secondary transition-colors shrink-0"
           aria-expanded={isExpanded}
         >
           {isExpanded ? "Collapse" : "Expand"}
         </button>
       </div>
 
-      {/* Rationale */}
-      <p className="text-xs sm:text-sm text-ink-secondary mb-4 leading-relaxed">
-        {rationale}
-      </p>
+      {/* Problem Justification: Why It Matters */}
+      {rationale && (
+        <div className="mb-4 space-y-1">
+          <span className="text-xs font-semibold text-muted uppercase tracking-wider block">
+            Why It Matters
+          </span>
+          <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed">
+            {rationale}
+          </p>
+        </div>
+      )}
 
       {isExpanded && (
-        <div className="space-y-4 pt-2 border-t border-border-subtle">
-          {/* Action Steps */}
+        <div className="space-y-4 pt-4 border-t border-border-subtle">
+          {/* Action Steps: Recommended Actions */}
           {Array.isArray(actionSteps) && actionSteps.length > 0 && (
-            <div>
-              <span className="text-xs font-semibold text-ink uppercase tracking-wider block mb-2">
-                Action Steps:
+            <div className="space-y-2">
+              <span className="text-xs font-semibold text-muted uppercase tracking-wider block">
+                Recommended Actions
               </span>
-              <ul className="space-y-2">
+              <ol className="space-y-2">
                 {actionSteps.map((step, idx) => (
-                  <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-ink-secondary">
-                    <span className="w-5 h-5 rounded-full bg-surface-secondary border border-border-primary text-cyan flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
-                      {idx + 1}
+                  <li key={idx} className="flex items-start gap-3 text-xs sm:text-sm text-ink-secondary">
+                    <span className="font-mono text-xs font-semibold text-cyan shrink-0 pt-0.5 w-4">
+                      {idx + 1}.
                     </span>
                     <span className="flex-1 leading-relaxed">{step}</span>
                   </li>
                 ))}
-              </ul>
+              </ol>
             </div>
           )}
 
-          {/* Expected Impact */}
+          {/* Expected Benefit (Clean divider without nested box or emoji) */}
           {expectedImpact && (
-            <div className="p-3 rounded-lg bg-surface-secondary/70 border border-border-subtle flex items-start gap-2.5">
-              <span className="text-sm font-bold text-green shrink-0 mt-0.5">📈</span>
-              <div className="text-xs sm:text-sm leading-relaxed">
-                <span className="font-semibold text-ink block sm:inline sm:mr-1">
-                  Expected Impact:
-                </span>
-                <span className="text-ink-secondary">{expectedImpact}</span>
-              </div>
+            <div className="pt-3 border-t border-border-subtle space-y-1">
+              <span className="text-xs font-semibold text-muted uppercase tracking-wider block">
+                Expected Benefit
+              </span>
+              <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed">
+                {expectedImpact}
+              </p>
             </div>
           )}
         </div>
@@ -137,13 +137,21 @@ function RecommendationCard({ recommendation, index }) {
 }
 
 /**
- * StrategicRecommendationsList - Prioritized list of actionable recommendations.
+ * StrategicRecommendationsList - Prioritized list of actionable recommendations
+ * with transparent synthesis and fallback attribution.
  *
  * @param {Object} props
  * @param {Array} props.recommendations
+ * @param {boolean} [props.fallbackActive=false]
+ * @param {string} [props.pipelineHealth]
  * @param {string} [props.className]
  */
-export default function StrategicRecommendationsList({ recommendations = [], className }) {
+export default function StrategicRecommendationsList({
+  recommendations = [],
+  fallbackActive = false,
+  pipelineHealth,
+  className,
+}) {
   if (!Array.isArray(recommendations) || recommendations.length === 0) {
     return null;
   }
@@ -156,22 +164,33 @@ export default function StrategicRecommendationsList({ recommendations = [], cla
     return pA - pB;
   });
 
+  const isInsufficient = pipelineHealth === "insufficient_data";
+
   return (
-    <div className={cn("space-y-4", className)}>
-      <div className="flex items-center justify-between">
-        <h3 className="font-display font-semibold text-ink text-lg sm:text-xl flex items-center gap-2">
-          <span>Strategic Recommendations</span>
-          <span className="text-xs font-normal text-muted px-2 py-0.5 rounded-full bg-surface-secondary border border-border-subtle">
-            {sortedRecommendations.length} Actions
+    <section aria-label="Strategic Recommendations" className={cn("space-y-4", className)}>
+      <div className="space-y-1.5">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h3 className="font-display font-semibold text-ink text-lg sm:text-xl">
+            Strategic Recommendations
+          </h3>
+          <span className="text-xs font-mono text-muted">
+            {sortedRecommendations.length} {sortedRecommendations.length === 1 ? "Action" : "Actions"}
           </span>
-        </h3>
+        </div>
+        <p className="text-xs sm:text-sm text-muted leading-relaxed">
+          {fallbackActive
+            ? "Generated by local deterministic heuristic rules from your recorded telemetry and profile data. Inspect supporting inputs and scope limits in Evidence & Verification Audit below."
+            : isInsufficient
+            ? "AI-synthesized starting guidance under limited pipeline telemetry. Review recorded counts and missing-data notes in Evidence & Verification Audit below."
+            : "AI-synthesized guidance informed by your submitted profile and tracked telemetry. Inspect verified facts and limitations in Evidence & Verification Audit below."}
+        </p>
       </div>
 
-      <div className="space-y-3.5">
+      <div className="space-y-4">
         {sortedRecommendations.map((rec, idx) => (
-          <RecommendationCard key={idx} recommendation={rec} index={idx} />
+          <RecommendationCard key={rec.id || idx} recommendation={rec} index={idx} />
         ))}
       </div>
-    </div>
+    </section>
   );
 }

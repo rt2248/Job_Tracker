@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useInsights from "../../hooks/useInsights";
 import Button from "../../components/shared/Button";
 import ThemeToggleButton from "../../components/shared/ThemeToggleButton";
 import StatusBadge from "../../components/applications_page/StatusBadge";
+import PipelineJourneyBar from "../../components/dashboard_page/PipelineJourneyBar";
+import DashboardMetricStrip from "../../components/dashboard_page/DashboardMetricStrip";
 import {
   SubmissionActivityChart,
   PipelineDistributionChart,
   PipelineDistributionDetails,
   SkillFitChart,
-  MetricCard,
 } from "../../components/insights";
+import { STATUS_ORDER } from "../../constants/jobStatus";
 import { cn } from "../../utils/cn";
 
 /**
@@ -53,11 +55,36 @@ export default function Insights() {
 
   const [selectedStageKey, setSelectedStageKey] = useState(null);
 
-  const volumeMetrics = summary?.volumeMetrics || {
-    trackedOpportunities: 0,
-    submittedApplications: 0,
-    cumulativeOffers: 0,
-    cumulativeRejections: 0,
+  const statusCounts = useMemo(() => {
+    const counts = {};
+    for (const s of STATUS_ORDER) counts[s] = 0;
+    const allStages = [
+      ...(pipeline?.activeSegment?.stages || []),
+      ...(pipeline?.closedSegment?.stages || []),
+    ];
+    for (const st of allStages) {
+      if (counts[st.status] !== undefined) {
+        counts[st.status] = Number(st.count) || 0;
+      }
+    }
+    return counts;
+  }, [pipeline]);
+
+  const handleStageSelect = (stage) => {
+    setSelectedStageKey(stage);
+    if (stage) {
+      setTimeout(() => {
+        const el = document.getElementById("primary-charts-section");
+        if (el) {
+          el.scrollIntoView({
+            behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches
+              ? "auto"
+              : "smooth",
+            block: "nearest",
+          });
+        }
+      }, 80);
+    }
   };
 
   const snapshotMetrics = summary?.snapshotMetrics || {
@@ -139,7 +166,7 @@ export default function Insights() {
       {/* Error Alert */}
       {!isLoading && error && (
         <div
-          className="p-4 sm:p-5 rounded-xl bg-red/10 border border-red/50 mb-6 text-sm sm:text-base text-red flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+          className="dashboard-panel border-red/40 border-l-[3px] border-l-red rounded-xl p-4 sm:p-5 mb-6 text-sm sm:text-base text-red flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
           role="alert"
         >
           <div className="flex items-center gap-2.5">
@@ -164,17 +191,27 @@ export default function Insights() {
       {!isLoading && !error && (
         <div className="space-y-10 sm:space-y-12">
           {/* Career Strategist AI Callout */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-cyan/10 via-surface to-surface-secondary border border-cyan/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
-            <div className="flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-cyan/15 border border-cyan/40 text-cyan flex items-center justify-center text-lg shrink-0 mt-0.5">
-                🧭
-              </div>
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
+          <div className="dashboard-panel-focal border-l-[3px] border-l-cyan rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
+            <div className="flex items-start gap-3.5 min-w-0">
+              <svg
+                viewBox="0 0 24 24"
+                className="w-5 h-5 text-cyan shrink-0 mt-1"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.85"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="9.5" />
+                <polygon points="15.8 8.2 13.7 13.7 8.2 15.8 10.3 10.3 15.8 8.2" fill="currentColor" fillOpacity="0.18" />
+              </svg>
+              <div className="space-y-1.5 min-w-0">
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
                   <h3 className="font-display font-semibold text-base sm:text-lg text-ink">
                     Evolexa Career Strategist
                   </h3>
-                  <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-cyan/20 text-cyan border border-cyan/40">
+                  <span className="text-[13px] font-mono font-bold uppercase tracking-wider text-cyan whitespace-nowrap">
                     AI Diagnosis
                   </span>
                 </div>
@@ -187,57 +224,28 @@ export default function Insights() {
               variant="primary"
               size="sm"
               onClick={() => navigate("/career-strategist")}
-              className="shrink-0 text-xs font-semibold px-4 py-2"
+              className="shrink-0 text-xs font-semibold px-4 py-2 inline-flex items-center gap-1.5"
             >
-              Launch Career Strategist →
+              <span>Launch Career Strategist</span>
+              <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 shrink-0" fill="none" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </Button>
           </div>
 
-          {/* 2. Overview Metrics (Volume & Snapshot KPI Cards) */}
+          {/* 2. Overview Metrics (Pipeline Journey, Summary Metrics Strip & Current Snapshot) */}
           <section aria-labelledby="kpi-metrics-heading">
             <h2 id="kpi-metrics-heading" className="sr-only">
               Application Overview Metrics
             </h2>
 
-            {/* Volume Metrics (All-time tracking activity) */}
+            {/* Reused Dashboard Pipeline Journey & 4-Block Summary Metric Strip */}
             <div className="mb-10 sm:mb-12">
-              <div className="text-sm sm:text-base font-sans font-bold text-cyan uppercase tracking-wider mb-4 sm:mb-4.5 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan shrink-0" aria-hidden="true" />
-                All-Time Cumulative Volume
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 lg:gap-5">
-                <MetricCard
-                  label="Tracked"
-                  value={volumeMetrics.trackedOpportunities}
-                  description="Total added to tracker"
-                  indicatorColor="bg-slate-400"
-                  valueColor="text-ink"
-                />
 
-                <MetricCard
-                  label="Submitted"
-                  value={volumeMetrics.submittedApplications}
-                  description="Non-saved applications"
-                  indicatorColor="bg-cyan"
-                  valueColor="text-cyan"
-                />
-
-                <MetricCard
-                  label="Cumulative Offers"
-                  value={volumeMetrics.cumulativeOffers}
-                  description="Offer + Accepted"
-                  indicatorColor="bg-emerald-500"
-                  valueColor="text-emerald-600 dark:text-emerald-400"
-                />
-
-                <MetricCard
-                  label="Rejections"
-                  value={volumeMetrics.cumulativeRejections}
-                  description="Closed without offer"
-                  indicatorColor="bg-red"
-                  valueColor="text-red"
-                />
-              </div>
+              <DashboardMetricStrip
+                statusCounts={statusCounts}
+                summary={summary}
+              />
             </div>
 
             {/* Snapshot Metrics (Current pipeline state) */}
@@ -246,36 +254,54 @@ export default function Insights() {
                 <span className="w-1.5 h-1.5 rounded-full bg-amber shrink-0" aria-hidden="true" />
                 Current Pipeline State
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 lg:gap-5">
-                <MetricCard
-                  label="Active in Pipeline"
-                  value={snapshotMetrics.activeInPipeline}
-                  description="Applied, OA &amp; Interview"
-                  indicatorColor="bg-cyan"
-                  valueColor="text-ink"
-                />
-
-                <MetricCard
-                  label="Interviews in Progress"
-                  value={snapshotMetrics.interviewsInProgress}
-                  description="Active interview rounds"
-                  indicatorColor="bg-amber-400 dark:bg-yellow-400"
-                  valueColor="text-amber-500 dark:text-yellow-400"
-                />
-
-                <MetricCard
-                  label="Pending Offers"
-                  value={snapshotMetrics.pendingOffers}
-                  description="Awaiting decision"
-                  indicatorColor="bg-emerald-500"
-                  valueColor="text-emerald-600 dark:text-emerald-400"
-                />
+              <div className="dashboard-workspace-deck rounded-xl grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border-subtle/80">
+                {[
+                  {
+                    label: "Active in Pipeline",
+                    value: snapshotMetrics.activeInPipeline,
+                    description: "Applied, OA & Interview",
+                    indicatorColor: "bg-cyan",
+                    valueColor: "text-ink",
+                  },
+                  {
+                    label: "Interviews in Progress",
+                    value: snapshotMetrics.interviewsInProgress,
+                    description: "Active interview rounds",
+                    indicatorColor: "bg-amber-400 dark:bg-yellow-400",
+                    valueColor: "text-amber-500 dark:text-yellow-400",
+                  },
+                  {
+                    label: "Pending Offers",
+                    value: snapshotMetrics.pendingOffers,
+                    description: "Awaiting decision",
+                    indicatorColor: "bg-emerald-500",
+                    valueColor: "text-emerald-600 dark:text-emerald-400",
+                  },
+                ].map((metric) => (
+                  <div key={metric.label} className="p-4 sm:p-5 flex flex-col justify-between">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-sans font-semibold text-ink leading-tight text-base sm:text-lg">
+                        {metric.label}
+                      </span>
+                      <span
+                        className={cn("w-2 h-2 rounded-full shrink-0", metric.indicatorColor)}
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <p className={cn("font-mono font-bold text-3xl sm:text-4xl mt-1.5", metric.valueColor)}>
+                      {metric.value}
+                    </p>
+                    <p className="text-muted font-sans text-xs sm:text-sm mt-1 leading-normal">
+                      {metric.description}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           </section>
 
           {/* 3. Primary Charts Row: Application Pipeline Distribution (Left) & Submission Activity (Right) */}
-          <section aria-labelledby="primary-charts-heading">
+          <section id="primary-charts-section" aria-labelledby="primary-charts-heading">
             <h2 id="primary-charts-heading" className="sr-only">
               Application Pipeline Distribution and Submission Activity
             </h2>
@@ -320,7 +346,7 @@ export default function Insights() {
             className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8"
           >
             {/* Rule-Based Recommendations */}
-            <div className="bg-surface border border-border-primary rounded-xl p-4 sm:p-6 flex flex-col">
+            <div className="dashboard-panel rounded-xl p-5 sm:p-6 flex flex-col">
               <div className="flex items-center justify-between mb-5 sm:mb-6">
                 <h3 id="recommendations-heading" className="font-display text-ink text-lg sm:text-xl font-semibold leading-tight">
                   Smart Recommendations
@@ -331,7 +357,7 @@ export default function Insights() {
               </div>
 
               {ruleBasedInsights.length > 0 ? (
-                <div className="space-y-3.5 flex-1" role="list" aria-label="Recommendations list">
+                <div className="space-y-3 flex-1" role="list" aria-label="Recommendations list">
                   {ruleBasedInsights.map((rec) => {
                     const isWarning = rec.type === "warning";
                     const isPositive = rec.type === "positive";
@@ -341,12 +367,12 @@ export default function Insights() {
                         key={rec.id}
                         role="listitem"
                         className={cn(
-                          "p-3.5 rounded-xl border transition-all text-sm",
+                          "rounded-r-lg border-l-[3px] p-3.5 sm:p-4 transition-all text-sm",
                           isWarning
-                            ? "bg-amber-500/10 border-amber-500/30 text-ink"
+                            ? "border-l-amber bg-amber-500/[0.08] text-ink"
                             : isPositive
-                            ? "bg-emerald-500/10 border-emerald-500/30 text-ink"
-                            : "bg-surface-secondary/40 border-border-subtle text-ink-secondary"
+                            ? "border-l-emerald-500 bg-emerald-500/[0.08] text-ink"
+                            : "border-l-cyan bg-surface-secondary/60 text-ink-secondary"
                         )}
                       >
                         <div className="flex items-center gap-2.5 mb-1.5">
@@ -380,38 +406,49 @@ export default function Insights() {
             </div>
 
             {/* Stale Application Alerts */}
-            <div className="bg-surface border border-border-primary rounded-xl p-4 sm:p-6 flex flex-col">
-              <div className="flex items-center justify-between mb-2.5">
-                <div className="flex items-center gap-2">
+            <div className="dashboard-panel rounded-xl p-5 sm:p-6 flex flex-col">
+              <div className="flex items-center justify-between gap-3 mb-2.5">
+                <div className="flex items-center gap-2.5 flex-wrap">
                   <h3 className="font-display text-ink text-lg sm:text-xl font-semibold leading-tight">
                     Stale Application Alerts
                   </h3>
                   <span
                     className={cn(
-                      "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs sm:text-sm font-mono font-bold",
+                      "inline-flex items-center gap-1.5 text-xs sm:text-sm font-mono font-bold",
                       staleAlerts.staleCount > 0
-                        ? "bg-amber/15 text-amber border border-amber/50"
-                        : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/50"
+                        ? "text-amber"
+                        : "text-emerald-600 dark:text-emerald-400"
                     )}
                   >
+                    <span
+                      className={cn(
+                        "w-1.5 h-1.5 rounded-full shrink-0",
+                        staleAlerts.staleCount > 0 ? "bg-amber" : "bg-emerald-500"
+                      )}
+                      aria-hidden="true"
+                    />
                     {staleAlerts.staleCount} flagged
                   </span>
                 </div>
-                <span className="text-xs sm:text-sm text-muted">&gt; {staleAlerts.thresholdDays} days inactive</span>
+                <span className="text-xs sm:text-sm text-muted shrink-0">&gt; {staleAlerts.thresholdDays} days inactive</span>
               </div>
 
               {/* Explanatory Caveat */}
-              <p className="text-xs sm:text-sm text-muted leading-relaxed mb-6 sm:mb-7">
+              <p className="text-xs sm:text-sm text-muted leading-relaxed mb-5 sm:mb-6">
                 {staleAlerts.caveat}
               </p>
 
               {staleAlerts.staleCount > 0 ? (
-                <div className="space-y-3 flex-1 overflow-y-auto max-h-72 custom-scrollbar pr-1" role="list" aria-label="Stale applications list">
+                <div
+                  className="divide-y divide-border-subtle/80 border-t border-border-subtle/80 flex-1"
+                  role="list"
+                  aria-label="Stale applications list"
+                >
                   {staleAlerts.applications.map((app) => (
                     <div
                       key={app.id}
                       role="listitem"
-                      className="p-3 rounded-lg bg-surface-secondary/40 border border-border-subtle hover:border-amber/60 transition-all flex items-center justify-between gap-3 text-sm"
+                      className="py-3.5 first:pt-3.5 last:pb-1 px-2 -mx-2 rounded-lg hover:bg-surface-secondary/45 transition-colors flex items-center justify-between gap-3 text-sm"
                     >
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
@@ -443,9 +480,17 @@ export default function Insights() {
                   ))}
                 </div>
               ) : (
-                <div className="p-6 rounded-lg bg-surface-secondary/30 border border-border-subtle text-center my-auto">
-                  <div className="w-7 h-7 rounded-full bg-emerald-500/10 text-emerald-500 mx-auto mb-2 flex items-center justify-center">
-                    ✓
+                <div className="py-8 text-center my-auto border-t border-border-subtle/70">
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/12 text-emerald-500 mx-auto mb-2.5 flex items-center justify-center">
+                    <svg viewBox="0 0 16 16" className="w-4 h-4" fill="none" aria-hidden="true">
+                      <path
+                        d="M3.5 8.5L6.5 11.5L12.5 4.5"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   </div>
                   <p className="font-display font-semibold text-sm sm:text-base text-ink mb-1">
                     All Active Applications Moving

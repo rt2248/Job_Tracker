@@ -202,6 +202,63 @@
     background: rgba(99, 102, 241, 0.6);
   }
 
+  /* Scoped horizontal scrollbar for Dashboard Pipeline Board (Light & Dark themes) */
+  .pipeline-board-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 9px;
+  }
+  .pipeline-board-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--surface-secondary) / 0.9);
+    border-radius: 9999px;
+    border: 1px solid hsl(var(--border-subtle) / 0.45);
+  }
+  .pipeline-board-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--border-primary) / 0.78);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  .pipeline-board-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--brand-cyan) / 0.72);
+    background-clip: padding-box;
+  }
+  .pipeline-board-scrollbar::-webkit-scrollbar-thumb:active {
+    background: hsl(var(--brand-cyan) / 0.92);
+    background-clip: padding-box;
+  }
+
+  [data-theme='light'] .pipeline-board-scrollbar::-webkit-scrollbar-track,
+  .light .pipeline-board-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--surface-elevated));
+    border-color: hsl(var(--border-subtle) / 0.55);
+  }
+  [data-theme='light'] .pipeline-board-scrollbar::-webkit-scrollbar-thumb,
+  .light .pipeline-board-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--border-primary) / 0.85);
+    background-clip: padding-box;
+  }
+  [data-theme='light'] .pipeline-board-scrollbar::-webkit-scrollbar-thumb:hover,
+  .light .pipeline-board-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--brand-cyan) / 0.82);
+    background-clip: padding-box;
+  }
+  [data-theme='light'] .pipeline-board-scrollbar::-webkit-scrollbar-thumb:active,
+  .light .pipeline-board-scrollbar::-webkit-scrollbar-thumb:active {
+    background: hsl(var(--brand-cyan));
+    background-clip: padding-box;
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    .pipeline-board-scrollbar {
+      scrollbar-width: thin;
+      scrollbar-color: hsl(var(--border-primary) / 0.8) hsl(var(--surface-secondary) / 0.9);
+    }
+    [data-theme='light'] .pipeline-board-scrollbar,
+    .light .pipeline-board-scrollbar {
+      scrollbar-color: hsl(var(--border-primary) / 0.85) hsl(var(--surface-elevated));
+    }
+  }
+
   /* Subtle 1px surface border utility */
   .border-subtle {
     border-color: hsl(var(--border-subtle));
@@ -454,6 +511,61 @@
               inset 0 -1px 0 0 rgba(15, 23, 42, 0.06),
               0 4px 12px -2px rgba(15, 23, 42, 0.08),
               0 2px 4px -2px rgba(15, 23, 42, 0.05) !important;
+}
+
+/* Dashboard Reference-Inspired Surface Layering & Depth (Hard Rule 14) */
+.dashboard-workspace-deck {
+  background-color: hsl(var(--surface-secondary) / 0.72);
+  border: 1px solid hsl(var(--border-subtle) / 0.78);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+}
+
+.dashboard-well {
+  background-color: hsl(var(--surface-secondary) / 0.82);
+  border: 1px solid hsl(var(--border-subtle) / 0.85);
+}
+
+.dashboard-panel {
+  background-color: hsl(var(--surface-elevated));
+  border: 1px solid hsl(var(--border-primary) / 0.65);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+              0 6px 18px -6px rgba(0, 0, 0, 0.52);
+}
+
+.dashboard-panel-focal {
+  background-color: hsl(var(--surface-elevated));
+  border: 1px solid hsl(var(--border-primary) / 0.78);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.09),
+              0 10px 26px -8px rgba(0, 0, 0, 0.62);
+}
+
+[data-theme='light'] .dashboard-workspace-deck,
+.light .dashboard-workspace-deck {
+  background-color: hsl(var(--surface-secondary) / 0.85);
+  border-color: hsl(var(--border-subtle) / 0.72);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.75);
+}
+
+[data-theme='light'] .dashboard-well,
+.light .dashboard-well {
+  background-color: hsl(var(--surface-secondary) / 0.9);
+  border-color: hsl(var(--border-subtle) / 0.85);
+}
+
+[data-theme='light'] .dashboard-panel,
+.light .dashboard-panel {
+  background-color: hsl(var(--surface-primary));
+  border-color: hsl(var(--border-subtle) / 0.9);
+  box-shadow: 0 1px 3px 0 rgba(11, 29, 45, 0.06),
+              0 8px 20px -8px rgba(11, 29, 45, 0.08);
+}
+
+[data-theme='light'] .dashboard-panel-focal,
+.light .dashboard-panel-focal {
+  background-color: hsl(var(--surface-primary));
+  border-color: hsl(var(--border-primary) / 0.72);
+  box-shadow: 0 2px 6px 0 rgba(11, 29, 45, 0.07),
+              0 12px 28px -8px rgba(11, 29, 45, 0.11);
 }
 
 /* ==========================================================================

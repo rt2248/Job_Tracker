@@ -26,13 +26,77 @@ const {
   AiError,
   AiCancellationError,
   AiTimeoutError,
+  AiGatewayTimeoutError,
+  AiBadGatewayError,
+  AiCapacityError,
   AiRateLimitError,
+  AiQuotaExhaustedError,
+  AiNetworkError,
   AiAuthenticationError,
   AiConfigurationError,
+  AiContextWindowExceededError,
   AiSchemaValidationError,
   AiModelFailureError,
   AI_ERROR_CODES,
 } = require("../services/ai/contracts/errors");
+
+/**
+ * Resolves a single request-scoped correlation identifier at controller entry.
+ * Reuses an explicit request/assessment correlation ID when provided; otherwise
+ * generates one deterministic UUID/fallback ID reused across success or error paths.
+ *
+ * @param {Object} req
+ * @returns {string}
+ */
+function resolveCorrelationId(req) {
+  const candidates = [
+    req?.body?.correlationId,
+    req?.correlationId,
+    req?.headers?.["x-correlation-id"],
+  ];
+
+  for (const candidate of candidates) {
+    if (typeof candidate === "string") {
+      const trimmed = candidate.trim();
+      if (trimmed.length > 0) {
+        return trimmed.slice(0, 128);
+      }
+    }
+  }
+
+  return crypto.randomUUID
+    ? crypto.randomUUID()
+    : `corr-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+}
+
+/**
+ * Sends a standardized, backward-compatible error envelope while preserving
+ * top-level `message` alongside structured `correlationId` and `error`.
+ *
+ * @param {Object} res
+ * @param {Object} params
+ * @param {number} params.status
+ * @param {string} params.code
+ * @param {string} params.message
+ * @param {string} params.correlationId
+ * @param {Object} [params.details]
+ */
+function sendErrorResponse(res, { status, code, message, correlationId, details }) {
+  const errorPayload = {
+    code,
+    message,
+  };
+
+  if (details !== undefined && details !== null) {
+    errorPayload.details = details;
+  }
+
+  return res.status(status).json({
+    message,
+    correlationId,
+    error: errorPayload,
+  });
+}
 
 /**
  * Derives verified total years of experience from profile experience array.
@@ -83,12 +147,20 @@ function createCareerStrategistController({
    * Generates or retrieves structured AI career strategy assessment.
    */
   async function generateAssessment(req, res) {
+    // Establish a single request-scoped correlation ID reused across success and all error branches
+    const correlationId = resolveCorrelationId(req);
+
     // ------------------------------------------------------------------------
     // 1. Identity & Authorization Verification
     // ------------------------------------------------------------------------
     const userId = req.user?.userId;
     if (!userId) {
-      return res.status(401).json({ message: "No token provided or invalid session" });
+      return sendErrorResponse(res, {
+        status: 401,
+        code: "AUTHENTICATION_REQUIRED",
+        message: "No token provided or invalid session",
+        correlationId,
+      });
     }
 
     // Explicit cross-user spoof protection: reject attempts to override authenticated ID
@@ -97,8 +169,11 @@ function createCareerStrategistController({
       (req.body?.user_id && req.body.user_id !== userId);
 
     if (spoofAttempt) {
-      return res.status(403).json({
+      return sendErrorResponse(res, {
+        status: 403,
+        code: "FORBIDDEN",
         message: "Unauthorized: Client cannot override authenticated user identity",
+        correlationId,
       });
     }
 
@@ -109,8 +184,15 @@ function createCareerStrategistController({
     if (req.body?.yearsOfExperience !== undefined && req.body?.yearsOfExperience !== null) {
       const parsedYoe = Number(req.body.yearsOfExperience);
       if (!Number.isFinite(parsedYoe) || parsedYoe < 0 || parsedYoe > 70) {
-        return res.status(400).json({
+        return sendErrorResponse(res, {
+          status: 400,
+          code: "INVALID_REQUEST",
           message: "Invalid yearsOfExperience. Must be a finite non-negative number between 0 and 70.",
+          correlationId,
+          details: {
+            field: "yearsOfExperience",
+            constraint: "Must be a finite non-negative number between 0 and 70",
+          },
         });
       }
       clientYoe = parsedYoe;
@@ -120,16 +202,30 @@ function createCareerStrategistController({
     if (req.body?.options?.timeoutMs !== undefined) {
       const parsedTimeout = Number(req.body.options.timeoutMs);
       if (!Number.isFinite(parsedTimeout) || parsedTimeout <= 0 || parsedTimeout > 120000) {
-        return res.status(400).json({
+        return sendErrorResponse(res, {
+          status: 400,
+          code: "INVALID_REQUEST",
           message: "Invalid options.timeoutMs. Must be a positive integer <= 120,000 ms.",
+          correlationId,
+          details: {
+            field: "options.timeoutMs",
+            constraint: "Must be a positive integer <= 120,000 ms",
+          },
         });
       }
       effectiveTimeoutMs = parsedTimeout;
     }
 
     if (req.body?.targetRoles !== undefined && !Array.isArray(req.body.targetRoles)) {
-      return res.status(400).json({
+      return sendErrorResponse(res, {
+        status: 400,
+        code: "INVALID_REQUEST",
         message: "Invalid targetRoles. Must be an array of role titles.",
+        correlationId,
+        details: {
+          field: "targetRoles",
+          constraint: "Must be an array of role titles",
+        },
       });
     }
 
@@ -148,8 +244,11 @@ function createCareerStrategistController({
       ]);
     } catch (dbErr) {
       console.error("[CareerStrategistController] Database retrieval error:", dbErr.message);
-      return res.status(500).json({
+      return sendErrorResponse(res, {
+        status: 500,
+        code: "INTERNAL_SERVER_ERROR",
         message: "Failed to retrieve candidate profile and pipeline telemetry",
+        correlationId,
       });
     }
 
@@ -222,14 +321,6 @@ function createCareerStrategistController({
         thresholdDays: Number(safeSummary.staleAlerts?.thresholdDays) || 14,
       },
     };
-
-    // Correlation ID
-    const correlationId =
-      typeof req.body?.correlationId === "string" && req.body.correlationId.trim().length > 0
-        ? req.body.correlationId.trim()
-        : crypto.randomUUID
-        ? crypto.randomUUID()
-        : `corr-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
     // ------------------------------------------------------------------------
     // 4. Cancellation & Disconnect Management (Stage 2B.4C-R2 Lifecycle)
@@ -334,59 +425,158 @@ function createCareerStrategistController({
       }
 
       // Client Disconnection / Cancellation
-      if (err instanceof AiCancellationError || err.code === AI_ERROR_CODES.CANCELLATION || abortController.signal.aborted) {
-        return res.status(499).json({ message: "Assessment request cancelled" });
-      }
-
-      // Request Structure / Configuration Error
-      if (err instanceof AiConfigurationError || err.code === AI_ERROR_CODES.CONFIGURATION_ERROR) {
-        if (err.diagnosticContext?.reason === "INVALID_REQUEST_STRUCTURE") {
-          return res.status(400).json({
-            message: "Invalid assessment request structure",
-            details: err.message,
-          });
-        }
-        return res.status(500).json({ message: "Internal assessment configuration error" });
-      }
-
-      // Provider Rate Limit
-      if (err instanceof AiRateLimitError || err.code === AI_ERROR_CODES.RATE_LIMITED) {
-        return res.status(429).json({
-          message: "AI provider rate limit reached. Please retry shortly.",
+      if (
+        err instanceof AiCancellationError ||
+        err?.code === AI_ERROR_CODES.CANCELLATION ||
+        abortController.signal.aborted
+      ) {
+        return sendErrorResponse(res, {
+          status: 499,
+          code: "ABORTED",
+          message: "Assessment request cancelled",
+          correlationId,
         });
       }
 
-      // Provider Timeout
-      if (err instanceof AiTimeoutError || err.code === AI_ERROR_CODES.TIMEOUT || err.code === AI_ERROR_CODES.GATEWAY_TIMEOUT) {
-        return res.status(504).json({
+      // Prompt Context Window Exceeded
+      if (
+        err instanceof AiContextWindowExceededError ||
+        err?.code === AI_ERROR_CODES.CONTEXT_WINDOW_EXCEEDED
+      ) {
+        return sendErrorResponse(res, {
+          status: 400,
+          code: "CONTEXT_WINDOW_EXCEEDED",
+          message: "Assessment prompt exceeds the AI model context window",
+          correlationId,
+        });
+      }
+
+      // Request Structure / Configuration Error
+      if (err instanceof AiConfigurationError || err?.code === AI_ERROR_CODES.CONFIGURATION_ERROR) {
+        if (err?.diagnosticContext?.reason === "INVALID_REQUEST_STRUCTURE") {
+          return sendErrorResponse(res, {
+            status: 400,
+            code: "INVALID_REQUEST",
+            message: "Invalid assessment request structure",
+            correlationId,
+            details: {
+              reason: "INVALID_REQUEST_STRUCTURE",
+              ...(typeof err?.message === "string" && err.message.trim().length > 0
+                ? { validationError: err.message }
+                : {}),
+            },
+          });
+        }
+        return sendErrorResponse(res, {
+          status: 500,
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Internal assessment configuration error",
+          correlationId,
+        });
+      }
+
+      // Provider Rate Limit / Quota Exhausted
+      if (
+        err instanceof AiRateLimitError ||
+        err?.code === AI_ERROR_CODES.RATE_LIMITED ||
+        err instanceof AiQuotaExhaustedError ||
+        err?.code === AI_ERROR_CODES.QUOTA_EXHAUSTED
+      ) {
+        return sendErrorResponse(res, {
+          status: 429,
+          code: "RATE_LIMITED",
+          message: "AI provider rate limit reached. Please retry shortly.",
+          correlationId,
+        });
+      }
+
+      // Provider Timeout / Gateway Timeout
+      if (
+        err instanceof AiTimeoutError ||
+        err?.code === AI_ERROR_CODES.TIMEOUT ||
+        err instanceof AiGatewayTimeoutError ||
+        err?.code === AI_ERROR_CODES.GATEWAY_TIMEOUT
+      ) {
+        return sendErrorResponse(res, {
+          status: 504,
+          code: "TIMEOUT",
           message: "Career assessment generation timed out",
+          correlationId,
         });
       }
 
       // Evidence Validation Failure (Unsupported Claims / Model Hallucinations)
-      if (err instanceof AiSchemaValidationError || err.code === AI_ERROR_CODES.SCHEMA_VALIDATION_ERROR) {
-        return res.status(502).json({
+      if (
+        err instanceof AiSchemaValidationError ||
+        err?.code === AI_ERROR_CODES.SCHEMA_VALIDATION_ERROR
+      ) {
+        return sendErrorResponse(res, {
+          status: 502,
+          code: "SCHEMA_VALIDATION_ERROR",
           message: "AI provider returned unsupported or ungrounded assessment",
+          correlationId,
         });
       }
 
-      // Model Malformed JSON
-      if (err instanceof AiModelFailureError || err.code === AI_ERROR_CODES.MODEL_FAILURE) {
-        return res.status(502).json({
+      // Model Malformed JSON / Unparseable Completion
+      if (err instanceof AiModelFailureError || err?.code === AI_ERROR_CODES.MODEL_FAILURE) {
+        return sendErrorResponse(res, {
+          status: 502,
+          code: "MODEL_FAILURE",
           message: "AI provider returned malformed response",
+          correlationId,
+        });
+      }
+
+      // Upstream Capacity Unavailable
+      if (
+        err instanceof AiCapacityError ||
+        err?.code === AI_ERROR_CODES.CAPACITY_UNAVAILABLE
+      ) {
+        return sendErrorResponse(res, {
+          status: 503,
+          code: "UPSTREAM_UNAVAILABLE",
+          message: "AI provider is temporarily unavailable. Please retry shortly.",
+          correlationId,
+        });
+      }
+
+      // Upstream Bad Gateway / Network Error
+      if (
+        err instanceof AiBadGatewayError ||
+        err?.code === AI_ERROR_CODES.BAD_GATEWAY ||
+        err instanceof AiNetworkError ||
+        err?.code === AI_ERROR_CODES.NETWORK_ERROR
+      ) {
+        return sendErrorResponse(res, {
+          status: 502,
+          code: "UPSTREAM_UNAVAILABLE",
+          message: "AI provider gateway or network communication failed",
+          correlationId,
         });
       }
 
       // Authentication Defect
-      if (err instanceof AiAuthenticationError || err.code === AI_ERROR_CODES.AUTHENTICATION_ERROR) {
+      if (
+        err instanceof AiAuthenticationError ||
+        err?.code === AI_ERROR_CODES.AUTHENTICATION_ERROR
+      ) {
         console.error("[CareerStrategistController] AI Provider authentication defect");
-        return res.status(500).json({ message: "AI provider authentication failed" });
+        return sendErrorResponse(res, {
+          status: 500,
+          code: "INTERNAL_SERVER_ERROR",
+          message: "AI provider authentication failed",
+          correlationId,
+        });
       }
 
       // Unhandled / Internal Failure
-      console.error("[CareerStrategistController] Unhandled error:", err.message);
-      return res.status(500).json({
+      console.error("[CareerStrategistController] Unhandled error:", err?.message || String(err));
+      return sendErrorResponse(res, {
+        status: 500,
+        code: "INTERNAL_SERVER_ERROR",
         message: "Failed to generate career strategy assessment",
+        correlationId,
       });
     } finally {
       cleanupListeners();

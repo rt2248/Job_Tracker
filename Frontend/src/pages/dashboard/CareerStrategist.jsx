@@ -90,15 +90,26 @@ export default function CareerStrategist() {
       {/* 1. Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8 sm:mb-10 shrink-0">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xl">🧭</span>
+          <div className="flex items-center gap-2.5 mb-1">
+            <svg
+              className="w-6 h-6 text-cyan shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+            </svg>
             <h1 className="font-display text-2xl sm:text-3xl text-ink font-bold tracking-tight">
               Career Strategist
             </h1>
           </div>
           <p className="text-muted text-xs sm:text-sm mt-1 max-w-2xl leading-relaxed">
-            AI-driven strategic diagnosis grounded in your active pipeline telemetry and verified skills.
-            Bounded by deterministic zero-hallucination validation.
+            Pipeline diagnostics, skill alignment, and evidence-checked recommendations derived from your tracked applications.
           </p>
         </div>
 
@@ -156,7 +167,20 @@ export default function CareerStrategist() {
           className="mb-6 p-4 rounded-xl bg-red/10 border border-red/30 text-ink flex items-start justify-between gap-4"
         >
           <div className="flex items-start gap-3">
-            <span className="text-red font-bold text-base mt-0.5">✕</span>
+            <svg
+              className="w-5 h-5 text-red shrink-0 mt-0.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="15" y1="9" x2="9" y2="15" />
+              <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
             <div className="space-y-1">
               <h4 className="font-semibold text-xs sm:text-sm text-red">
                 Assessment Failed ({error.code || "ERROR"})
@@ -165,7 +189,7 @@ export default function CareerStrategist() {
                 {error.message || "An unexpected error occurred during assessment generation."}
               </p>
               {error.correlationId && (
-                <span className="text-[11px] font-mono text-muted block">
+                <span className="text-xs font-mono text-muted block">
                   Correlation ID: {error.correlationId}
                 </span>
               )}
@@ -202,13 +226,21 @@ export default function CareerStrategist() {
             {/* Strategic Recommendations List */}
             <StrategicRecommendationsList
               recommendations={assessment.strategicRecommendations}
+              fallbackActive={fallbackActive}
+              pipelineHealth={assessment.candidateSummary?.pipelineHealth}
             />
 
             {/* Two-Column Grid: Skill Gap & Pipeline Diagnostics */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <SkillGapCard skillGapAnalysis={assessment.skillGapAnalysis} />
+              <SkillGapCard
+                skillGapAnalysis={assessment.skillGapAnalysis}
+                fallbackActive={fallbackActive}
+                pipelineHealth={assessment.candidateSummary?.pipelineHealth}
+              />
               <PipelineDiagnosticsCard
                 pipelineDiagnostics={assessment.pipelineDiagnostics}
+                pipelineHealth={assessment.candidateSummary?.pipelineHealth}
+                dataLimitationsNoted={assessment.evidenceGrounding?.dataLimitationsNoted}
               />
             </div>
 
@@ -218,6 +250,9 @@ export default function CareerStrategist() {
               validationAudit={validationAudit}
               telemetry={telemetry}
               correlationId={correlationId}
+              verifiedCandidateSkills={assessment.skillGapAnalysis?.verifiedCandidateSkills}
+              fallbackActive={fallbackActive}
+              pipelineHealth={assessment.candidateSummary?.pipelineHealth}
             />
           </>
         ) : (

@@ -112,6 +112,8 @@ Evolexa does not load bulky third-party icon libraries (e.g., `lucide-react` or 
 | `AccountSecurityTab.jsx` | Security Ledger Icons | Inline SVG (Shield, Key, Copy, Check) | Zero-emoji security credential indicators & copy-to-clipboard state |
 | `AvatarPreviewModal.jsx` | Lightbox Close Icon | Inline SVG (`X`) | Keyboard-accessible lightbox close control |
 | `AvatarCropModal.jsx` | Image Crop & Zoom Controls | Inline SVG (Close, Plus, Minus, Reset, Alert) | Disabled-state & theme-adaptive vector controls inside crop workspace |
+| `DashboardMetricStrip.jsx` | Pipeline KPI Micro-Visuals | Inline SVG (Bars, Sparkline, Yield Arc) | Live data-driven micro-telemetry inside Dashboard KPI tiles |
+| `DashboardInsightsSection.jsx` | Compass Strategist Icon | Inline SVG Compass (`currentColor`) | Replaces emoji with theme-compatible vector icon |
 | `NavBar.jsx` / `SideBar.jsx` | Evolexa Monogram | Stylized HTML/CSS Badge | Text mark ("EX", "ET") with font-display styling |
 
 ---

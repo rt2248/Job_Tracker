@@ -500,4 +500,251 @@ describe("Career Strategist Frontend Service Integration", () => {
       );
     });
   });
+
+  describe("6. Stage 2B.10B Targeted Error Contract Alignment", () => {
+    it("classifies HTTP 502 MODEL_FAILURE strictly as MODEL_FAILURE without mislabeling as SCHEMA_VALIDATION_ERROR", async () => {
+      globalThis.fetch = async () => ({
+        ok: false,
+        status: 502,
+        json: async () => ({
+          message: "AI provider returned malformed response",
+          correlationId: "corr-model-fail-502",
+          error: {
+            code: "MODEL_FAILURE",
+            message: "AI provider returned malformed response",
+          },
+        }),
+      });
+
+      await assert.rejects(
+        () => generateCareerAssessment(),
+        (err) => {
+          assert.ok(err instanceof CareerStrategistError);
+          assert.equal(err.status, 502);
+          assert.equal(err.code, CAREER_STRATEGIST_ERROR_CODES.MODEL_FAILURE);
+          assert.notEqual(err.code, CAREER_STRATEGIST_ERROR_CODES.SCHEMA_VALIDATION_ERROR);
+          assert.equal(err.message, "AI provider returned malformed response");
+          assert.equal(err.correlationId, "corr-model-fail-502");
+          assert.equal(err.details, null);
+          return true;
+        }
+      );
+    });
+
+    it("preserves MODEL_FAILURE on incomplete HTTP 502 payload lacking error.message", async () => {
+      globalThis.fetch = async () => ({
+        ok: false,
+        status: 502,
+        json: async () => ({
+          correlationId: "corr-model-incomplete",
+          error: { code: "MODEL_FAILURE" },
+        }),
+      });
+
+      await assert.rejects(
+        () => generateCareerAssessment(),
+        (err) => {
+          assert.equal(err.status, 502);
+          assert.equal(err.code, CAREER_STRATEGIST_ERROR_CODES.MODEL_FAILURE);
+          assert.equal(err.correlationId, "corr-model-incomplete");
+          assert.match(err.message, /malformed or unparseable/i);
+          return true;
+        }
+      );
+    });
+
+    it("normalizes canonical AI_* error codes and CONTEXT_WINDOW_EXCEEDED", async () => {
+      globalThis.fetch = async () => ({
+        ok: false,
+        status: 400,
+        json: async () => ({
+          message: "Assessment prompt exceeds the AI model context window",
+          correlationId: "corr-ctx-400",
+          error: {
+            code: "CONTEXT_WINDOW_EXCEEDED",
+            message: "Assessment prompt exceeds the AI model context window",
+          },
+        }),
+      });
+
+      await assert.rejects(
+        () => generateCareerAssessment(),
+        (err) => {
+          assert.equal(err.status, 400);
+          assert.equal(err.code, CAREER_STRATEGIST_ERROR_CODES.CONTEXT_WINDOW_EXCEEDED);
+          assert.equal(err.correlationId, "corr-ctx-400");
+          return true;
+        }
+      );
+
+      globalThis.fetch = async () => ({
+        ok: false,
+        status: 502,
+        json: async () => ({
+          correlationId: "corr-ai-alias-502",
+          error: {
+            code: "AI_MODEL_FAILURE",
+            message: "Upstream model returned corrupted payload",
+          },
+        }),
+      });
+
+      await assert.rejects(
+        () => generateCareerAssessment(),
+        (err) => {
+          assert.equal(err.code, CAREER_STRATEGIST_ERROR_CODES.MODEL_FAILURE);
+          assert.equal(err.correlationId, "corr-ai-alias-502");
+          return true;
+        }
+      );
+    });
+
+    it("parses structured error envelope details and correlationId accurately", async () => {
+      const validationDetails = {
+        field: "yearsOfExperience",
+        constraint: "Must be a finite non-negative number between 0 and 70",
+      };
+
+      globalThis.fetch = async () => ({
+        ok: false,
+        status: 400,
+        json: async () => ({
+          message: "Invalid yearsOfExperience parameter",
+          correlationId: "corr-val-details-400",
+          error: {
+            code: "INVALID_REQUEST",
+            message: "Invalid yearsOfExperience parameter",
+            details: validationDetails,
+          },
+        }),
+      });
+
+      await assert.rejects(
+        () => generateCareerAssessment(),
+        (err) => {
+          assert.equal(err.status, 400);
+          assert.equal(err.code, CAREER_STRATEGIST_ERROR_CODES.INVALID_REQUEST);
+          assert.equal(err.message, "Invalid yearsOfExperience parameter");
+          assert.equal(err.correlationId, "corr-val-details-400");
+          assert.deepEqual(err.details, validationDetails);
+          return true;
+        }
+      );
+    });
+
+    it("retains compatibility with legacy flat { message } error responses", async () => {
+      globalThis.fetch = async () => ({
+        ok: false,
+        status: 502,
+        json: async () => ({
+          message: "Legacy gateway ungrounded response",
+        }),
+      });
+
+      await assert.rejects(
+        () => generateCareerAssessment(),
+        (err) => {
+          assert.equal(err.status, 502);
+          assert.equal(err.code, CAREER_STRATEGIST_ERROR_CODES.SCHEMA_VALIDATION_ERROR);
+          assert.equal(err.message, "Legacy gateway ungrounded response");
+          assert.equal(err.correlationId, null);
+          assert.equal(err.details, null);
+          return true;
+        }
+      );
+    });
+
+    it("does not silently misclassify unrecognized backend error.code values", async () => {
+      globalThis.fetch = async () => ({
+        ok: false,
+        status: 502,
+        json: async () => ({
+          correlationId: "corr-unknown-code",
+          error: {
+            code: "SOME_UNRECOGNIZED_UPSTREAM_CODE",
+            message: "Unhandled vendor proxy state",
+          },
+        }),
+      });
+
+      await assert.rejects(
+        () => generateCareerAssessment(),
+        (err) => {
+          assert.equal(err.status, 502);
+          assert.equal(err.code, CAREER_STRATEGIST_ERROR_CODES.UNKNOWN_ERROR);
+          assert.notEqual(err.code, "SOME_UNRECOGNIZED_UPSTREAM_CODE");
+          assert.notEqual(err.code, CAREER_STRATEGIST_ERROR_CODES.SCHEMA_VALIDATION_ERROR);
+          assert.equal(err.message, "Unhandled vendor proxy state");
+          assert.equal(err.correlationId, "corr-unknown-code");
+          return true;
+        }
+      );
+    });
+
+    it("handles malformed, non-JSON, primitive, and incomplete error payloads safely", async () => {
+      // 1. response.json() throws on HTML gateway error
+      globalThis.fetch = async () => ({
+        ok: false,
+        status: 502,
+        json: async () => {
+          throw new SyntaxError("Unexpected token < in JSON");
+        },
+      });
+
+      await assert.rejects(
+        () => generateCareerAssessment(),
+        (err) => {
+          assert.equal(err.status, 502);
+          assert.equal(err.code, CAREER_STRATEGIST_ERROR_CODES.SCHEMA_VALIDATION_ERROR);
+          assert.equal(err.correlationId, null);
+          assert.equal(err.details, null);
+          return true;
+        }
+      );
+
+      // 2. Malformed nested fields: non-object error, numeric code, whitespace correlationId, empty details
+      globalThis.fetch = async () => ({
+        ok: false,
+        status: 429,
+        json: async () => ({
+          correlationId: "   ",
+          error: {
+            code: 429,
+            message: "",
+            details: {},
+          },
+          message: "Rate limit exceeded from proxy",
+        }),
+      });
+
+      await assert.rejects(
+        () => generateCareerAssessment(),
+        (err) => {
+          assert.equal(err.status, 429);
+          assert.equal(err.code, CAREER_STRATEGIST_ERROR_CODES.RATE_LIMITED);
+          assert.equal(err.message, "Rate limit exceeded from proxy");
+          assert.equal(err.correlationId, null);
+          assert.equal(err.details, null);
+          return true;
+        }
+      );
+
+      // 3. Array JSON payload on failure
+      globalThis.fetch = async () => ({
+        ok: false,
+        status: 500,
+        json: async () => ["not", "an", "object"],
+      });
+
+      await assert.rejects(
+        () => generateCareerAssessment(),
+        (err) => {
+          assert.equal(err.status, 500);
+          assert.equal(err.code, CAREER_STRATEGIST_ERROR_CODES.INTERNAL_SERVER_ERROR);
+          assert.equal(err.correlationId, null);
+          return true;
+        }
+      );
+    });
+  });
 });

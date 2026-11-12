@@ -241,7 +241,7 @@ export default function PipelineDistributionChart({
 
   if (!pipelineData) {
     return (
-      <div className={cn("bg-surface border border-border-primary rounded-xl p-6", className)}>
+      <div className={cn("dashboard-panel rounded-xl p-6", className)}>
         <EmptyStateVisual iconType="pipeline" title="Pipeline Data Unavailable" description="No pipeline metrics could be retrieved." />
       </div>
     );
@@ -249,7 +249,7 @@ export default function PipelineDistributionChart({
 
   if (snapshotTotal === 0) {
     return (
-      <div className={cn("bg-surface border border-border-primary rounded-xl p-6", className)}>
+      <div className={cn("dashboard-panel rounded-xl p-6", className)}>
         <EmptyStateVisual
           iconType="pipeline"
           title="Pipeline is Empty"
@@ -262,7 +262,7 @@ export default function PipelineDistributionChart({
   return (
     <div
       className={cn(
-        "bg-surface border border-border-primary rounded-xl p-4 sm:p-6 transition-all flex flex-col justify-between",
+        "dashboard-panel rounded-xl p-5 sm:p-6 transition-all flex flex-col justify-between",
         className
       )}
       role="region"
@@ -281,7 +281,7 @@ export default function PipelineDistributionChart({
 
         {/* Distinction Callout: Active Segment vs Evaluation-Only Metric */}
         {typeof activeInPipeline === "number" && (
-          <div className="mb-5 p-3 rounded-lg bg-surface-secondary/60 border border-border-subtle text-sm flex items-start gap-2.5 leading-relaxed">
+          <div className="mb-5 pl-3.5 pr-3 py-2.5 rounded-r-lg border-l-2 border-l-cyan bg-surface-secondary/50 text-sm flex items-start gap-2.5 leading-relaxed">
             <svg viewBox="0 0 16 16" className="w-4 h-4 text-cyan shrink-0 mt-0.5" fill="none">
               <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
               <path d="M8 7v4M8 5h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -406,165 +406,116 @@ export function PipelineDistributionDetails({
   const activeStages = activeSegment.stages || [];
   const closedStages = closedSegment.stages || [];
 
+  const renderStageColumn = ({ title, dotColor, totalCount, totalColor, stages, keyPrefix, listLabel }) => (
+    <div className="dashboard-panel rounded-xl p-4 sm:p-5 flex flex-col gap-2.5">
+      <div className="flex items-center justify-between pb-3 mb-1.5 border-b border-border-subtle">
+        <span className="font-display font-semibold text-sm sm:text-base text-ink flex items-center gap-2">
+          <span className={cn("w-2 h-2 rounded-full shrink-0", dotColor)} aria-hidden="true" />
+          {title}
+        </span>
+        <span className={cn("font-mono text-sm sm:text-base font-bold", totalColor)}>
+          {totalCount} total
+        </span>
+      </div>
+
+      <div className="space-y-1.5" role="list" aria-label={listLabel}>
+        {stages.map((stage) => {
+          const meta = STAGE_META[stage.status] || {};
+          const isSelected = selectedStageKey === stage.status;
+          const isDimmed = selectedStageKey && !isSelected;
+
+          return (
+            <div
+              key={`${keyPrefix}-${stage.status}`}
+              role="button"
+              tabIndex={0}
+              onClick={() => setSelectedStageKey(isSelected ? null : stage.status)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setSelectedStageKey(isSelected ? null : stage.status);
+                }
+              }}
+              className={cn(
+                "flex items-center justify-between p-2 rounded-lg transition-all cursor-pointer select-none",
+                "hover:bg-surface-secondary/75",
+                isSelected && "bg-surface-secondary ring-1 ring-border-accent/45",
+                isDimmed && "opacity-40"
+              )}
+              aria-label={`${stage.label}: ${stage.count} applications (${stage.percentage}%)`}
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className={cn("p-1.5 rounded-md bg-surface-secondary/80 shrink-0", meta.textColor)}>
+                  <StageShapeIcon shape={meta.shape} className={meta.textColor} />
+                </span>
+                <span className="font-sans text-sm font-medium text-ink-secondary truncate">
+                  {stage.label}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                {/* Mini SVG proportional track */}
+                <div className="w-16 sm:w-20 h-1.5 rounded-full bg-surface-secondary/90 overflow-hidden hidden sm:block">
+                  <div
+                    className={cn("h-full rounded-full transition-all duration-300", meta.barColor)}
+                    style={{ width: `${Math.min(100, stage.percentage)}%` }}
+                  />
+                </div>
+
+                <span className="font-mono text-sm font-bold text-ink w-8 text-right">
+                  {stage.count}
+                </span>
+
+                <span className="font-mono text-xs sm:text-sm text-muted w-14 text-right">
+                  {stage.percentage}%
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+
   return (
     <div
       className={cn(
-        "bg-surface border border-border-primary rounded-xl p-4 sm:p-6 transition-all",
+        "dashboard-workspace-deck rounded-xl p-5 sm:p-6 transition-all",
         className
       )}
       role="region"
       aria-label="Current pipeline overview"
     >
       {/* Section Header */}
-      <h3 className="font-display text-ink text-lg sm:text-xl font-semibold leading-tight mb-6 sm:mb-7">
+      <h3 className="font-display text-ink text-lg sm:text-xl font-semibold leading-tight mb-5 sm:mb-6">
         Current Pipeline Overview
       </h3>
 
       {/* Detailed Stage Cards Breakdown */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6 lg:gap-8">
-        {/* 1. Active Stages Column */}
-        <div className="flex flex-col gap-2.5 p-3.5 sm:p-4 rounded-xl bg-surface-secondary/40 border border-border-subtle">
-          <div className="flex items-center justify-between pb-3 mb-2 border-b border-border-subtle">
-            <span className="font-display font-semibold text-sm sm:text-base text-ink flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-cyan shrink-0" aria-hidden="true" />
-              Active Opportunities
-            </span>
-            <span className="font-mono text-sm sm:text-base font-bold text-cyan">
-              {activeSegment.totalActive} total
-            </span>
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6 lg:gap-7">
+        {renderStageColumn({
+          title: "Active Opportunities",
+          dotColor: "bg-cyan",
+          totalCount: activeSegment.totalActive,
+          totalColor: "text-cyan",
+          stages: activeStages,
+          keyPrefix: "act",
+          listLabel: "Active stages list",
+        })}
 
-          <div className="space-y-2" role="list" aria-label="Active stages list">
-            {activeStages.map((stage) => {
-              const meta = STAGE_META[stage.status] || {};
-              const isSelected = selectedStageKey === stage.status;
-              const isDimmed = selectedStageKey && !isSelected;
-
-              return (
-                <div
-                  key={`act-${stage.status}`}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => setSelectedStageKey(isSelected ? null : stage.status)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setSelectedStageKey(isSelected ? null : stage.status);
-                    }
-                  }}
-                  className={cn(
-                    "flex items-center justify-between p-2 rounded-lg transition-all cursor-pointer select-none",
-                    "border border-transparent hover:border-border-subtle hover:bg-surface-secondary/80",
-                    isSelected && "bg-surface-secondary border-border-accent/40 shadow-sm ring-1 ring-border-accent/30",
-                    isDimmed && "opacity-40"
-                  )}
-                  aria-label={`${stage.label}: ${stage.count} applications (${stage.percentage}%)`}
-                >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className={cn("p-1 rounded-md bg-surface border shrink-0", meta.accentBorder, meta.textColor)}>
-                      <StageShapeIcon shape={meta.shape} className={meta.textColor} />
-                    </span>
-                    <span className="font-sans text-sm font-medium text-ink-secondary truncate">
-                      {stage.label}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2 shrink-0">
-                    {/* Mini SVG proportional track */}
-                    <div className="w-16 sm:w-20 h-1.5 rounded-full bg-surface overflow-hidden border border-border-subtle hidden sm:block">
-                      <div
-                        className={cn("h-full rounded-full transition-all duration-300", meta.barColor)}
-                        style={{ width: `${Math.min(100, stage.percentage)}%` }}
-                      />
-                    </div>
-
-                    <span className="font-mono text-sm font-bold text-ink w-8 text-right">
-                      {stage.count}
-                    </span>
-
-                    <span className="font-mono text-xs sm:text-sm text-muted w-14 text-right">
-                      {stage.percentage}%
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 2. Closed Outcomes Column */}
-        <div className="flex flex-col gap-2.5 p-3.5 sm:p-4 rounded-xl bg-surface-secondary/40 border border-border-subtle">
-          <div className="flex items-center justify-between pb-3 mb-2 border-b border-border-subtle">
-            <span className="font-display font-semibold text-sm sm:text-base text-ink flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-slate-400 shrink-0" aria-hidden="true" />
-              Closed Outcomes
-            </span>
-            <span className="font-mono text-sm sm:text-base font-bold text-ink">
-              {closedSegment.totalClosed} total
-            </span>
-          </div>
-
-          <div className="space-y-2" role="list" aria-label="Closed stages list">
-            {closedStages.map((stage) => {
-              const meta = STAGE_META[stage.status] || {};
-              const isSelected = selectedStageKey === stage.status;
-              const isDimmed = selectedStageKey && !isSelected;
-
-              return (
-                <div
-                  key={`cls-${stage.status}`}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => setSelectedStageKey(isSelected ? null : stage.status)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setSelectedStageKey(isSelected ? null : stage.status);
-                    }
-                  }}
-                  className={cn(
-                    "flex items-center justify-between p-2 rounded-lg transition-all cursor-pointer select-none",
-                    "border border-transparent hover:border-border-subtle hover:bg-surface-secondary/80",
-                    isSelected && "bg-surface-secondary border-border-accent/40 shadow-sm ring-1 ring-border-accent/30",
-                    isDimmed && "opacity-40"
-                  )}
-                  aria-label={`${stage.label}: ${stage.count} applications (${stage.percentage}%)`}
-                >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className={cn("p-1 rounded-md bg-surface border shrink-0", meta.accentBorder, meta.textColor)}>
-                      <StageShapeIcon shape={meta.shape} className={meta.textColor} />
-                    </span>
-                    <span className="font-sans text-sm font-medium text-ink-secondary truncate">
-                      {stage.label}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2 shrink-0">
-                    {/* Mini SVG proportional track */}
-                    <div className="w-16 sm:w-20 h-1.5 rounded-full bg-surface overflow-hidden border border-border-subtle hidden sm:block">
-                      <div
-                        className={cn("h-full rounded-full transition-all duration-300", meta.barColor)}
-                        style={{ width: `${Math.min(100, stage.percentage)}%` }}
-                      />
-                    </div>
-
-                    <span className="font-mono text-sm font-bold text-ink w-8 text-right">
-                      {stage.count}
-                    </span>
-
-                    <span className="font-mono text-xs sm:text-sm text-muted w-14 text-right">
-                      {stage.percentage}%
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        {renderStageColumn({
+          title: "Closed Outcomes",
+          dotColor: "bg-slate-400",
+          totalCount: closedSegment.totalClosed,
+          totalColor: "text-ink",
+          stages: closedStages,
+          keyPrefix: "cls",
+          listLabel: "Closed stages list",
+        })}
       </div>
 
       {/* Mandatory Snapshot Disclaimer Banner */}
-      <div className="mt-8 sm:mt-9 pt-4 border-t border-border-subtle flex items-start gap-2 text-xs sm:text-sm text-muted leading-relaxed">
+      <div className="mt-7 sm:mt-8 pt-4 border-t border-border-subtle flex items-start gap-2 text-xs sm:text-sm text-muted leading-relaxed">
         <svg viewBox="0 0 14 14" className="w-3.5 h-3.5 text-muted shrink-0 mt-0.5" fill="none">
           <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
           <path d="M7 6v4M7 4h.01" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />

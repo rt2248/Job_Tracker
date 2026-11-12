@@ -26,9 +26,15 @@ const {
   AiError,
   AiCancellationError,
   AiTimeoutError,
+  AiGatewayTimeoutError,
+  AiBadGatewayError,
+  AiCapacityError,
   AiRateLimitError,
+  AiQuotaExhaustedError,
+  AiNetworkError,
   AiAuthenticationError,
   AiConfigurationError,
+  AiContextWindowExceededError,
   AiSchemaValidationError,
   AiModelFailureError,
   AI_ERROR_CODES,
@@ -1336,6 +1342,399 @@ describe("Stage 2B.4C Career Strategist Controller & Route Integration", () => {
         server.closeAllConnections?.();
         server.close();
       }
+    });
+  });
+
+  // --------------------------------------------------------------------------
+  // 9. Stage 2B.10B Targeted Error Envelope & Correlation ID Hardening
+  // --------------------------------------------------------------------------
+  describe("9. Stage 2B.10B Targeted Error Envelope & Correlation ID Hardening", () => {
+    function buildStandardController(mockServiceOverride = null) {
+      return createCareerStrategistController({
+        careerStrategistService: mockServiceOverride || createMockService(),
+        profileModel: {
+          async getProfileByUserId() {
+            return createMockProfile();
+          },
+        },
+        insightsModel: {
+          async getInsightsSummary() {
+            return createMockInsightsSummary();
+          },
+          async getPipelineSnapshot() {
+            return createMockPipelineSnapshot();
+          },
+        },
+      });
+    }
+
+    it("emits consistent structured error envelopes with correlationId and backward-compatible message across controller branches", async () => {
+      const scenarios = [
+        {
+          label: "missing user session (401)",
+          setup: () => ({
+            controller: buildStandardController(),
+            reqRes: createMockReqRes({ user: null, body: { correlationId: "corr-branch-401" } }),
+          }),
+          expectedStatus: 401,
+          expectedCode: "AUTHENTICATION_REQUIRED",
+          expectedCorrelationId: "corr-branch-401",
+          expectDetails: false,
+        },
+        {
+          label: "userId spoof attempt (403)",
+          setup: () => ({
+            controller: buildStandardController(),
+            reqRes: createMockReqRes({
+              user: { userId: "auth-user" },
+              body: { userId: "other-user", correlationId: "corr-branch-403" },
+            }),
+          }),
+          expectedStatus: 403,
+          expectedCode: "FORBIDDEN",
+          expectedCorrelationId: "corr-branch-403",
+          expectDetails: false,
+        },
+        {
+          label: "invalid yearsOfExperience (400)",
+          setup: () => ({
+            controller: buildStandardController(),
+            reqRes: createMockReqRes({ body: { yearsOfExperience: 99, correlationId: "corr-branch-yoe" } }),
+          }),
+          expectedStatus: 400,
+          expectedCode: "INVALID_REQUEST",
+          expectedCorrelationId: "corr-branch-yoe",
+          expectDetails: true,
+        },
+        {
+          label: "invalid targetRoles (400)",
+          setup: () => ({
+            controller: buildStandardController(),
+            reqRes: createMockReqRes({ body: { targetRoles: "Lead", correlationId: "corr-branch-roles" } }),
+          }),
+          expectedStatus: 400,
+          expectedCode: "INVALID_REQUEST",
+          expectedCorrelationId: "corr-branch-roles",
+          expectDetails: true,
+        },
+        {
+          label: "invalid options.timeoutMs (400)",
+          setup: () => ({
+            controller: buildStandardController(),
+            reqRes: createMockReqRes({
+              body: { options: { timeoutMs: -5 }, correlationId: "corr-branch-timeout-opt" },
+            }),
+          }),
+          expectedStatus: 400,
+          expectedCode: "INVALID_REQUEST",
+          expectedCorrelationId: "corr-branch-timeout-opt",
+          expectDetails: true,
+        },
+        {
+          label: "context window exceeded (400)",
+          setup: () => ({
+            controller: buildStandardController(
+              createMockService({ throwError: new AiContextWindowExceededError("Prompt too large") })
+            ),
+            reqRes: createMockReqRes({ body: { correlationId: "corr-branch-ctx" } }),
+          }),
+          expectedStatus: 400,
+          expectedCode: "CONTEXT_WINDOW_EXCEEDED",
+          expectedCorrelationId: "corr-branch-ctx",
+          expectDetails: false,
+        },
+        {
+          label: "service INVALID_REQUEST_STRUCTURE (400)",
+          setup: () => ({
+            controller: buildStandardController(
+              createMockService({
+                throwError: new AiConfigurationError("Invalid CareerAssessmentRequest: targetRoles required", {
+                  diagnosticContext: { reason: "INVALID_REQUEST_STRUCTURE" },
+                }),
+              })
+            ),
+            reqRes: createMockReqRes({ body: { correlationId: "corr-branch-struct" } }),
+          }),
+          expectedStatus: 400,
+          expectedCode: "INVALID_REQUEST",
+          expectedCorrelationId: "corr-branch-struct",
+          expectDetails: true,
+        },
+        {
+          label: "AiRateLimitError (429)",
+          setup: () => ({
+            controller: buildStandardController(
+              createMockService({ throwError: new AiRateLimitError("429") })
+            ),
+            reqRes: createMockReqRes({ body: { correlationId: "corr-branch-429" } }),
+          }),
+          expectedStatus: 429,
+          expectedCode: "RATE_LIMITED",
+          expectedCorrelationId: "corr-branch-429",
+          expectDetails: false,
+        },
+        {
+          label: "AiQuotaExhaustedError (429)",
+          setup: () => ({
+            controller: buildStandardController(
+              createMockService({ throwError: new AiQuotaExhaustedError("Daily quota used") })
+            ),
+            reqRes: createMockReqRes({ body: { correlationId: "corr-branch-quota" } }),
+          }),
+          expectedStatus: 429,
+          expectedCode: "RATE_LIMITED",
+          expectedCorrelationId: "corr-branch-quota",
+          expectDetails: false,
+        },
+        {
+          label: "AiTimeoutError (504)",
+          setup: () => ({
+            controller: buildStandardController(
+              createMockService({ throwError: new AiTimeoutError("Timed out") })
+            ),
+            reqRes: createMockReqRes({ body: { correlationId: "corr-branch-504" } }),
+          }),
+          expectedStatus: 504,
+          expectedCode: "TIMEOUT",
+          expectedCorrelationId: "corr-branch-504",
+          expectDetails: false,
+        },
+        {
+          label: "AiGatewayTimeoutError (504)",
+          setup: () => ({
+            controller: buildStandardController(
+              createMockService({ throwError: new AiGatewayTimeoutError("Gateway timed out") })
+            ),
+            reqRes: createMockReqRes({ body: { correlationId: "corr-branch-gw504" } }),
+          }),
+          expectedStatus: 504,
+          expectedCode: "TIMEOUT",
+          expectedCorrelationId: "corr-branch-gw504",
+          expectDetails: false,
+        },
+        {
+          label: "AiSchemaValidationError (502)",
+          setup: () => ({
+            controller: buildStandardController(
+              createMockService({ throwError: new AiSchemaValidationError("Ungrounded output") })
+            ),
+            reqRes: createMockReqRes({ body: { correlationId: "corr-branch-schema" } }),
+          }),
+          expectedStatus: 502,
+          expectedCode: "SCHEMA_VALIDATION_ERROR",
+          expectedCorrelationId: "corr-branch-schema",
+          expectDetails: false,
+        },
+        {
+          label: "AiModelFailureError (502 MODEL_FAILURE)",
+          setup: () => ({
+            controller: buildStandardController(
+              createMockService({ throwError: new AiModelFailureError("Malformed JSON") })
+            ),
+            reqRes: createMockReqRes({ body: { correlationId: "corr-branch-model" } }),
+          }),
+          expectedStatus: 502,
+          expectedCode: "MODEL_FAILURE",
+          expectedCorrelationId: "corr-branch-model",
+          expectDetails: false,
+        },
+        {
+          label: "AiCapacityError (503)",
+          setup: () => ({
+            controller: buildStandardController(
+              createMockService({ throwError: new AiCapacityError("Overloaded") })
+            ),
+            reqRes: createMockReqRes({ body: { correlationId: "corr-branch-503" } }),
+          }),
+          expectedStatus: 503,
+          expectedCode: "UPSTREAM_UNAVAILABLE",
+          expectedCorrelationId: "corr-branch-503",
+          expectDetails: false,
+        },
+        {
+          label: "AiBadGatewayError (502 UPSTREAM_UNAVAILABLE)",
+          setup: () => ({
+            controller: buildStandardController(
+              createMockService({ throwError: new AiBadGatewayError("Bad gateway") })
+            ),
+            reqRes: createMockReqRes({ body: { correlationId: "corr-branch-bgw" } }),
+          }),
+          expectedStatus: 502,
+          expectedCode: "UPSTREAM_UNAVAILABLE",
+          expectedCorrelationId: "corr-branch-bgw",
+          expectDetails: false,
+        },
+        {
+          label: "AiNetworkError (502 UPSTREAM_UNAVAILABLE)",
+          setup: () => ({
+            controller: buildStandardController(
+              createMockService({ throwError: new AiNetworkError("Socket hangup") })
+            ),
+            reqRes: createMockReqRes({ body: { correlationId: "corr-branch-net" } }),
+          }),
+          expectedStatus: 502,
+          expectedCode: "UPSTREAM_UNAVAILABLE",
+          expectedCorrelationId: "corr-branch-net",
+          expectDetails: false,
+        },
+        {
+          label: "AiCancellationError (499)",
+          setup: () => ({
+            controller: buildStandardController(
+              createMockService({ throwError: new AiCancellationError("Aborted") })
+            ),
+            reqRes: createMockReqRes({ body: { correlationId: "corr-branch-499" } }),
+          }),
+          expectedStatus: 499,
+          expectedCode: "ABORTED",
+          expectedCorrelationId: "corr-branch-499",
+          expectDetails: false,
+        },
+        {
+          label: "Internal configuration defect (500)",
+          setup: () => ({
+            controller: buildStandardController(
+              createMockService({ throwError: new AiConfigurationError("Missing endpoint config") })
+            ),
+            reqRes: createMockReqRes({ body: { correlationId: "corr-branch-cfg500" } }),
+          }),
+          expectedStatus: 500,
+          expectedCode: "INTERNAL_SERVER_ERROR",
+          expectedCorrelationId: "corr-branch-cfg500",
+          expectDetails: false,
+        },
+        {
+          label: "AiAuthenticationError (500)",
+          setup: () => ({
+            controller: buildStandardController(
+              createMockService({ throwError: new AiAuthenticationError("Invalid provider key") })
+            ),
+            reqRes: createMockReqRes({ body: { correlationId: "corr-branch-auth500" } }),
+          }),
+          expectedStatus: 500,
+          expectedCode: "INTERNAL_SERVER_ERROR",
+          expectedCorrelationId: "corr-branch-auth500",
+          expectDetails: false,
+        },
+        {
+          label: "Unhandled runtime error (500)",
+          setup: () => ({
+            controller: buildStandardController(
+              createMockService({ throwError: new Error("Unexpected internal failure") })
+            ),
+            reqRes: createMockReqRes({ body: { correlationId: "corr-branch-500" } }),
+          }),
+          expectedStatus: 500,
+          expectedCode: "INTERNAL_SERVER_ERROR",
+          expectedCorrelationId: "corr-branch-500",
+          expectDetails: false,
+        },
+      ];
+
+      for (const scenario of scenarios) {
+        const { controller, reqRes } = scenario.setup();
+        await controller.generateAssessment(reqRes.req, reqRes.res);
+
+        assert.equal(reqRes.res.statusCode, scenario.expectedStatus, scenario.label);
+        assert.equal(reqRes.res.body.correlationId, scenario.expectedCorrelationId, scenario.label);
+        assert.equal(typeof reqRes.res.body.message, "string", scenario.label);
+        assert.ok(reqRes.res.body.message.length > 0, scenario.label);
+        assert.ok(reqRes.res.body.error && typeof reqRes.res.body.error === "object", scenario.label);
+        assert.equal(reqRes.res.body.error.code, scenario.expectedCode, scenario.label);
+        assert.equal(reqRes.res.body.error.message, reqRes.res.body.message, scenario.label);
+
+        if (scenario.expectDetails) {
+          assert.ok(
+            reqRes.res.body.error.details && typeof reqRes.res.body.error.details === "object",
+            scenario.label
+          );
+        } else {
+          assert.equal("details" in reqRes.res.body.error, false, scenario.label);
+        }
+      }
+    });
+
+    it("generates a single consistent correlationId when none is provided and propagates x-correlation-id header", async () => {
+      // 1. Auto-generated ID when missing
+      let serviceCorrelationId = null;
+      const controllerFailAfterService = createCareerStrategistController({
+        careerStrategistService: createMockService({
+          onGenerate: (reqDto) => {
+            serviceCorrelationId = reqDto.correlationId;
+          },
+          throwError: new AiModelFailureError("Corrupted JSON"),
+        }),
+        profileModel: { async getProfileByUserId() { return createMockProfile(); } },
+        insightsModel: {
+          async getInsightsSummary() { return createMockInsightsSummary(); },
+          async getPipelineSnapshot() { return createMockPipelineSnapshot(); },
+        },
+      });
+
+      const { req: reqAuto, res: resAuto } = createMockReqRes();
+      await controllerFailAfterService.generateAssessment(reqAuto, resAuto);
+
+      assert.equal(resAuto.statusCode, 502);
+      assert.equal(typeof resAuto.body.correlationId, "string");
+      assert.ok(resAuto.body.correlationId.length > 0);
+      assert.equal(
+        resAuto.body.correlationId,
+        serviceCorrelationId,
+        "Error envelope correlationId must match the single request-scoped ID passed to service"
+      );
+
+      // 2. x-correlation-id header reuse across early DB error
+      const controllerDbFail = createCareerStrategistController({
+        profileModel: {
+          async getProfileByUserId() {
+            throw new Error("DB unreachable");
+          },
+        },
+        insightsModel: {
+          async getInsightsSummary() { return createMockInsightsSummary(); },
+          async getPipelineSnapshot() { return createMockPipelineSnapshot(); },
+        },
+      });
+
+      const { req: reqHeader, res: resHeader } = createMockReqRes({
+        headers: { "x-correlation-id": "hdr-trace-7788" },
+      });
+      await controllerDbFail.generateAssessment(reqHeader, resHeader);
+
+      assert.equal(resHeader.statusCode, 500);
+      assert.equal(resHeader.body.correlationId, "hdr-trace-7788");
+      assert.equal(resHeader.body.error.code, "INTERNAL_SERVER_ERROR");
+      assert.equal(resHeader.body.error.message, resHeader.body.message);
+    });
+
+    it("handles nullish/non-Error throws gracefully and preserves exact HTTP 200 success DTO", async () => {
+      // Non-Error primitive throw in service must not throw secondary TypeError
+      const controllerPrimitiveThrow = buildStandardController(
+        createMockService({ throwError: "string failure" })
+      );
+      const { req: reqPrim, res: resPrim } = createMockReqRes({
+        body: { correlationId: "corr-prim-500" },
+      });
+      await controllerPrimitiveThrow.generateAssessment(reqPrim, resPrim);
+
+      assert.equal(resPrim.statusCode, 500);
+      assert.equal(resPrim.body.correlationId, "corr-prim-500");
+      assert.equal(resPrim.body.error.code, "INTERNAL_SERVER_ERROR");
+      assert.equal(resPrim.body.message, "Failed to generate career strategy assessment");
+
+      // Existing HTTP 200 success response DTO contract remains unchanged
+      const controllerOk = buildStandardController();
+      const { req: reqOk, res: resOk } = createMockReqRes({
+        body: { correlationId: "corr-success-unchanged" },
+      });
+      await controllerOk.generateAssessment(reqOk, resOk);
+
+      assert.equal(resOk.statusCode, 200);
+      assert.equal(resOk.body.success, true);
+      assert.equal(resOk.body.correlationId, "corr-success-unchanged");
+      assert.equal(resOk.body.error, undefined);
+      assert.ok(resOk.body.assessment);
+      assert.ok(resOk.body.validationAudit);
     });
   });
 

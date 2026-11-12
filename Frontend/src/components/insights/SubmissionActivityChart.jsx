@@ -101,6 +101,8 @@ export default function SubmissionActivityChart({
   onRangeChange,
   totalSubmittedInPeriod,
   isLoading = false,
+  showHeroTotal = false,
+  comfortable = false,
   className,
 }) {
   const [activePointIndex, setActivePointIndex] = useState(null);
@@ -195,7 +197,7 @@ export default function SubmissionActivityChart({
     return (
       <div
         className={cn(
-          "bg-surface border border-border-primary rounded-xl p-4 sm:p-6 transition-all animate-pulse",
+          "dashboard-panel rounded-xl p-4 sm:p-6 transition-all animate-pulse",
           className
         )}
         aria-busy="true"
@@ -218,21 +220,39 @@ export default function SubmissionActivityChart({
   return (
     <div
       className={cn(
-        "bg-surface border border-border-primary rounded-xl p-4 sm:p-6 transition-all",
+        "dashboard-panel rounded-xl p-4 sm:p-6 transition-all",
         className
       )}
       role="region"
       aria-label="Application submission activity chart"
     >
       {/* Header with Title and Range Filters */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 sm:mb-6">
+      <div className={cn(
+        "flex flex-col sm:flex-row sm:items-start justify-between gap-3",
+        comfortable ? "mb-6 sm:mb-7" : "mb-5 sm:mb-6"
+      )}>
         <div>
           <h3 className="font-display text-ink text-lg sm:text-xl font-semibold leading-tight">
             Submission Activity
           </h3>
-          <p className="text-sm text-muted mt-1">
-            Timeline of {totalSubmissions} {totalSubmissions === 1 ? "application" : "applications"} submitted to employers
-          </p>
+          {showHeroTotal ? (
+            <div className={cn("flex items-baseline gap-2.5", comfortable ? "mt-2.5" : "mt-2")}>
+              <span className="font-mono text-3xl sm:text-4xl font-bold text-ink leading-none tracking-tight">
+                {totalSubmissions}
+              </span>
+              <span className={cn(
+                "text-muted font-sans",
+                comfortable ? "text-sm sm:text-[15px]" : "text-xs sm:text-sm"
+              )}>
+                {totalSubmissions === 1 ? "application" : "applications"} submitted{" "}
+                ({selectedRange === "30d" ? "last 30d" : selectedRange === "90d" ? "last 90d" : "all time"})
+              </span>
+            </div>
+          ) : (
+            <p className="text-sm text-muted mt-1">
+              Timeline of {totalSubmissions} {totalSubmissions === 1 ? "application" : "applications"} submitted to employers
+            </p>
+          )}
         </div>
 
         {/* Range Selector Pills */}
@@ -255,7 +275,8 @@ export default function SubmissionActivityChart({
                 aria-selected={isSelected}
                 onClick={() => onRangeChange && onRangeChange(tab.key)}
                 className={cn(
-                  "px-3 py-1.5 text-xs sm:text-sm font-sans font-medium rounded-md transition-all select-none",
+                  "px-3 font-sans font-medium rounded-md transition-all select-none",
+                  comfortable ? "py-2 text-[13px] sm:text-sm" : "py-1.5 text-xs sm:text-sm",
                   "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan/70",
                   isSelected
                     ? "bg-surface text-cyan font-semibold shadow-sm border border-border-primary"
@@ -322,9 +343,12 @@ export default function SubmissionActivityChart({
                   />
                   <text
                     x={padding.left - 8}
-                    y={y + 3}
+                    y={y + 4}
                     textAnchor="end"
-                    className="fill-muted font-mono text-xs select-none"
+                    className={cn(
+                      "fill-muted font-mono select-none",
+                      comfortable ? "text-[15px]" : "text-xs"
+                    )}
                   >
                     {tickVal}
                   </text>
@@ -358,9 +382,12 @@ export default function SubmissionActivityChart({
               <text
                 key={`xlbl-${lbl.date}-${lbl.index}`}
                 x={lbl.x}
-                y={padding.top + plotHeight + 20}
+                y={padding.top + plotHeight + 22}
                 textAnchor="middle"
-                className="fill-muted font-sans text-xs select-none"
+                className={cn(
+                  "fill-muted font-sans select-none",
+                  comfortable ? "text-[15px]" : "text-xs"
+                )}
               >
                 {formatDateLabel(lbl.date)}
               </text>
@@ -474,7 +501,10 @@ export default function SubmissionActivityChart({
           </svg>
 
           {/* Footer note explaining zero days */}
-          <div className="flex items-center justify-between text-xs sm:text-sm text-muted mt-4 pt-3 border-t border-border-subtle">
+          <div className={cn(
+            "flex items-center justify-between text-muted border-t border-border-subtle",
+            comfortable ? "text-[13px] sm:text-sm mt-5 pt-3.5" : "text-xs sm:text-sm mt-4 pt-3"
+          )}>
             <span>
               Dates with no marks indicate 0 applications submitted on that day
             </span>

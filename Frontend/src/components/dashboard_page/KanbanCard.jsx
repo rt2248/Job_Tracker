@@ -35,8 +35,8 @@ function KanbanCard({ job, onClick, onDragStart, isDragging }) {
             onDragEnd={handleDragEnd}
             onClick={handleClick}
             className={cn(
-                "group relative bg-surface-secondary/80 hover:bg-surface-elevated border border-border-primary hover:border-cyan/60",
-                "rounded-xl p-3.5 transition-all duration-150 card-3d card-3d-hover hover:-translate-y-0.5 cursor-grab active:cursor-grabbing select-none",
+                "group relative dashboard-panel hover:border-cyan/60",
+                "rounded-lg px-3.5 py-4 transition-all duration-150 hover:-translate-y-0.5 cursor-grab active:cursor-grabbing select-none",
                 isDragging && "opacity-40 scale-95 border-dashed border-cyan ring-2 ring-cyan/20"
             )}
         >
@@ -44,19 +44,19 @@ function KanbanCard({ job, onClick, onDragStart, isDragging }) {
                 {job.role}
             </h4>
 
-            <p className="text-muted text-sm font-sans mt-1 truncate flex items-center gap-1.5">
+            <p className="text-muted text-sm font-sans mt-1.5 truncate flex items-center gap-1.5">
                 <span className="truncate">{job.company}</span>
                 <span className="text-border-primary/80">·</span>
                 <JobTypeBadge jobType={job.jobType} />
             </p>
 
-            <div className="mt-3 pt-2.5 border-t border-border-subtle flex flex-wrap items-center justify-between gap-1.5 text-xs sm:text-sm">
+            <div className="mt-3.5 pt-3 border-t border-border-subtle flex flex-wrap items-center justify-between gap-1.5 text-[13px] sm:text-sm">
                 {compensation ? (
                     <span className="text-cyan font-mono font-medium truncate">
                         {compensation}
                     </span>
                 ) : (
-                    <span className="text-muted font-sans text-xs sm:text-sm truncate">
+                    <span className="text-muted font-sans text-[13px] sm:text-sm truncate">
                         {job.workMode || "Standard"}
                     </span>
                 )}

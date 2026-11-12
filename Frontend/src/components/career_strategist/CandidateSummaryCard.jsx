@@ -16,6 +16,14 @@ const CAREER_STAGE_LABELS = {
   executive: "Executive / Director",
 };
 
+const EXPERIENCE_BOUNDED_STAGES = new Set([
+  "entry_level",
+  "mid_level",
+  "senior",
+  "lead_architect",
+  "transitioning",
+]);
+
 /**
  * Visual styling and metadata for pipeline health statuses.
  */
@@ -23,58 +31,44 @@ const PIPELINE_HEALTH_CONFIG = {
   healthy: {
     label: "Healthy Velocity",
     variant: "emerald",
-    bgClass: "bg-green/10 text-green border-green/30",
-    dotClass: "bg-green",
     description: "Pipeline shows balanced stage progression and steady interview conversion.",
   },
   needs_focus: {
     label: "Needs Focus",
     variant: "amber",
-    bgClass: "bg-amber/10 text-amber border-amber/30",
-    dotClass: "bg-amber",
     description: "Pipeline requires attention on specific stage conversion or follow-ups.",
   },
   critical_bottleneck: {
     label: "Critical Bottleneck",
     variant: "rose",
-    bgClass: "bg-red/10 text-red border-red/30",
-    dotClass: "bg-red",
     description: "Significant stagnation, high rejection rate, or low active volume detected.",
   },
   insufficient_data: {
     label: "Insufficient Data",
     variant: "subtle",
-    bgClass: "bg-surface-secondary text-muted border-border-primary",
-    dotClass: "bg-muted",
     description: "Telemetry volume is too limited to diagnose confident pipeline patterns.",
   },
   inconsistent_data: {
     label: "Inconsistent Telemetry",
     variant: "subtle",
-    bgClass: "bg-surface-secondary text-muted border-border-primary",
-    dotClass: "bg-muted",
     description: "Pipeline telemetry shows inconsistencies across recorded stages.",
   },
   // Aliases for resilience
   needs_attention: {
     label: "Needs Attention",
     variant: "amber",
-    bgClass: "bg-amber/10 text-amber border-amber/30",
-    dotClass: "bg-amber",
     description: "Applications are bottlenecking or conversion drop-off is elevated.",
   },
   critical: {
     label: "Critical Bottleneck",
     variant: "rose",
-    bgClass: "bg-red/10 text-red border-red/30",
-    dotClass: "bg-red",
     description: "Significant stagnation, high rejection rate, or low active volume detected.",
   },
 };
 
 /**
  * CandidateSummaryCard - Displays executive diagnosis of career stage, pipeline health,
- * and primary bottleneck.
+ * and primary bottleneck with bounded accuracy.
  *
  * @param {Object} props
  * @param {Object} props.candidateSummary
@@ -88,62 +82,74 @@ export default function CandidateSummaryCard({ candidateSummary, className }) {
   const healthConfig =
     PIPELINE_HEALTH_CONFIG[pipelineHealth] || PIPELINE_HEALTH_CONFIG.insufficient_data;
 
+  const isUnspecified = !careerStage || careerStage === "unspecified";
+  const isExperienceBounded = EXPERIENCE_BOUNDED_STAGES.has(careerStage);
+
   return (
     <Card className={cn("overflow-hidden border-border-primary", className)}>
-      <CardHeader className="mb-3">
+      <CardHeader className="mb-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-            <span>Executive Assessment</span>
+          <CardTitle className="text-base sm:text-lg">
+            Executive Assessment
           </CardTitle>
-          <div className="flex items-center gap-2">
-            <span
-              className={cn(
-                "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border",
-                healthConfig.bgClass
-              )}
-            >
-              <span className={cn("w-2 h-2 rounded-full", healthConfig.dotClass)} />
-              {healthConfig.label}
-            </span>
-          </div>
+          <Badge dot variant={healthConfig.variant} size="sm" className="font-semibold">
+            {healthConfig.label}
+          </Badge>
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
-        {/* Career Stage & Diagnostics Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          <div className="p-3.5 rounded-lg bg-surface-secondary/60 border border-border-subtle">
-            <span className="text-xs font-medium text-muted block mb-1 uppercase tracking-wider">
+      <CardContent className="space-y-5">
+        {/* Career Stage & Health Summary Row (Flat divided sections, no boxed sub-cards) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="space-y-1.5">
+            <span className="text-xs font-medium text-muted block uppercase tracking-wider">
               Diagnosed Career Stage
             </span>
-            <div className="flex items-center gap-2">
-              <span className="font-display font-semibold text-ink text-sm sm:text-base">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <span className="font-display font-semibold text-ink text-base sm:text-lg">
                 {stageLabel}
               </span>
-              <Badge variant="indigo" size="sm">
-                Verified
-              </Badge>
+              {isUnspecified ? (
+                <Badge variant="subtle" size="sm">
+                  Unclassified
+                </Badge>
+              ) : isExperienceBounded ? (
+                <Badge variant="indigo" size="sm">
+                  Experience-Bounded
+                </Badge>
+              ) : null}
             </div>
           </div>
 
-          <div className="p-3.5 rounded-lg bg-surface-secondary/60 border border-border-subtle">
-            <span className="text-xs font-medium text-muted block mb-1 uppercase tracking-wider">
+          <div className="space-y-1.5">
+            <span className="text-xs font-medium text-muted block uppercase tracking-wider">
               Pipeline Health Assessment
             </span>
-            <p className="text-xs text-ink-secondary leading-relaxed">
+            <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed">
               {healthConfig.description}
             </p>
           </div>
         </div>
 
-        {/* Primary Bottleneck Callout */}
-        <div className="p-4 rounded-lg bg-surface border border-border-accent/40 bg-gradient-to-r from-surface to-surface-secondary">
-          <div className="flex items-start gap-3">
-            <div className="w-6 h-6 rounded-md bg-cyan/15 text-cyan flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 border border-cyan/40">
-              ⚡
-            </div>
-            <div className="min-w-0 flex-1">
-              <span className="text-xs font-semibold text-cyan uppercase tracking-wider block mb-1">
+        {/* Primary Bottleneck Callout (Left accent band without emoji or gradient) */}
+        <div className="pt-4 border-t border-border-subtle">
+          <div className="pl-3.5 border-l-2 border-l-cyan flex items-start gap-3">
+            <svg
+              className="w-4 h-4 text-cyan shrink-0 mt-0.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <polygon points="12 2 2 7 12 12 22 7 12 2" />
+              <polyline points="2 17 12 22 22 17" />
+              <polyline points="2 12 12 17 22 12" />
+            </svg>
+            <div className="min-w-0 flex-1 space-y-1">
+              <span className="text-xs font-semibold text-cyan uppercase tracking-wider block">
                 Primary Pipeline Bottleneck
               </span>
               <p className="text-sm text-ink leading-relaxed font-sans">

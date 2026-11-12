@@ -1,5 +1,4 @@
 import React from "react";
-import Card from "../shared/Card";
 import { cn } from "../../utils/cn";
 
 /**
@@ -17,6 +16,7 @@ import { cn } from "../../utils/cn";
  * @param {string} [props.indicatorColor='bg-slate-400'] - Tailwind background class for status dot
  * @param {string} [props.valueColor='text-ink'] - Tailwind color class for numerical value
  * @param {boolean} [props.compact=false] - Whether to render in compact mode for denser dashboards
+ * @param {'panel'|'well'} [props.variant='panel'] - Surface depth preset aligned to dashboard design tokens
  * @param {string} [props.className] - Additional wrapper card classes
  */
 export default function MetricCard({
@@ -26,13 +26,17 @@ export default function MetricCard({
   indicatorColor = "bg-slate-400",
   valueColor = "text-ink",
   compact = false,
+  variant = "panel",
   className,
 }) {
   return (
-    <Card
+    <div
       className={cn(
-        "bg-surface border-border-primary flex flex-col justify-between transition-all",
-        compact ? "p-3" : "p-3.5 sm:p-4",
+        "rounded-xl flex flex-col justify-between transition-all duration-200",
+        variant === "well"
+          ? "dashboard-well hover:border-cyan/35"
+          : "dashboard-panel hover:border-cyan/40",
+        compact ? "p-3" : "p-4 sm:p-5",
         className
       )}
     >
@@ -71,6 +75,6 @@ export default function MetricCard({
           {description}
         </p>
       )}
-    </Card>
+    </div>
   );
 }

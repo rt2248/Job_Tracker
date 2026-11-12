@@ -6,7 +6,7 @@
 ### 1. Mandatory UI/UX Design Governance: HARD RULES
 
 > **CRITICAL DIRECTIVE FOR ALL FRONTEND AND UI/UX WORK:**  
-> Before implementing **ANY** frontend UI/UX change, page redesign, visual refinement, or new component, you **MUST** consult and strictly adhere to the 13 non-negotiable principles defined in:  
+> Before implementing **ANY** frontend UI/UX change, page redesign, visual refinement, or new component, you **MUST** consult and strictly adhere to the 14 non-negotiable principles defined in:  
 > 
 > 👉 **[`HARD_RULES.md`](./HARD_RULES.md)**
 
@@ -24,6 +24,7 @@
 11. **Avoid Excessive Pills & Badges:** Avoid badge spam; use colored typography and whitespace where appropriate.
 12. **Intentional Color & Contrast:** Maintain tasteful palette variation and verify strict contrast in both Light Mode and Dark Mode.
 13. **Zero Emojis, Professional SVG Iconography Only:** Emojis are strictly prohibited throughout the UI. Use clean, accessible, theme-compatible SVG icons from `Frontend/src/assets/icons/` and maintain `Frontend/src/assets/ASSET_CATALOG.md`.
+14. **Visual Depth, Surface Identity & Component Presence:** Never create flat, lifeless containers. Establish intentional surface hierarchy, contextual elevation, tonal contrast, and distinct visual identity across both Light Mode and Dark Mode without artificial decoration.
 
 For detailed guidelines, scope, and interpretation rules, read **[`HARD_RULES.md`](./HARD_RULES.md)**.
 

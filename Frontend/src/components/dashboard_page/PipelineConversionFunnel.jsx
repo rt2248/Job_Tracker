@@ -16,7 +16,7 @@ import { cn } from "../../utils/cn";
  * @param {Array} props.jobsList - Authenticated user application records
  * @param {string} [props.className]
  */
-export default function PipelineConversionFunnel({ jobsList = [], className }) {
+export default function PipelineConversionFunnel({ jobsList = [], embedded = false, className }) {
   const funnelData = useMemo(() => {
     const totalTracked = jobsList.length;
 
@@ -86,73 +86,74 @@ export default function PipelineConversionFunnel({ jobsList = [], className }) {
       role="region"
       aria-labelledby="conversion-funnel-heading"
       className={cn(
-        "p-4 sm:p-5 rounded-2xl bg-surface/80 border border-border-primary shadow-sm card-3d flex flex-col justify-between",
+        embedded
+          ? "flex flex-col"
+          : "dashboard-panel rounded-xl p-4 sm:p-5 flex flex-col",
         className
       )}
     >
-      <div>
-        {/* Header */}
-        <div className="flex items-center justify-between gap-2 mb-4 pb-2.5 border-b border-border-subtle">
-          <div className="flex items-center gap-2">
-            <svg
-              viewBox="0 0 20 20"
-              className="w-4 h-4 text-cyan"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <polygon points="2 3 18 3 12 11 12 17 8 15 8 11 2 3" />
-            </svg>
-            <h3
-              id="conversion-funnel-heading"
-              className="font-display text-sm sm:text-base font-bold text-ink tracking-tight"
-            >
-              Conversion Funnel Velocity
-            </h3>
-          </div>
-          <span className="text-xs font-mono text-muted">
-            End-to-end yield
-          </span>
+      {/* Header */}
+      <div className="shrink-0 flex items-center justify-between gap-2 mb-4 pb-3.5 border-b border-border-subtle">
+        <div className="flex items-center gap-2 min-w-0">
+          <svg
+            viewBox="0 0 20 20"
+            className="w-4 h-4 text-cyan shrink-0"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            aria-hidden="true"
+          >
+            <polygon points="2 3 18 3 12 11 12 17 8 15 8 11 2 3" />
+          </svg>
+          <h3
+            id="conversion-funnel-heading"
+            className="font-display text-sm sm:text-base font-bold text-ink tracking-tight"
+          >
+            Conversion Funnel
+          </h3>
         </div>
-
-        {/* Funnel Steps */}
-        <div className="space-y-3.5">
-          {funnelData.map((step) => (
-            <div key={step.id} className="space-y-1.5">
-              <div className="flex items-center justify-between text-xs sm:text-sm">
-                <span className="font-sans font-semibold text-ink flex items-center gap-1.5">
-                  <span className={cn("w-2 h-2 rounded-full shrink-0", step.color)} />
-                  {step.label}
-                </span>
-                <div className="flex items-center gap-2 font-mono">
-                  <span className="font-bold text-ink">{step.count}</span>
-                  <span className="text-muted text-[11px] sm:text-xs">
-                    ({step.rateLabel})
-                  </span>
-                </div>
-              </div>
-
-              {/* Progress track */}
-              <div
-                className="w-full h-2 rounded-full bg-surface-secondary overflow-hidden border border-border-subtle"
-                role="progressbar"
-                aria-valuenow={step.rate}
-                aria-valuemin="0"
-                aria-valuemax="100"
-              >
-                <div
-                  className={cn("h-full rounded-full transition-all duration-500", step.barColor)}
-                  style={{ width: `${Math.max(step.rate > 0 ? step.rate : 0, step.count > 0 ? 6 : 0)}%` }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
+        <span className="text-[13px] font-mono text-muted shrink-0 whitespace-nowrap">
+          End-to-end yield
+        </span>
       </div>
 
-      <div className="mt-4 pt-3 border-t border-border-subtle flex items-center justify-between text-xs text-muted font-sans">
+      {/* Funnel Steps */}
+      <div className="flex flex-col space-y-5">
+        {funnelData.map((step) => (
+          <div key={step.id} className="space-y-2">
+            <div className="flex items-center justify-between text-sm sm:text-[15px]">
+              <span className="font-sans font-semibold text-ink flex items-center gap-1.5">
+                <span className={cn("w-2 h-2 rounded-full shrink-0", step.color)} />
+                {step.label}
+              </span>
+              <div className="flex items-center gap-2 font-mono">
+                <span className="font-bold text-ink">{step.count}</span>
+                <span className="text-muted text-xs sm:text-[13px]">
+                  ({step.rateLabel})
+                </span>
+              </div>
+            </div>
+
+            {/* Progress track */}
+            <div
+              className="w-full h-2 rounded-full bg-surface-secondary overflow-hidden border border-border-subtle"
+              role="progressbar"
+              aria-valuenow={step.rate}
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <div
+                className={cn("h-full rounded-full transition-all duration-500", step.barColor)}
+                style={{ width: `${Math.max(step.rate > 0 ? step.rate : 0, step.count > 0 ? 6 : 0)}%` }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="shrink-0 mt-5 pt-3.5 border-t border-border-subtle flex items-center justify-between gap-2 text-[13px] text-muted font-sans">
         <span>Derived from live application statuses</span>
-        <span className="font-mono">Real-time yields</span>
+        <span className="font-mono shrink-0">Real-time yields</span>
       </div>
     </div>
   );
