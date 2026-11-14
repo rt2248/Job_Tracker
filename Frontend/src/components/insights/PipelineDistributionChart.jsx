@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { cn } from "../../utils/cn";
 import EmptyStateVisual from "./EmptyStateVisual";
@@ -124,6 +124,7 @@ function StageShapeIcon({ shape, className }) {
 
 /**
  * Custom Tooltip for the Pipeline Distribution Pie Chart
+ * Renders rich segment details in a collision-aware container outside the central total.
  */
 function CustomPieTooltip({ active, payload, snapshotTotal }) {
   if (!active || !payload || !payload.length) return null;
@@ -138,15 +139,15 @@ function CustomPieTooltip({ active, payload, snapshotTotal }) {
       : "0.0";
 
   return (
-    <div className="bg-surface-elevated/95 backdrop-blur-md border border-border-primary rounded-xl p-3 shadow-xl min-w-[210px] text-sm pointer-events-none transition-all">
-      <div className="flex items-center justify-between gap-2 pb-1.5 mb-1.5 border-b border-border-subtle">
-        <span className="font-display font-semibold text-ink text-sm sm:text-base flex items-center gap-1.5">
+    <div className="bg-surface-elevated/95 backdrop-blur-md border border-border-primary rounded-xl p-3 shadow-xl w-[236px] text-sm pointer-events-none transition-all select-none">
+      <div className="flex items-center justify-between gap-1.5 pb-1.5 mb-1.5 border-b border-border-subtle">
+        <span className="font-display font-semibold text-ink text-sm flex items-center gap-1.5 truncate">
           <StageShapeIcon shape={meta.shape} className={meta.textColor} />
-          {data.label}
+          <span className="truncate">{data.label}</span>
         </span>
         <span
           className={cn(
-            "text-xs font-medium px-2 py-0.5 rounded-full border",
+            "text-[11px] font-medium px-2 py-0.5 rounded-full border shrink-0",
             !isClosed
               ? "bg-cyan/10 text-cyan border-cyan/50"
               : "bg-surface-secondary text-ink-secondary border-border-subtle"
@@ -158,7 +159,7 @@ function CustomPieTooltip({ active, payload, snapshotTotal }) {
       <div className="space-y-1 font-sans">
         <div className="flex items-center justify-between text-xs sm:text-sm text-muted">
           <span>Opportunities:</span>
-          <span className="font-mono font-bold text-ink">
+          <span className="font-mono font-bold text-ink whitespace-nowrap">
             {data.count} {data.count === 1 ? "opportunity" : "opportunities"}
           </span>
         </div>
@@ -171,6 +172,73 @@ function CustomPieTooltip({ active, payload, snapshotTotal }) {
       </div>
     </div>
   );
+}
+
+/**
+ * Calculates a collision-free tooltip coordinate { x, y } for the hovered slice
+ * ensuring:
+ * 1. The tooltip renders near the hovered segment outside the central hole.
+ * 2. It NEVER obscures the central total and labels ("20 Total Tracked opportunities").
+ * 3. It is collision-aware, staying cleanly inside the chart container boundaries.
+ * 4. It tracks smoothly without jitter.
+ */
+function getSliceTooltipPosition(slice, containerEl) {
+  if (!slice) return undefined;
+
+  const cw = containerEl?.clientWidth || (slice.cx ? slice.cx * 2 : 570);
+  const ch = containerEl?.clientHeight || (slice.cy ? slice.cy * 2 : 280);
+
+  const cx = slice.cx || cw / 2;
+  const cy = slice.cy || ch / 2;
+
+  // Tooltip dimensions
+  const W = 236;
+  const H = 104;
+
+  const RADIAN = Math.PI / 180;
+  const midAngle = slice.midAngle !== undefined ? slice.midAngle : 0;
+  const angleRad = -midAngle * RADIAN;
+
+  const sliceR = ((slice.innerRadius || 68) + (slice.outerRadius || 102)) / 2;
+  const sx = cx + sliceR * Math.cos(angleRad);
+  const sy = cy + sliceR * Math.sin(angleRad);
+
+  let x = 0;
+  let y = 0;
+
+  // Protected central text zone: [cx - 50, cx + 50] x [cy - 40, cy + 40]
+  if (cw >= 480) {
+    const isRightSide = Math.cos(angleRad) >= 0;
+
+    if (isRightSide) {
+      // Place to the right of the center hole
+      const minX = cx + 60;
+      const targetX = Math.max(minX, sx + 22);
+      x = Math.min(cw - W - 8, targetX);
+      x = Math.max(minX, x);
+    } else {
+      // Place to the left of the center hole
+      const maxX = cx - 55 - W;
+      const targetX = Math.min(maxX, sx - W - 22);
+      x = Math.max(8, targetX);
+      x = Math.min(maxX, x);
+    }
+
+    // Vertical placement aligned with slice center Y, clamped to container
+    const targetY = sy - H / 2;
+    y = Math.max(8, Math.min(ch - H - 8, targetY));
+  } else {
+    // Narrow mobile viewport: position above or below the central text box
+    const isTop = Math.sin(angleRad) < 0;
+    if (isTop) {
+      y = Math.max(6, cy - 46 - H);
+    } else {
+      y = Math.min(ch - H - 6, cy + 46);
+    }
+    x = Math.max(8, Math.min(cw - W - 8, cx - W / 2));
+  }
+
+  return { x: Math.round(x), y: Math.round(y) };
 }
 
 /**
@@ -200,8 +268,16 @@ export default function PipelineDistributionChart({
     externalSelectedStageKey !== undefined ? externalSelectedStageKey : internalSelectedStageKey;
   const setSelectedStageKey = externalSetSelectedStageKey || setInternalSelectedStageKey;
 
+  const donutContainerRef = useRef(null);
+  const [activeSlice, setActiveSlice] = useState(null);
+
   const snapshotTotal = pipelineData?.snapshotTotal ?? 0;
   const activeSegment = pipelineData?.activeSegment ?? { totalActive: 0, stages: [] };
+
+  const tooltipPos = useMemo(() => {
+    if (!activeSlice) return undefined;
+    return getSliceTooltipPosition(activeSlice, donutContainerRef.current);
+  }, [activeSlice]);
 
   // Combine stages with display metadata for Recharts Pie chart (non-zero slices only)
   const pieSlices = useMemo(() => {
@@ -262,7 +338,7 @@ export default function PipelineDistributionChart({
   return (
     <div
       className={cn(
-        "dashboard-panel rounded-xl p-5 sm:p-6 transition-all flex flex-col justify-between",
+        "dashboard-panel rounded-xl p-5 sm:p-6 transition-all flex flex-col",
         className
       )}
       role="region"
@@ -270,7 +346,7 @@ export default function PipelineDistributionChart({
     >
       <div>
         {/* Header */}
-        <div className="mb-5 sm:mb-6">
+        <div className="mb-4 sm:mb-5">
           <h3 className="font-display text-ink text-lg sm:text-xl font-semibold leading-tight">
             Application Pipeline Distribution
           </h3>
@@ -281,7 +357,7 @@ export default function PipelineDistributionChart({
 
         {/* Distinction Callout: Active Segment vs Evaluation-Only Metric */}
         {typeof activeInPipeline === "number" && (
-          <div className="mb-5 pl-3.5 pr-3 py-2.5 rounded-r-lg border-l-2 border-l-cyan bg-surface-secondary/50 text-sm flex items-start gap-2.5 leading-relaxed">
+          <div className="mb-3.5 sm:mb-4 pl-3.5 pr-3 py-2.5 rounded-r-lg border-l-2 border-l-cyan bg-surface-secondary/50 text-sm flex items-start gap-2.5 leading-relaxed">
             <svg viewBox="0 0 16 16" className="w-4 h-4 text-cyan shrink-0 mt-0.5" fill="none">
               <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
               <path d="M8 7v4M8 5h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -295,10 +371,17 @@ export default function PipelineDistributionChart({
       </div>
 
       {/* Donut Chart with Centered Total Tracked Opportunities */}
-      <div className="relative w-full h-64 sm:h-72 lg:h-80 flex items-center justify-center my-auto py-2">
+      <div
+        ref={donutContainerRef}
+        className="relative w-full flex-1 min-h-[240px] sm:min-h-[260px] flex items-center justify-center my-auto py-1"
+      >
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
-            <Tooltip content={<CustomPieTooltip snapshotTotal={snapshotTotal} />} />
+          <PieChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
+            <Tooltip
+              position={tooltipPos}
+              isAnimationActive={false}
+              content={<CustomPieTooltip snapshotTotal={snapshotTotal} />}
+            />
             <Pie
               data={pieSlices}
               dataKey="count"
@@ -309,6 +392,8 @@ export default function PipelineDistributionChart({
               outerRadius={102}
               paddingAngle={pieSlices.length > 1 ? 2 : 0}
               cornerRadius={pieSlices.length > 1 ? 3 : 0}
+              onMouseEnter={(entry) => setActiveSlice(entry)}
+              onMouseLeave={() => setActiveSlice(null)}
               onClick={(data) => {
                 const status = data?.status || data?.payload?.status;
                 if (status) {
@@ -344,7 +429,7 @@ export default function PipelineDistributionChart({
         </ResponsiveContainer>
 
         {/* Centered Total Opportunities Indicator */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center select-none">
           <span className="font-mono text-3xl sm:text-4xl font-bold text-ink leading-none">
             {snapshotTotal}
           </span>

@@ -4,7 +4,6 @@ import useInsights from "../../hooks/useInsights";
 import Button from "../../components/shared/Button";
 import ThemeToggleButton from "../../components/shared/ThemeToggleButton";
 import StatusBadge from "../../components/applications_page/StatusBadge";
-import PipelineJourneyBar from "../../components/dashboard_page/PipelineJourneyBar";
 import DashboardMetricStrip from "../../components/dashboard_page/DashboardMetricStrip";
 import {
   SubmissionActivityChart,
@@ -69,23 +68,6 @@ export default function Insights() {
     }
     return counts;
   }, [pipeline]);
-
-  const handleStageSelect = (stage) => {
-    setSelectedStageKey(stage);
-    if (stage) {
-      setTimeout(() => {
-        const el = document.getElementById("primary-charts-section");
-        if (el) {
-          el.scrollIntoView({
-            behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches
-              ? "auto"
-              : "smooth",
-            block: "nearest",
-          });
-        }
-      }, 80);
-    }
-  };
 
   const snapshotMetrics = summary?.snapshotMetrics || {
     activeInPipeline: 0,
@@ -313,7 +295,7 @@ export default function Insights() {
                 selectedStageKey={selectedStageKey}
                 onSelectStageKey={setSelectedStageKey}
                 showDetails={false}
-                className="h-full flex flex-col justify-between"
+                className="h-full flex flex-col"
               />
 
               {/* Right Column: Submission Activity (Activity Graph) */}
@@ -323,7 +305,7 @@ export default function Insights() {
                 onRangeChange={onRangeChange}
                 totalSubmittedInPeriod={summary?.submissionActivity?.totalSubmittedInPeriod}
                 isLoading={isRangeLoading}
-                className="h-full flex flex-col justify-between"
+                className="h-full flex flex-col"
               />
             </div>
           </section>

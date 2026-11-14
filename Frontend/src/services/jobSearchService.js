@@ -67,3 +67,19 @@ export const getLocations = async () => {
 
     return result.locations;
 };
+
+export const getRecommendations = async () => {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`${BASE_URL}/recommendations`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(result.message || "Failed to fetch recommendations");
+    }
+
+    return result;
+};

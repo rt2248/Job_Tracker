@@ -21,6 +21,7 @@ const crypto = require("crypto");
 const { CareerStrategistService } = require("../services/ai/CareerStrategistService");
 const profileModelDefault = require("../models/files/profile.model");
 const insightsModelDefault = require("../models/files/insights.model");
+const { calculateYearsOfExperienceFromHistory } = require("../utils/experienceCalculator");
 
 const {
   AiError,
@@ -96,36 +97,6 @@ function sendErrorResponse(res, { status, code, message, correlationId, details 
     correlationId,
     error: errorPayload,
   });
-}
-
-/**
- * Derives verified total years of experience from profile experience array.
- *
- * @param {Array} experienceList
- * @returns {number}
- */
-function calculateYearsOfExperienceFromHistory(experienceList) {
-  if (!Array.isArray(experienceList) || experienceList.length === 0) {
-    return 0;
-  }
-
-  let totalMonths = 0;
-  const now = new Date();
-
-  for (const exp of experienceList) {
-    if (!exp || !exp.startDate) continue;
-    const start = new Date(exp.startDate);
-    if (isNaN(start.getTime())) continue;
-
-    const end = exp.current || !exp.endDate ? now : new Date(exp.endDate);
-    if (isNaN(end.getTime()) || end < start) continue;
-
-    const diffMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
-    totalMonths += Math.max(0, diffMonths);
-  }
-
-  const years = Math.round((totalMonths / 12) * 10) / 10;
-  return Math.min(70, Math.max(0, years));
 }
 
 /**

@@ -120,7 +120,7 @@ export default function SubmissionActivityChart({
 
   // 2. SVG Geometry Calculations
   const svgWidth = 640;
-  const svgHeight = 220;
+  const svgHeight = comfortable ? 240 : 240;
   const padding = { top: 24, right: 28, bottom: 36, left: 38 };
   const plotWidth = svgWidth - padding.left - padding.right;
   const plotHeight = svgHeight - padding.top - padding.bottom;
@@ -220,7 +220,7 @@ export default function SubmissionActivityChart({
   return (
     <div
       className={cn(
-        "dashboard-panel rounded-xl p-4 sm:p-6 transition-all",
+        "dashboard-panel rounded-xl p-4 sm:p-6 transition-all flex flex-col",
         className
       )}
       role="region"
@@ -229,7 +229,7 @@ export default function SubmissionActivityChart({
       {/* Header with Title and Range Filters */}
       <div className={cn(
         "flex flex-col sm:flex-row sm:items-start justify-between gap-3",
-        comfortable ? "mb-6 sm:mb-7" : "mb-5 sm:mb-6"
+        comfortable ? "mb-6 sm:mb-7" : "mb-3.5 sm:mb-4"
       )}>
         <div>
           <h3 className="font-display text-ink text-lg sm:text-xl font-semibold leading-tight">
@@ -299,20 +299,21 @@ export default function SubmissionActivityChart({
           className="py-10"
         />
       ) : (
-        <div className="relative w-full">
+        <div className="flex-1 flex flex-col justify-between min-h-0 mt-2 sm:mt-2.5">
           {/* Accessible Text Description for Screen Readers */}
           <div className="sr-only">
             Application submission chart for {selectedRange === "30d" ? "past 30 days" : selectedRange === "90d" ? "past 90 days" : "all time"}. Total {totalSubmissions} submissions.
           </div>
 
-          {/* SVG Vector Chart */}
-          <svg
-            ref={chartSvgRef}
-            viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-            className="w-full h-auto overflow-visible select-none"
-            role="img"
-            aria-label={`Activity timeline line chart showing ${totalSubmissions} total submissions`}
-          >
+          {/* SVG Vector Chart Container - positioned naturally below the heading */}
+          <div className="relative w-full">
+            <svg
+              ref={chartSvgRef}
+              viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+              className="w-full h-auto overflow-visible select-none"
+              role="img"
+              aria-label={`Activity timeline line chart showing ${totalSubmissions} total submissions`}
+            >
             <defs>
               {/* Cyan gradient fill for area under line */}
               <linearGradient id="activityAreaGradient" x1="0" y1="0" x2="0" y2="1">
@@ -499,12 +500,13 @@ export default function SubmissionActivityChart({
               </g>
             )}
           </svg>
+        </div>
 
-          {/* Footer note explaining zero days */}
-          <div className={cn(
-            "flex items-center justify-between text-muted border-t border-border-subtle",
-            comfortable ? "text-[13px] sm:text-sm mt-5 pt-3.5" : "text-xs sm:text-sm mt-4 pt-3"
-          )}>
+        {/* Footer note explaining zero days */}
+        <div className={cn(
+          "flex items-center justify-between text-muted border-t border-border-subtle shrink-0",
+          comfortable ? "text-[13px] sm:text-sm mt-5 pt-3.5" : "text-xs sm:text-sm mt-auto pt-3"
+        )}>
             <span>
               Dates with no marks indicate 0 applications submitted on that day
             </span>
